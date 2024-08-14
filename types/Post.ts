@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 export interface Post {
+  _id: Types.ObjectId;
   userId: Types.ObjectId;
   description: string;
   location: string;

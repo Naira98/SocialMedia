@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
-import Post from "../models/Post";
 import { RequestWithUser } from "../types/RequestWithUser";
+import Post from "../models/Post";
 
 export const getFeed = async (
   req: RequestWithUser,

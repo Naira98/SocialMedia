@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
-import { JWT_SECRET_KEY } from "../config";
 import { Request, Response } from "express";
+import { JWT_SECRET_KEY } from "../config";
 
 /* REGISTER */
-export const register = async (req, res) => {
+export const register = async (req: Request, res: Response) => {
   const {
     email,
     firstName,

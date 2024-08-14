@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import User from "./User";
-import { Post } from "../types/Post";
+import { Post } from "../../../types/Post";
 
 const postSchema = new mongoose.Schema<Post>(
   {
