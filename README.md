@@ -10,10 +10,10 @@
 # Features
 - Authentication
 - Authorization
-- helmet
-- multer
+- Helmet
+- Multer
 - React dropzone
-- formik for form handling
-- yup for validation
+- Formik for form handling
+- Yup for validation
 - React Router
-- material ui
+- Material ui

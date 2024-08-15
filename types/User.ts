@@ -7,6 +7,7 @@ export interface User {
   email: string;
   password: string;
   profilePicPath: string;
+  token?: string | undefined;
   friends: string[];
   location?: string;
   occupation?: string;

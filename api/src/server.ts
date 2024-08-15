@@ -35,10 +35,18 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const fileFilter = (req, file, cb) => {
+  var ext = path.extname(file.originalname);
+  if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
+    return cb(new Error("Only images are allowed"));
+  }
+  cb(null, true);
+};
+
+const upload = multer({ storage, fileFilter });
 
 app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts",verifyToken , upload.single("picture"), addPost);
+app.post("/posts", verifyToken, upload.single("picture"), addPost);
 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
