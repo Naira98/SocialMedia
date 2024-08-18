@@ -5,10 +5,11 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import Dropzone from "react-dropzone";
 
-import FlexBetween from "./FlexBetween";
-import { register } from "../utils/actions/auth";
+import FlexBetween from "./styledComponents/FlexBetween";
 import { registerFromValues } from "../types/form";
 import { palette } from "../types/ThemeWithPalette";
+import { useRegister } from "../hooks/auth/useRegister";
+import Spinner from "./Spinner";
 
 const initialValuesRegister: registerFromValues = {
   firstName: "",
@@ -18,6 +19,7 @@ const initialValuesRegister: registerFromValues = {
   location: "",
   occupation: "",
   profilePicPath: "",
+  picture: null,
 };
 
 const registerSchema = yup.object().shape({
@@ -33,13 +35,16 @@ const registerSchema = yup.object().shape({
 const RegisterForm = ({
   setIsLogin,
 }: {
-  setIsLogin: (isLogin: boolean | ((isLogin: boolean) => void)) => void;
+  setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { palette } = useTheme() as { palette: palette };
+  const { register, isPending } = useRegister();
 
   const handleFormSubmit = async (values: registerFromValues) => {
-    await register(values, setIsLogin);
+    register({ values, setIsLogin });
   };
+
+  if (isPending) return <Spinner />;
 
   return (
     <Formik
@@ -110,11 +115,11 @@ const RegisterForm = ({
               p="1rem"
             >
               <Dropzone
-                // acceptedFiles=".jpg, .jpeg, .png"
+                acceptedFiles=".jpg,.jpeg,.png"
                 multiple={false}
-                onDrop={(acceptedFiles) => {
-                  setFieldValue("profilePicPath", acceptedFiles[0]);
-                }}
+                onDrop={(acceptedFiles) =>
+                  setFieldValue("picture", acceptedFiles[0])
+                }
               >
                 {({ getRootProps, getInputProps }) => (
                   <Box
@@ -124,15 +129,11 @@ const RegisterForm = ({
                     sx={{ "&:hover": { cursor: "pointer" } }}
                   >
                     <input {...getInputProps()} />
-                    {!values.profilePicPath ? (
+                    {!values.picture ? (
                       <p>Add Picture Here</p>
                     ) : (
                       <FlexBetween>
-                        <Typography>
-                          {typeof values.profilePicPath == "object"
-                            ? values.profilePicPath.name
-                            : values.profilePicPath}
-                        </Typography>
+                        <Typography>{values.picture.name}</Typography>
                         <EditOutlinedIcon />
                       </FlexBetween>
                     )}

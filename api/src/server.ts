@@ -13,6 +13,9 @@ import { verifyToken } from "./middlewares/is-auth";
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
 import postRoutes from "./routes/posts";
+import { users, posts } from "../data/index.js";
+import User from "./models/User";
+import Post from "./models/Post";
 
 const PORT = 3000;
 const app = express();
@@ -31,7 +34,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "..", "public", "assets"));
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, file.originalname.replaceAll(' ', '-'));
   },
 });
 
@@ -54,5 +57,8 @@ app.use("/posts", postRoutes);
 
 mongoose.connect(MONGO_URI);
 app.listen(PORT, () => {
+  /* ADD DATA ONE TIME */
+  // User.insertMany(users);
+  // Post.insertMany(posts);
   return console.log(`Express is listening at http://localhost:${PORT}`);
 });

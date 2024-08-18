@@ -9,16 +9,14 @@ export const getUser = async (
 ) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(
-      id,
-      "-password -viewedProfile -impressions -createdAt -updatedAt"
-    );
+    const user = await User.findById(id, "-password -createdAt -updatedAt");
     if (!user) return res.status(404).json("User not found");
     return res.status(200).json(user);
   } catch (err) {
     return res.status(500).json(err);
   }
 };
+
 export const getUserFriends = async (
   req: RequestWithUser,
   res: Response,
@@ -31,7 +29,7 @@ export const getUserFriends = async (
     const friends = await Promise.all(
       user.friends.map((id) =>
         User.findById(id).select(
-          "_id firstName lastName occupation location profilePicPath"
+          "_id firstName lastName occupation picturePath viewedProfile impressions "
         )
       )
     );
@@ -41,6 +39,7 @@ export const getUserFriends = async (
     return res.status(500).json(err);
   }
 };
+
 export const addRemoveFriend = async (
   req: RequestWithUser,
   res: Response,
@@ -70,7 +69,7 @@ export const addRemoveFriend = async (
     const friends = await Promise.all(
       user.friends.map((id) =>
         User.findById(id).select(
-          "_id firstName lastName occupation location profilePicPath"
+          "_id firstName lastName occupation picturePath viewedProfile impressions "
         )
       )
     );

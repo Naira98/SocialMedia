@@ -1,8 +1,9 @@
 import { Types } from "mongoose";
+import { User } from "./User";
 
 export interface Post {
   _id: Types.ObjectId;
-  userId: Types.ObjectId;
+  userId: User;
   description: string;
   location: string;
   picturePath: string;
@@ -11,6 +12,7 @@ export interface Post {
   //   [key: string]: boolean;
   // }[];
   comments: string[];
+  createdAt: Date;
 }
 
 // interface UserData {

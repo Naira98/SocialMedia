@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   FormControl,
@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import {
@@ -17,17 +18,24 @@ import {
   Notifications,
   Search,
 } from "@mui/icons-material";
-import FlexBetween from "./FlexBetween";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
-import { setLogout, setMode } from "../redux/authSlice";
+import FlexBetween from "./styledComponents/FlexBetween";
+import { setMode } from "../redux/authSlice";
+import UserImage from "./UserImage";
+import { useLogout } from "../hooks/auth/useLogout";
 import { ReduxState } from "../types/reduxState";
 import { ThemeWithPalette } from "../types/ThemeWithPalette";
 
 const Nvabar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const modeStorage = localStorage.getItem("mode");
   const user = useSelector((state: ReduxState) => state.user);
-  const mode = useSelector((state: ReduxState) => state.mode);
+  const tokens = useSelector((state: ReduxState) => state.tokens);
+  const mode = useSelector((state: ReduxState) => state.mode) && modeStorage;
+  const isMobileScreen = useMediaQuery("(max-width: 1126px)");
+  const {logout} = useLogout()
 
   const theme = useTheme() as ThemeWithPalette;
   const neutralLight = theme.palette.neutral.light;
@@ -37,7 +45,7 @@ const Nvabar = () => {
   const fullName = `${user?.firstName} ${user?.lastName}`;
 
   return (
-    <>
+    <div style={{ position: "sticky", top: "0", left: "0", zIndex: "99" }}>
       <FlexBetween
         style={{
           padding: "1rem 6%",
@@ -49,6 +57,7 @@ const Nvabar = () => {
             fontWeight="bold"
             fontSize="clamp(1.5rem, 2rem, 2.5rem)"
             color="primary"
+            noWrap={true}
             onClick={() => navigate("/home")}
             sx={{
               "&:hover": {
@@ -58,22 +67,35 @@ const Nvabar = () => {
           >
             Social Media
           </Typography>
-          <FlexBetween
-            style={{
-              padding: "0.1rem 1.5rem",
-              backgroundColor: neutralLight,
-              gap: "3rem",
-              borderRadius: "9px",
-            }}
-          >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween>
+          {!isMobileScreen && (
+            <FlexBetween
+              style={{
+                padding: "0.1rem 1.5rem",
+                backgroundColor: neutralLight,
+                gap: "3rem",
+                borderRadius: "9px",
+              }}
+            >
+              <InputBase placeholder="Search..." />
+              <IconButton>
+                <Search />
+              </IconButton>
+            </FlexBetween>
+          )}
         </FlexBetween>
 
         <FlexBetween gap="2rem">
+          <IconButton>
+            <Message sx={{ fontSize: "25px", color: neutralMediumMain }} />
+          </IconButton>
+          <IconButton>
+            <Notifications
+              sx={{ fontSize: "25px", color: neutralMediumMain }}
+            />
+          </IconButton>
+          <IconButton>
+            <Help sx={{ fontSize: "25px", color: neutralMediumMain }} />
+          </IconButton>
           <IconButton onClick={() => dispatch(setMode())}>
             {mode === "light" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
@@ -81,11 +103,16 @@ const Nvabar = () => {
               <LightMode sx={{ fontSize: "25px" }} />
             )}
           </IconButton>
-          <Message sx={{ fontSize: "25px", color: neutralMediumMain }} />
-          <Notifications sx={{ fontSize: "25px", color: neutralMediumMain }} />
-          <Help sx={{ fontSize: "25px", color: neutralMediumMain }} />
 
-          <FormControl variant="standard" value={fullName}>
+          {user && (
+            <Link to={`/profile/${user._id}`}>
+              <IconButton>
+                <UserImage image={user?.picturePath} size="40px" />
+              </IconButton>
+            </Link>
+          )}
+
+          <FormControl variant="standard">
             <Select
               value={fullName}
               sx={{
@@ -106,12 +133,19 @@ const Nvabar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Logout</MenuItem>
+              {tokens && (
+                <MenuItem
+                  sx={{ gap: "0.75rem" }}
+                  onClick={() => logout()}
+                >
+                  <LogoutOutlinedIcon /> Logout
+                </MenuItem>
+              )}
             </Select>
           </FormControl>
         </FlexBetween>
       </FlexBetween>
-    </>
+    </div>
   );
 };
 

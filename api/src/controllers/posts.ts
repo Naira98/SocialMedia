@@ -1,6 +1,8 @@
+import fs from "fs";
 import { NextFunction, Response } from "express";
 import { RequestWithUser } from "../types/RequestWithUser";
 import Post from "../models/Post";
+import { Post as PostType } from "../../../types/Post";
 
 export const getFeed = async (
   req: RequestWithUser,
@@ -8,29 +10,20 @@ export const getFeed = async (
   next: NextFunction
 ) => {
   try {
-    const posts = await Post.find().populate(
-      "userId",
-      "firstName lastName profilePicPath"
-    );
-    return res.status(200).json(posts);
-  } catch (err) {
-    return res.status(500).json(err);
-  }
-};
+    const { userId } = req.params;
+    let posts: PostType[];
+    if (userId.toString() === req.user.userId.toString()) {
+      posts = await Post.find()
+        .populate("userId", "firstName lastName picturePath")
+        .sort({ createdAt: -1 });
+    } else {
+      posts = await Post.find({ userId: userId })
+        .populate("userId", "firstName lastName picturePath")
+        .sort({ createdAt: -1 });
+    }
 
-export const getPost = async (
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { postId } = req.params;
-    const post = await Post.findById(postId).populate(
-      "userId",
-      "firstName lastName profilePicPath"
-    );
-    if (!post) return res.status(404).json("Post not found");
-    return res.status(200).json(post);
+    // return all posts
+    return res.status(200).json(posts);
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -52,7 +45,13 @@ export const addPost = async (
       likes: {},
     });
     const addedPost = await newPost.save();
-    res.status(201).json(addedPost);
+
+    const posts = await Post.find()
+      .populate("userId", "firstName lastName picturePath")
+      .sort({ createdAt: -1 });
+
+    // return all posts
+    res.status(201).json(posts);
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -67,7 +66,10 @@ export const likePost = async (
     const { postId } = req.params;
     const { userId } = req.user;
 
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate(
+      "userId",
+      "firstName lastName picturePath"
+    );
     if (!post) return res.status(404).json("Post not found");
 
     const isLiked = post.likes.get(userId);
@@ -80,8 +82,44 @@ export const likePost = async (
 
     const updatedPost = await post.save();
 
+    // return updated post only
     res.status(200).json(updatedPost);
   } catch (err) {
     return res.status(500).json(err);
   }
+};
+
+export const deletePost = async (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req.user;
+
+    const post = await Post.findOne({ _id: postId, userId: userId });
+
+    if (post.picturePath) {
+      const postWithSameImage = await Post.find({
+        picturePath: post.picturePath,
+      });
+      console.log(postWithSameImage)
+      if (postWithSameImage.length === 1) deleteImage(post.picturePath);
+    }
+
+    await Post.findOneAndDelete({ _id: postId, userId: userId });
+
+    // return id of deleted post only
+    res.status(200).json({ postId });
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
+
+const deleteImage = (path:string) => {
+  console.log(path)
+  fs.unlink(path, (err) => {
+    if (err) console.log(err);
+  });
 };

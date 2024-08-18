@@ -4,6 +4,7 @@ import { verifyToken } from "../middlewares/is-auth";
 const router = express.Router();
 
 router.get("/:id", verifyToken, getUser);
+
 router.get("/friends/:id", verifyToken, getUserFriends);
 
 router.patch("/:friendId", verifyToken, addRemoveFriend);

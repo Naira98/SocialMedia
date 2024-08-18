@@ -10,5 +10,6 @@ export interface registerFromValues {
   password: string;
   location: string;
   occupation: string;
-  profilePicPath: HTMLImageElement | string;
+  profilePicPath: string;
+  picture: File | null
 }

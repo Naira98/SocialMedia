@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { JWT_SECRET_KEY } from "../config";
+import { ACCESS_SECRET } from "../config";
 
 export const verifyToken = (req, res, next) => {
   try {
@@ -9,7 +9,7 @@ export const verifyToken = (req, res, next) => {
     if (token.startsWith("Bearer ")) {
       token = token.split(" ").at(1);
     }
-    jwt.verify(token, JWT_SECRET_KEY, (err, user) => {
+    jwt.verify(token, ACCESS_SECRET, (err, user) => {
       if (err) return res.status(403).json({ message: "Token invalid" });
       req.user = user;
       next();

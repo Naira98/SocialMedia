@@ -1,13 +1,12 @@
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-import { login } from "../utils/actions/auth";
 import { palette } from "../types/ThemeWithPalette";
+import { useLogin } from "../hooks/auth/useLogin";
 import { loginFormValues } from "../types/form";
+import Spinner from "./Spinner";
 
 const initialValuesLogin = {
   email: "",
@@ -20,15 +19,16 @@ const loginSchema = yup.object().shape({
 const LoginForm = ({
   setIsLogin,
 }: {
-  setIsLogin: (isLogin: boolean | ((isLogin: boolean) => void)) => void;
+  setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const { login, isPending } = useLogin();
   const { palette } = useTheme() as { palette: palette };
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleFormSubmit = async (values: loginFormValues) => {
-    await login(values, dispatch, navigate);
+    login({ values });
   };
+
+  if (isPending) return <Spinner />;
 
   return (
     <Formik
@@ -78,6 +78,7 @@ const LoginForm = ({
             <Button
               fullWidth
               type="submit"
+              disabled={isPending}
               sx={{
                 m: "2rem 0",
                 p: "1rem",

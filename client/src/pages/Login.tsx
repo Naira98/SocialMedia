@@ -1,35 +1,41 @@
-import { useTheme } from "@emotion/react";
 import { Box, Typography } from "@mui/material";
-import { ThemeWithPalette } from "../types/ThemeWithPalette";
+import { useTheme } from "@emotion/react";
 import Form from "../components/Form";
+import { palette } from "../types/ThemeWithPalette";
 
 const Login = () => {
-  const theme: ThemeWithPalette = useTheme();
+  const { palette } = useTheme() as { palette: palette };
 
   return (
     <Box>
       <Box
-        width="100%"
-        backgroundColor={theme.palette.background.alt}
-        p="1rem 6%"
-        textAlign="center"
+        sx={{
+          width: "100%",
+          backgroundColor: `${palette.background.alt}`,
+          p: "1rem 6%",
+          textAlign: "center",
+        }}
       >
-        <Typography fontWeight="bold" fontSize="32px" color="primary">
+        <Typography
+          fontWeight="bold"
+          fontSize="32px"
+          color="primary"
+          noWrap={true}
+        >
           Social Media
         </Typography>
       </Box>
 
       <Box
-        width="50%"
-        backgroundColor={theme.palette.background.alt}
-        p="2rem"
-        m="2rem auto"
-        borderRadius="1.5rem"
-        textAlign="center"
+        sx={{
+          width: "50%",
+          backgroundColor: `${palette.background.alt}`,
+          p: "2rem",
+          m: "2rem auto",
+          borderRadius: "1.5rem",
+          textAlign: "center",
+        }}
       >
-        <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
-          Welcome to Social Media
-        </Typography>
         <Form />
       </Box>
     </Box>

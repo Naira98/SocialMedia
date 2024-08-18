@@ -1,7 +1,13 @@
-import express from 'express'
-import { login } from '../controllers/auth'
-const router = express.Router()
+import express from "express";
+import { login, logout, refresh } from "../controllers/auth";
+import { verifyToken } from "../middlewares/is-auth";
 
-router.post('/login', login)
+const router = express.Router();
 
-export default router
+router.post("/login", login);
+
+router.post("/refresh", refresh);
+
+router.post("/logout", verifyToken, logout);
+
+export default router;

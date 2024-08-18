@@ -1,16 +1,14 @@
-import { Types } from "mongoose";
-
 export interface User {
-  _id: Types.ObjectId;
+  _id: string;
   firstName: string;
   lastName: string;
-  email: string;
-  password: string;
-  profilePicPath: string;
+  email?: string;
+  password?: string;
+  picturePath: string;
   token?: string | undefined;
   friends: string[];
   location?: string;
   occupation?: string;
-  viewedProfile: number;
-  impressions: number;
+  viewedProfile?: number;
+  impressions?: number;
 }
