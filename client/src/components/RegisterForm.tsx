@@ -115,7 +115,6 @@ const RegisterForm = ({
               p="1rem"
             >
               <Dropzone
-                acceptedFiles=".jpg,.jpeg,.png"
                 multiple={false}
                 onDrop={(acceptedFiles) =>
                   setFieldValue("picture", acceptedFiles[0])

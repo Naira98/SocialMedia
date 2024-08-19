@@ -66,7 +66,6 @@ const AddPostWidget = ({ picturePath }: { picturePath: string }) => {
           p="1rem"
         >
           <Dropzone
-            acceptedFiles=".jpg,.jpeg,.png"
             multiple={false}
             onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
           >

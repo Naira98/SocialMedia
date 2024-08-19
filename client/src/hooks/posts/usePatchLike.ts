@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { patchLike as patchLikeApi } from "../../services/posts";
 import { ReduxState } from "../../types/reduxState";
 import { useSelector } from "react-redux";
-import { likePost } from "../../redux/authSlice";
+import { likeCommentPost } from "../../redux/authSlice";
 
 export function usePatchLike() {
   const queryClient = useQueryClient();
@@ -16,7 +16,7 @@ export function usePatchLike() {
     onSuccess: (data) => {
       //data= postId
       queryClient.invalidateQueries({ queryKey: ["posts", tokens.userId] });
-      dispatch(likePost({ post: data }));
+      dispatch(likeCommentPost({ post: data }));
     },
     onError: (err) => {
       toast.error(err.message);

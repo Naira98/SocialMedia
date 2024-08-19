@@ -31,6 +31,7 @@ export const authSlice = createSlice({
       state.isAuth = false;
     },
     setFriends: (state, action) => {
+      // _id[]
       if (state.user) {
         state.user.friends = action.payload.friends;
       } else {
@@ -38,12 +39,14 @@ export const authSlice = createSlice({
       }
     },
     setFriendsData: (state, action) => {
+      // Friend[]
       state.friendsData = action.payload.friends;
     },
     setPosts: (state, action) => {
       state.posts = action.payload.posts;
     },
-    likePost: (state, action) => {
+    likeCommentPost: (state, action) => {
+      // updatedPost only
       const updatedPosts = state.posts.map((post: Post) => {
         if (post._id === action.payload.post._id) return action.payload.post;
         return post;
@@ -66,7 +69,7 @@ export const {
   setFriends,
   setFriendsData,
   setPosts,
-  likePost,
+  likeCommentPost,
   deletePost,
 } = authSlice.actions;
 

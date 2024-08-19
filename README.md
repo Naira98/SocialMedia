@@ -6,6 +6,7 @@
 - JWT
 - React
 - Redux
+- React Query
 
 # Features
 - Authentication

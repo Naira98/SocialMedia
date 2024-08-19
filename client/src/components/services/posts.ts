@@ -1,11 +1,16 @@
-import { Token } from "../types/reduxState";
-import apiReq from "./apiReq";
+import { Dispatch } from "@reduxjs/toolkit";
+import { likeCommentPost, setPosts, deletePost } from "../../redux/authSlice";
+import { Token } from "../../types/reduxState";
+import apiReq from "../../services/apiReq";
 
-export async function addPost(
+export async function getAddPost(
   post: string,
   image: File | null,
+  dispatch: Dispatch,
   tokens: Token,
-  location: string
+  location: string,
+  setImage: (image: File | null) => void,
+  setPost: (post: string) => void
 ) {
   try {
     const formData = new FormData();
@@ -26,20 +31,19 @@ export async function addPost(
 
     if (!res.ok) throw new Error("Can't post!");
     const data = await res.json();
-    return data;
+    dispatch(setPosts({ posts: data }));
+    setImage(null);
+    setPost("");
   } catch (err) {
     console.log(err);
-    throw err;
   }
 }
 
-export async function getFeed(tokens: Token | null, userId: string) {
+export async function getFeed(dispatch: Dispatch, tokens: Token | null) {
   try {
-    if (!tokens?.refreshToken) return null;
-
     const res: Response = await apiReq(
       "GET",
-      `/posts/${userId}`,
+      "/posts",
       tokens,
       {
         "Content-Type": "application/json",
@@ -49,14 +53,41 @@ export async function getFeed(tokens: Token | null, userId: string) {
 
     if (!res.ok) throw new Error("Can't get feed!");
     const data = await res.json();
-    return data;
+    dispatch(setPosts({ posts: data }));
   } catch (err) {
     console.log(err);
-    throw err;
   }
 }
 
-export async function patchLike(postId: string, tokens: Token | null) {
+export async function getUserPosts(
+  profileId: string,
+  tokens: Token | null,
+  dispatch: Dispatch
+) {
+  try {
+    const res: Response = await apiReq(
+      "GET",
+      `/posts/${profileId}`,
+      tokens,
+      {
+        "Content-Type": "application/json",
+      },
+      undefined
+    );
+
+    if (!res.ok) throw new Error("Can't get feed!");
+    const data = await res.json();
+    dispatch(setPosts({ posts: data }));
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getPatchLike(
+  postId: string,
+  tokens: Token | null,
+  dispatch: Dispatch
+) {
   try {
     const res: Response = await apiReq(
       "PATCH",
@@ -70,40 +101,17 @@ export async function patchLike(postId: string, tokens: Token | null) {
 
     if (!res.ok) throw new Error("Can't get feed!");
     const data = await res.json();
-    return data;
+    dispatch(likeCommentPost({ post: data }));
   } catch (err) {
     console.log(err);
   }
 }
 
-export async function addComment(
-  comment: string,
+export async function deletePostApi(
   postId: string,
-  tokens: Token
+  tokens: Token | null,
+  dispatch: Dispatch
 ) {
-  try {
-    const res: Response = await apiReq(
-      "POST",
-      `/posts/${postId}`,
-      tokens,
-      {
-        "Content-Type": "application/json",
-      },
-      JSON.stringify({ comment })
-    );
-
-    if (!res.ok) throw new Error("Can't add comment!");
-    const data = await res.json();
-
-    // updatedPost with userId populated
-    return data;
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-}
-
-export async function deletePostApi(postId: string, tokens: Token | null) {
   try {
     const res: Response = await apiReq(
       "DELETE",
@@ -117,7 +125,7 @@ export async function deletePostApi(postId: string, tokens: Token | null) {
 
     if (!res.ok) throw new Error("Can't delete post!");
     const data = await res.json();
-    return data;
+    dispatch(deletePost(data));
   } catch (err) {
     console.log(err);
   }

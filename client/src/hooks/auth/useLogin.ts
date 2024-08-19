@@ -21,7 +21,6 @@ export function useLogin() {
       // data = {user: {}, tokens: {}}
       queryClient.setQueryData(["user"], data.user);
       dispatch(setLogin({ user: data.user, tokens: data.tokens }));
-      localStorage.setItem("accessToken", data.tokens.accessToken);
       localStorage.setItem("refreshToken", data.tokens.refreshToken);
 
       navigate("/home", { replace: true });

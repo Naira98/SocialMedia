@@ -89,6 +89,32 @@ export const likePost = async (
   }
 };
 
+export const commentPost = async (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { postId } = req.params;
+    const { comment } = req.body;
+
+    const post = await Post.findById(postId).populate(
+      "userId",
+      "firstName lastName picturePath"
+    );
+    if (!post) return res.status(404).json("Post not found");
+
+    post.comments.push(comment);
+
+    await post.save();
+
+    // return updated post only
+    res.status(200).json(post);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
+
 export const deletePost = async (
   req: RequestWithUser,
   res: Response,
@@ -104,7 +130,7 @@ export const deletePost = async (
       const postWithSameImage = await Post.find({
         picturePath: post.picturePath,
       });
-      console.log(postWithSameImage)
+      console.log(postWithSameImage);
       if (postWithSameImage.length === 1) deleteImage(post.picturePath);
     }
 
@@ -117,8 +143,8 @@ export const deletePost = async (
   }
 };
 
-const deleteImage = (path:string) => {
-  console.log(path)
+const deleteImage = (path: string) => {
+  console.log(path);
   fs.unlink(path, (err) => {
     if (err) console.log(err);
   });

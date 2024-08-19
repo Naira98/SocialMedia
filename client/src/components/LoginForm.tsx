@@ -6,7 +6,6 @@ import * as yup from "yup";
 import { palette } from "../types/ThemeWithPalette";
 import { useLogin } from "../hooks/auth/useLogin";
 import { loginFormValues } from "../types/form";
-import Spinner from "./Spinner";
 
 const initialValuesLogin = {
   email: "",
@@ -27,8 +26,6 @@ const LoginForm = ({
   const handleFormSubmit = async (values: loginFormValues) => {
     login({ values });
   };
-
-  if (isPending) return <Spinner />;
 
   return (
     <Formik

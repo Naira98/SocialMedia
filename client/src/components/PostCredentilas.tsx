@@ -29,7 +29,7 @@ const PostCredentilas = ({
   const postCreatorId = user._id;
   const { friends, _id } = useSelector((state: ReduxState) => state.user)!;
   const tokens = useSelector((state: ReduxState) => state.tokens);
-  const isFriend = friends.find((friend: string) => friend === user._id);
+  const isFriend = friends.find((friend) => friend === user._id);
   const { addRemoveFriend } = useAddDeleteFriend({freindId: user._id});
   const { deletePost } = useDeletePost();
 
