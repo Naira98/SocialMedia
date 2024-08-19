@@ -98,15 +98,11 @@ export const commentPost = async (
     const { postId } = req.params;
     const { comment } = req.body;
 
-    const post = await Post.findById(postId).populate(
+    const post = await Post.updateOne({_id: postId}, {$push:{comments: comment}}).populate(
       "userId",
       "firstName lastName picturePath"
     );
     if (!post) return res.status(404).json("Post not found");
-
-    post.comments.push(comment);
-
-    await post.save();
 
     // return updated post only
     res.status(200).json(post);
