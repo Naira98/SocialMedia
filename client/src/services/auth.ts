@@ -14,7 +14,7 @@ export async function login(values: loginFormValues) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data);
-=    return data;
+    return data;
   } catch (err) {
     console.log(err);
     throw err;
@@ -74,7 +74,7 @@ export async function getUser(
 
     const refreshData = await refreshRes.json(); // {userId, accessToken, refreshToken}
     if (!refreshRes.ok) throw new Error(refreshData);
-    
+
     localStorage.setItem("refreshToken", refreshData.refreshToken);
 
     const userRes = await fetch(
@@ -93,7 +93,7 @@ export async function getUser(
 
     dispatch(setLogin({ user: userData, tokens: refreshData }));
 
-    return { user: userData, tokens: refreshData};
+    return { user: userData, tokens: refreshData };
   } catch (err) {
     console.log(err);
     throw err;
