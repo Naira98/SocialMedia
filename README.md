@@ -18,3 +18,4 @@
 - Yup for validation
 - React Router
 - Material ui
+- Media query

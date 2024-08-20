@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 
 import UserWidget from "../components/widgets/UserWidget";
 import PostsWidget from "../components/widgets/PostsWidget";
@@ -13,6 +13,7 @@ const Profile = () => {
   const { userId } = useParams() as { userId: string };
 
   const { profile, isPending, error } = useProfileUser(userId);
+  const isMobileScreen = useMediaQuery("(max-width: 1000px)");
 
   // useEffect(() => {
   //   if (userId) {
@@ -30,11 +31,18 @@ const Profile = () => {
       padding="2rem 6%"
       display="flex"
       justifyContent="space-between"
+      sx={
+        isMobileScreen ? { flexDirection: "column" } : { flexDirection: "row" }
+      }
     >
       {profile && userId && (
         <>
           <Box flexBasis="26%">
-            <UserWidget user={profile} key={profile._id.toString()} />
+            <UserWidget
+              user={profile}
+              key={profile._id.toString()}
+              isMobileScreen={isMobileScreen}
+            />
           </Box>
           <Box flexBasis="64%">
             <PostsWidget
@@ -43,10 +51,12 @@ const Profile = () => {
               isProfile={true}
             />
           </Box>
-          <Box flexBasis="26%">
-            <AdvertiseWidget />
-            <FriendListWidget userId={userId} key={profile._id.toString()} />
-          </Box>
+          {!isMobileScreen && (
+            <Box flexBasis="26%">
+              <AdvertiseWidget />
+              <FriendListWidget userId={userId} key={profile._id.toString()} />
+            </Box>
+          )}
         </>
       )}
     </Box>

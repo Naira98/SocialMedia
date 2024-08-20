@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Nvabar from "./Nvabar";
+import Nvabar from "./Navbar";
 import { Box } from "@mui/material";
 
 const AppLayout = () => {

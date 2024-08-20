@@ -16,7 +16,6 @@ import {
   LightMode,
   Message,
   Notifications,
-  Search,
 } from "@mui/icons-material";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
@@ -34,8 +33,8 @@ const Nvabar = () => {
   const user = useSelector((state: ReduxState) => state.user);
   const tokens = useSelector((state: ReduxState) => state.tokens);
   const mode = useSelector((state: ReduxState) => state.mode) && modeStorage;
-  const isMobileScreen = useMediaQuery("(max-width: 1126px)");
-  const {logout} = useLogout()
+  const isMobileScreen = useMediaQuery("(max-width: 1000px)");
+  const { logout } = useLogout();
 
   const theme = useTheme() as ThemeWithPalette;
   const neutralLight = theme.palette.neutral.light;
@@ -50,10 +49,10 @@ const Nvabar = () => {
         style={{
           padding: "1rem 6%",
           backgroundColor: alt,
-          gap: '1.5rem'
+          gap: "1.5rem",
         }}
       >
-        <FlexBetween gap="4rem">
+        <FlexBetween>
           <Typography
             fontWeight="bold"
             fontSize="clamp(1.5rem, 2rem, 2.5rem)"
@@ -68,35 +67,25 @@ const Nvabar = () => {
           >
             Social Media
           </Typography>
-          {!isMobileScreen && (
-            <FlexBetween
-              style={{
-                padding: "0.1rem 1.5rem",
-                backgroundColor: neutralLight,
-                gap: "3rem",
-                borderRadius: "9px",
-              }}
-            >
-              <InputBase placeholder="Search..." />
-              <IconButton>
-                <Search />
-              </IconButton>
-            </FlexBetween>
-          )}
         </FlexBetween>
 
         <FlexBetween gap="2rem">
-          <IconButton>
-            <Message sx={{ fontSize: "25px", color: neutralMediumMain }} />
-          </IconButton>
-          <IconButton>
-            <Notifications
-              sx={{ fontSize: "25px", color: neutralMediumMain }}
-            />
-          </IconButton>
-          <IconButton>
-            <Help sx={{ fontSize: "25px", color: neutralMediumMain }} />
-          </IconButton>
+          {!isMobileScreen && (
+            <>
+              <IconButton>
+                <Message sx={{ fontSize: "25px", color: neutralMediumMain }} />
+              </IconButton>
+              <IconButton>
+                <Notifications
+                  sx={{ fontSize: "25px", color: neutralMediumMain }}
+                />
+              </IconButton>
+              <IconButton>
+                <Help sx={{ fontSize: "25px", color: neutralMediumMain }} />
+              </IconButton>
+            </>
+          )}
+
           <IconButton onClick={() => dispatch(setMode())}>
             {mode === "light" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
@@ -135,10 +124,7 @@ const Nvabar = () => {
                 <Typography>{fullName}</Typography>
               </MenuItem>
               {tokens && (
-                <MenuItem
-                  sx={{ gap: "0.75rem" }}
-                  onClick={() => logout()}
-                >
+                <MenuItem sx={{ gap: "0.75rem" }} onClick={() => logout()}>
                   <LogoutOutlinedIcon /> Logout
                 </MenuItem>
               )}

@@ -3,7 +3,7 @@ import { Post } from "../../../types/Post";
 import { Friend, ReduxState } from "../types/reduxState";
 
 const initialState: ReduxState = {
-  mode: "light",
+  mode: localStorage.getItem('mode')  || "light",
   user: null,
   friendsData: null,
   tokens: null,

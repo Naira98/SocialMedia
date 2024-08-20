@@ -25,7 +25,13 @@ import { useUpdateAccount } from "../../hooks/users/useUpdateProfile";
 import { useAddTwitter } from "../../hooks/users/useAddTwitter";
 import { useAddLinkedin } from "../../hooks/users/useAddLinkedin";
 
-const UserWidget = ({ user }: { user: User | null }) => {
+const UserWidget = ({
+  user,
+  isMobileScreen,
+}: {
+  user: User | null;
+  isMobileScreen: boolean;
+}) => {
   const currentUser = useSelector((state: ReduxState) => state.user)!;
 
   const [isUpdate, setIsUpdate] = useState(false);
@@ -57,7 +63,11 @@ const UserWidget = ({ user }: { user: User | null }) => {
   return (
     <WidgetWrapper
       palette={palette}
-      style={{ position: "sticky", top: "6rem", left: "0", zIndex: "99" }}
+      style={
+        isMobileScreen
+          ? { display: "block" }
+          : { position: "sticky", top: "6rem", left: "0", zIndex: "99" }
+      }
     >
       {/* FIRST ROW */}
       <FlexBetween gap="0.5rem" pb="1.1rem">
@@ -229,7 +239,7 @@ const UserWidget = ({ user }: { user: User | null }) => {
                 Linkedin
               </Typography>
               <Typography color={medium} fontSize="10px">
-              {user.linkedin ? (
+                {user.linkedin ? (
                   <a
                     href={`http://linkedin.com/in/${user.linkedin}`}
                     target="_blank"
@@ -240,7 +250,6 @@ const UserWidget = ({ user }: { user: User | null }) => {
                 ) : (
                   "Network Platform"
                 )}
-                
               </Typography>
             </Box>
           </FlexBetween>
@@ -251,7 +260,7 @@ const UserWidget = ({ user }: { user: User | null }) => {
           )}
         </FlexBetween>
         {isLinkedin && (
-          <FlexBetween gap="0.5rem" mt='0.5rem'>
+          <FlexBetween gap="0.5rem" mt="0.5rem">
             <Input
               placeholder="/in/"
               value={linkedinLink}
