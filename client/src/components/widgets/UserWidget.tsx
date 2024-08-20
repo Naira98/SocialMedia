@@ -231,7 +231,7 @@ const UserWidget = ({ user }: { user: User | null }) => {
               <Typography color={medium} fontSize="10px">
               {user.linkedin ? (
                   <a
-                    href={`http://linkedin.com/in/${user.twitter}`}
+                    href={`http://linkedin.com/in/${user.linkedin}`}
                     target="_blank"
                     style={{ textDecoration: "none" }}
                   >
