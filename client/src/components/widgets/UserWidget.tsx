@@ -1,14 +1,7 @@
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Input,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, IconButton, Input, Typography } from "@mui/material";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
@@ -24,6 +17,7 @@ import { useState } from "react";
 import { useUpdateAccount } from "../../hooks/users/useUpdateProfile";
 import { useAddTwitter } from "../../hooks/users/useAddTwitter";
 import { useAddLinkedin } from "../../hooks/users/useAddLinkedin";
+import Button from "../Button";
 
 const UserWidget = ({
   user,
@@ -33,6 +27,7 @@ const UserWidget = ({
   isMobileScreen: boolean;
 }) => {
   const currentUser = useSelector((state: ReduxState) => state.user)!;
+  const navigate = useNavigate();
 
   const [isUpdate, setIsUpdate] = useState(false);
   const [firstName, setFirstName] = useState(currentUser.firstName);
@@ -49,9 +44,7 @@ const UserWidget = ({
   const { addLinkedin } = useAddLinkedin(setIsLinkedin);
 
   const { palette } = useTheme() as { palette: palette };
-  const primatyMain = palette.primary.main;
 
-  const navigate = useNavigate();
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
@@ -113,22 +106,30 @@ const UserWidget = ({
               onChange={(e) => setLastName(e.target.value)}
               style={{ width: "70%" }}
             />
+            {isMobileScreen && (
+              <Button
+                disabled={!firstName && !lastName}
+                isMobileScreen={isMobileScreen}
+                onClick={() =>
+                  updateAccount({ userId: user._id, firstName, lastName })
+                }
+              >
+                Update
+              </Button>
+            )}
           </FlexBetween>
 
-          <Button
-            disabled={!firstName && !lastName}
-            style={{ width: "60%", marginTop: "0.5rem" }}
-            onClick={() =>
-              updateAccount({ userId: user._id, firstName, lastName })
-            }
-            sx={{
-              color: palette.background.alt,
-              backgroundColor: primatyMain,
-              borderRadius: "3rem",
-            }}
-          >
-            Update
-          </Button>
+          {!isMobileScreen && (
+            <Button
+              disabled={!firstName && !lastName}
+              isMobileScreen={isMobileScreen}
+              onClick={() =>
+                updateAccount({ userId: user._id, firstName, lastName })
+              }
+            >
+              Update
+            </Button>
+          )}
         </FlexBetween>
       )}
 
@@ -216,15 +217,10 @@ const UserWidget = ({
 
             <Button
               disabled={!twitterLink}
-              style={{ width: "40%", marginTop: "0.5rem" }}
+              isMobileScreen={isMobileScreen}
               onClick={() =>
                 addTwitter({ userId: user._id, link: twitterLink })
               }
-              sx={{
-                color: palette.background.alt,
-                backgroundColor: primatyMain,
-                borderRadius: "3rem",
-              }}
             >
               Add
             </Button>
@@ -270,15 +266,10 @@ const UserWidget = ({
 
             <Button
               disabled={!linkedinLink}
-              style={{ width: "40%", marginTop: "0.5rem" }}
+              isMobileScreen={isMobileScreen}
               onClick={() =>
                 addLinkedin({ userId: user._id, link: linkedinLink })
               }
-              sx={{
-                color: palette.background.alt,
-                backgroundColor: primatyMain,
-                borderRadius: "3rem",
-              }}
             >
               Add
             </Button>

@@ -9,7 +9,7 @@ import { ReduxState } from "../types/reduxState";
 
 const Home = () => {
   const user = useSelector((state: ReduxState) => state.user);
-  const isMobileScreen = useMediaQuery("(max-width: 1000px)");
+  const isMobileScreen = useMediaQuery("(max-width: 1200px)");
 
   return (
     <Box

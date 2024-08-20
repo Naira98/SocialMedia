@@ -13,13 +13,7 @@ const Profile = () => {
   const { userId } = useParams() as { userId: string };
 
   const { profile, isPending, error } = useProfileUser(userId);
-  const isMobileScreen = useMediaQuery("(max-width: 1000px)");
-
-  // useEffect(() => {
-  //   if (userId) {
-  //     getProfileUser(userId, tokens, setUser);
-  //   }
-  // }, [tokens, userId]);
+  const isMobileScreen = useMediaQuery("(max-width: 1200px)");
 
   if (isPending) return <Spinner />;
   if (error) toast.error(error.message);

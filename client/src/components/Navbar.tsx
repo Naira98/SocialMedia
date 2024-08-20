@@ -33,7 +33,7 @@ const Nvabar = () => {
   const user = useSelector((state: ReduxState) => state.user);
   const tokens = useSelector((state: ReduxState) => state.tokens);
   const mode = useSelector((state: ReduxState) => state.mode) && modeStorage;
-  const isMobileScreen = useMediaQuery("(max-width: 1000px)");
+  const isMobileScreen = useMediaQuery("(max-width: 1200px)");
   const { logout } = useLogout();
 
   const theme = useTheme() as ThemeWithPalette;
