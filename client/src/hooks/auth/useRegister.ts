@@ -17,8 +17,7 @@ export function useRegister() {
       values: registerFromValues;
       setIsLogin: (isLogin: boolean) => void;
     }) => registerApi(values, setIsLogin),
-    onSuccess: (user) => {
-      console.log(user)
+    onSuccess: () => {
       toast.success("Account created successfully");
     },
     onError: (err) => {

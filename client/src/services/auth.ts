@@ -7,17 +7,14 @@ import { NavigateFunction } from "react-router-dom";
 
 export async function login(values: loginFormValues) {
   try {
-    console.log(values);
     const res = await fetch("http://localhost:3000/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
-    console.log(res);
     const data = await res.json();
     if (!res.ok) throw new Error(data);
-    console.log(data);
-    return data;
+=    return data;
   } catch (err) {
     console.log(err);
     throw err;
@@ -62,7 +59,7 @@ export async function getUser(
   try {
     if (!refreshToken) {
       navigate("/");
-      return {isToken: false};
+      // return {isToken: false};
     }
 
     dispatch(setIsLoading(true));
@@ -96,7 +93,7 @@ export async function getUser(
 
     dispatch(setLogin({ user: userData, tokens: refreshData }));
 
-    return { user: userData, tokens: refreshData, isToken: true };
+    return { user: userData, tokens: refreshData};
   } catch (err) {
     console.log(err);
     throw err;

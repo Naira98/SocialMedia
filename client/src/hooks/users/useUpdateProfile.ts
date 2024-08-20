@@ -24,7 +24,6 @@ export function useUpdateAccount(setIsUpdate: React.Dispatch<React.SetStateActio
     }) => updateAccountApi(userId, firstName, lastName, tokens),
     onSuccess: (user) => {
       // data = updatedUser
-      console.log(user)
       queryClient.setQueryData(["user", tokens.userId], user);
       dispatch(setUser(user));
       setIsUpdate(false);

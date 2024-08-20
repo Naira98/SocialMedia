@@ -40,7 +40,6 @@ export const register = async (req: Request, res: Response) => {
       twitter: "",
       linkedin: "",
     });
-    // console.log(newUser)
     await newUser.save();
 
     delete newUser.password;

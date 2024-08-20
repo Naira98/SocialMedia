@@ -158,7 +158,6 @@ export const addLinkedin = async (
       { returnDocument: "after" }
     );
 
-    console.log(user)
 
     // return updatedUser
     res.status(200).json(user);

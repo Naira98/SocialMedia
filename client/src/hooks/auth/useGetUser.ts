@@ -18,6 +18,6 @@ export function useGetUser(refreshToken: string | null) {
     queryFn: () => getUser(refreshToken, dispatch, navigate),
     enabled: !!refreshToken,
   });
-  // user = {userData: {}, refreshData: {userId, accessToken, refreshToken}, isToken: true or false}
+  // user = {userData: {}, refreshData: {userId, accessToken, refreshToken}}
   return { userDataAndTokens, isPending };
 }
