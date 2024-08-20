@@ -11,8 +11,10 @@ const userSchema = new mongoose.Schema<User>(
     friends: { type: [{ type: String }], default: [] },
     location: String,
     occupation: String,
-    viewedProfile: { type: Number, default: 0 },
-    impressions: { type: Number, default: 0 },
+    viewedProfile: { type: Number },
+    impressions: { type: Number },
+    twitter: { type: String, default: "" },
+    linkedin: { type: String, default: "" },
   },
   { timestamps: true }
 );

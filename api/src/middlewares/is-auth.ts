@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { ACCESS_SECRET } from "../config";
+import { NextFunction } from "express";
 
 export const verifyToken = (req, res, next) => {
   try {

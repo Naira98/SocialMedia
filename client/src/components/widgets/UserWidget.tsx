@@ -1,7 +1,14 @@
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, Divider, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Input,
+  Typography,
+} from "@mui/material";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
@@ -13,10 +20,30 @@ import FlexBetween from "../styledComponents/FlexBetween";
 import { palette } from "../../types/ThemeWithPalette";
 import { ReduxState } from "../../types/reduxState";
 import { User } from "../../../../types/User";
+import { useState } from "react";
+import { useUpdateAccount } from "../../hooks/users/useUpdateProfile";
+import { useAddTwitter } from "../../hooks/users/useAddTwitter";
+import { useAddLinkedin } from "../../hooks/users/useAddLinkedin";
 
 const UserWidget = ({ user }: { user: User | null }) => {
+  const currentUser = useSelector((state: ReduxState) => state.user)!;
+
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [firstName, setFirstName] = useState(currentUser.firstName);
+  const [lastName, setLastName] = useState(currentUser.lastName);
+
+  const [isTwitter, setIsTwitter] = useState(false);
+  const [twitterLink, setTwitterLink] = useState(currentUser.twitter);
+
+  const [isLinkedin, setIsLinkedin] = useState(false);
+  const [linkedinLink, setLinkedinLink] = useState(currentUser.linkedin);
+
+  const { updateAccount } = useUpdateAccount(setIsUpdate);
+  const { addTwitter } = useAddTwitter(setIsTwitter);
+  const { addLinkedin } = useAddLinkedin(setIsLinkedin);
+
   const { palette } = useTheme() as { palette: palette };
-  const currentUser = useSelector((state: ReduxState) => state.user);
+  const primatyMain = palette.primary.main;
 
   const navigate = useNavigate();
   const dark = palette.neutral.dark;
@@ -28,7 +55,10 @@ const UserWidget = ({ user }: { user: User | null }) => {
   }
 
   return (
-    <WidgetWrapper palette={palette} style={{position: 'sticky', top:'6rem', left:'0', zIndex: '99'}}>
+    <WidgetWrapper
+      palette={palette}
+      style={{ position: "sticky", top: "6rem", left: "0", zIndex: "99" }}
+    >
       {/* FIRST ROW */}
       <FlexBetween gap="0.5rem" pb="1.1rem">
         <FlexBetween gap="1rem">
@@ -53,11 +83,44 @@ const UserWidget = ({ user }: { user: User | null }) => {
           </Box>
         </FlexBetween>
         {currentUser._id === user._id && (
-          <IconButton>
+          <IconButton onClick={() => setIsUpdate((u) => !u)}>
             <ManageAccountsOutlinedIcon />
           </IconButton>
         )}
       </FlexBetween>
+      {isUpdate && (
+        <FlexBetween gap="0.5rem" pb="1.1rem" flexDirection="column">
+          <FlexBetween gap="0.75rem">
+            <Input
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              style={{ width: "70%" }}
+            />
+            <Input
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              style={{ width: "70%" }}
+            />
+          </FlexBetween>
+
+          <Button
+            disabled={!firstName && !lastName}
+            style={{ width: "60%", marginTop: "0.5rem" }}
+            onClick={() =>
+              updateAccount({ userId: user._id, firstName, lastName })
+            }
+            sx={{
+              color: palette.background.alt,
+              backgroundColor: primatyMain,
+              borderRadius: "3rem",
+            }}
+          >
+            Update
+          </Button>
+        </FlexBetween>
+      )}
 
       <Divider />
 
@@ -111,17 +174,52 @@ const UserWidget = ({ user }: { user: User | null }) => {
               <Typography color={main} fontWeight="500">
                 Twitter
               </Typography>
-              <Typography color={medium} fontSize="10px">
-                Social Network
+              <Typography color={medium} fontSize="11px">
+                {user.twitter ? (
+                  <a
+                    href={`http://twitter.com/${user.twitter}`}
+                    target="_blank"
+                    style={{ textDecoration: "none" }}
+                  >
+                    {user.twitter}
+                  </a>
+                ) : (
+                  "Social Network"
+                )}
               </Typography>
             </Box>
           </FlexBetween>
           {currentUser._id === user._id && (
-            <IconButton>
+            <IconButton onClick={() => setIsTwitter((t) => !t)}>
               <ModeEditOutlinedIcon sx={{ color: main }} />
             </IconButton>
           )}
         </FlexBetween>
+        {isTwitter && (
+          <FlexBetween gap="0.5rem" pb="1.1rem">
+            <Input
+              placeholder="@"
+              value={twitterLink}
+              onChange={(e) => setTwitterLink(e.target.value)}
+              style={{ width: "70%" }}
+            />
+
+            <Button
+              disabled={!twitterLink}
+              style={{ width: "40%", marginTop: "0.5rem" }}
+              onClick={() =>
+                addTwitter({ userId: user._id, link: twitterLink })
+              }
+              sx={{
+                color: palette.background.alt,
+                backgroundColor: primatyMain,
+                borderRadius: "3rem",
+              }}
+            >
+              Add
+            </Button>
+          </FlexBetween>
+        )}
 
         <FlexBetween gap="1rem">
           <FlexBetween gap="1rem">
@@ -131,16 +229,52 @@ const UserWidget = ({ user }: { user: User | null }) => {
                 Linkedin
               </Typography>
               <Typography color={medium} fontSize="10px">
-                Network Platform
+              {user.linkedin ? (
+                  <a
+                    href={`http://linkedin.com/in/${user.twitter}`}
+                    target="_blank"
+                    style={{ textDecoration: "none" }}
+                  >
+                    {user.linkedin}
+                  </a>
+                ) : (
+                  "Network Platform"
+                )}
+                
               </Typography>
             </Box>
           </FlexBetween>
           {currentUser._id === user._id && (
-            <IconButton>
+            <IconButton onClick={() => setIsLinkedin((l) => !l)}>
               <ModeEditOutlinedIcon sx={{ color: main }} />
             </IconButton>
           )}
         </FlexBetween>
+        {isLinkedin && (
+          <FlexBetween gap="0.5rem" mt='0.5rem'>
+            <Input
+              placeholder="/in/"
+              value={linkedinLink}
+              onChange={(e) => setLinkedinLink(e.target.value)}
+              style={{ width: "70%" }}
+            />
+
+            <Button
+              disabled={!linkedinLink}
+              style={{ width: "40%", marginTop: "0.5rem" }}
+              onClick={() =>
+                addLinkedin({ userId: user._id, link: linkedinLink })
+              }
+              sx={{
+                color: palette.background.alt,
+                backgroundColor: primatyMain,
+                borderRadius: "3rem",
+              }}
+            >
+              Add
+            </Button>
+          </FlexBetween>
+        )}
       </Box>
     </WidgetWrapper>
   );

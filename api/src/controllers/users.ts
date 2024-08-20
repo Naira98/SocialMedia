@@ -29,7 +29,7 @@ export const getUserFriends = async (
     const friends = await Promise.all(
       user.friends.map((id) =>
         User.findById(id).select(
-          "_id firstName lastName occupation picturePath viewedProfile impressions "
+          "_id firstName lastName occupation picturePath viewedProfile impressions linkedin twitter"
         )
       )
     );
@@ -74,6 +74,94 @@ export const addRemoveFriend = async (
       )
     );
     return res.status(200).json(friends);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
+
+export const updateAccount = async (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let { userId, firstName, lastName } = req.body;
+
+    if (req.user.toString() === userId.toString()) {
+      return res.status(403).json("Can't add link to another user");
+    }
+
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      { firstName, lastName },
+      { returnDocument: "after" }
+    );
+
+    // const returnedUser = Object.keys(user)
+    //   .filter((objKey) => objKey !== "password")
+    //   .reduce((newObj, key) => {
+    //     newObj[key] = user[key];
+    //     return newObj;
+    //   }, {});
+
+    // delete user.password;
+
+    // const user = User.findById(userId, "-password -createdAt -updatedAt");
+
+    // return updatedUser
+    res.status(200).json(user);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
+
+export const addTwitter = async (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let { userId, link } = req.body;
+
+    if (req.user.toString() === userId.toString()) {
+      return res.status(403).json("Can't add link to another user");
+    }
+
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      { twitter: link },
+      { returnDocument: "after" }
+    );
+
+    // return updatedUser
+    res.status(200).json(user);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
+
+export const addLinkedin = async (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let { userId, link } = req.body;
+
+    if (req.user.toString() === userId.toString()) {
+      return res.status(403).json("Can't add link to another user");
+    }
+
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      { linkedin: link },
+      { returnDocument: "after" }
+    );
+
+    console.log(user)
+
+    // return updatedUser
+    res.status(200).json(user);
   } catch (err) {
     return res.status(500).json(err);
   }

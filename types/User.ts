@@ -11,4 +11,6 @@ export interface User {
   occupation?: string;
   viewedProfile?: number;
   impressions?: number;
+  twitter: string;
+  linkedin: string;
 }

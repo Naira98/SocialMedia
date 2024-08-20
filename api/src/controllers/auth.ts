@@ -5,7 +5,7 @@ import User from "../models/User";
 import { REFRESH_SECRET } from "../config";
 import Token from "../models/Token";
 import { generateAccessToken, generateRefreshToken } from "../../lib/helpers";
-import { Token as TokenType } from "../../../types/Token";
+import { Token as TokenType } from "../types/Token";
 import { RequestWithUser } from "../types/RequestWithUser";
 
 /* REGISTER */
@@ -21,7 +21,7 @@ export const register = async (req: Request, res: Response) => {
   } = req.body;
   try {
     const user = await User.findOne({ email: email });
-    if (user) return res.json("Email already exists");
+    if (user) return res.status(409).json("Email already exists");
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -37,7 +37,10 @@ export const register = async (req: Request, res: Response) => {
       picturePath,
       viewedProfile: Math.floor(Math.random() * 10000),
       impressions: Math.floor(Math.random() * 10000),
+      twitter: "",
+      linkedin: "",
     });
+    // console.log(newUser)
     await newUser.save();
 
     delete newUser.password;

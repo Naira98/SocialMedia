@@ -50,6 +50,7 @@ const Nvabar = () => {
         style={{
           padding: "1rem 6%",
           backgroundColor: alt,
+          gap: '1.5rem'
         }}
       >
         <FlexBetween gap="4rem">

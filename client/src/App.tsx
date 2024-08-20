@@ -12,10 +12,14 @@ import Profile from "./pages/Profile";
 import AppLayout from "./components/AppLayout";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import { ReduxState } from "./types/reduxState";
-import { useGetUser } from "./hooks/auth/useGetUser";
 import { ThemeWithPalette } from "./types/ThemeWithPalette";
 import { getRefreshToken } from "./util/helpers";
 import Spinner from "./components/Spinner";
+import { useDispatch } from "react-redux";
+import { getUser } from "./services/auth";
+import { setLogin } from "./redux/authSlice";
+import ProtectedLogin from "./components/ProtectedLogin";
+// import { useGetUser } from "./hooks/auth/useGetUser";
 
 const App = () => {
   const mode = useSelector((state: ReduxState) => state.mode);
@@ -23,25 +27,47 @@ const App = () => {
     () => createTheme(themeSettings(mode)),
     [mode]
   );
-  const navigate = useNavigate();
-
   const refreshToken = getRefreshToken();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isLoading = useSelector((state: ReduxState) => state.isLoading);
+  // const {userDataAndTokens, isPending} = useGetUser(refreshToken);
+
+  // console.log(userDataAndTokens)
+
+  // console.log(userDataAndTokens?.isToken && isPending)
 
   useEffect(() => {
     if (refreshToken === null) return navigate("/");
-  }, [navigate, refreshToken]);
+    const fetchUesr = async () => {
+      const data = await getUser(refreshToken, dispatch, navigate);
+      if (data) {
+        // console.log(data)
+        dispatch(setLogin({ user: data.user, tokens: data.tokens }));
+        if (document.location.pathname == "/") navigate("/home");
+      }
 
-  const { isPending } = useGetUser(refreshToken);
+      // console.log(data);
+    };
+    fetchUesr();
+  }, [dispatch, navigate, refreshToken]);
 
-
-  if (isPending && window.location.pathname !== "/") return <Spinner />;
+  if (isLoading) return <Spinner />;
 
   return (
     <div className="app">
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedLogin>
+                <Login />
+              </ProtectedLogin>
+            }
+          />
           <Route
             element={
               <ProtectedRoutes>

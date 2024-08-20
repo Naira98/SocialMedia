@@ -1,23 +1,26 @@
 import apiReq from "./apiReq";
 import { loginFormValues, registerFromValues } from "../types/form";
 import { Token } from "../types/reduxState";
-import { setLogin } from "../redux/authSlice";
+import { setIsLoading, setLogin } from "../redux/authSlice";
 import { Dispatch } from "@reduxjs/toolkit";
+import { NavigateFunction } from "react-router-dom";
 
 export async function login(values: loginFormValues) {
   try {
+    console.log(values);
     const res = await fetch("http://localhost:3000/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
-
-    if (!res.ok) throw new Error("Can't register please try again");
+    console.log(res);
     const data = await res.json();
-
+    if (!res.ok) throw new Error(data);
+    console.log(data);
     return data;
   } catch (err) {
     console.log(err);
+    throw err;
   }
 }
 
@@ -39,17 +42,30 @@ export async function register(
       method: "POST",
       body: formData,
     });
+    console.log(res);
 
     const data = await res.json();
+    if (!res.ok) throw new Error(data);
+    console.log(data);
     if (data) setIsLogin(true);
   } catch (err) {
     console.log(err);
+    throw err;
   }
 }
 
-export async function getUser(refreshToken: string, dispatch: Dispatch) {
+export async function getUser(
+  refreshToken: string | null,
+  dispatch: Dispatch,
+  navigate: NavigateFunction
+) {
   try {
-    if (!refreshToken) return null;
+    if (!refreshToken) {
+      navigate("/");
+      return {isToken: false};
+    }
+
+    dispatch(setIsLoading(true));
 
     const refreshRes = await fetch("http://localhost:3000/auth/refresh", {
       method: "POST",
@@ -59,9 +75,9 @@ export async function getUser(refreshToken: string, dispatch: Dispatch) {
       body: JSON.stringify({ refreshToken }),
     });
 
-    if (!refreshRes.ok) throw new Error("Refresh token not valid");
     const refreshData = await refreshRes.json(); // {userId, accessToken, refreshToken}
-
+    if (!refreshRes.ok) throw new Error(refreshData);
+    
     localStorage.setItem("refreshToken", refreshData.refreshToken);
 
     const userRes = await fetch(
@@ -75,14 +91,17 @@ export async function getUser(refreshToken: string, dispatch: Dispatch) {
       }
     );
 
-    if (!userRes.ok) throw new Error("Can't find user");
     const userData = await userRes.json(); // userData: {_id, firstName, lastName, ...}
+    if (!userRes.ok) throw new Error(userData);
 
     dispatch(setLogin({ user: userData, tokens: refreshData }));
-    return { user: userData, tokens: refreshData };
+
+    return { user: userData, tokens: refreshData, isToken: true };
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    dispatch(setIsLoading(false));
   }
 }
 
@@ -95,10 +114,12 @@ export async function logout(tokens: Token | null) {
       { "Content-Type": "application/json" },
       undefined
     );
-    if (res.ok) {
-      return await res.json();
-    }
+    const data = await res.json();
+    if (!res.ok) throw new Error(data);
+
+    return data;
   } catch (err) {
     console.log(err);
+    throw err;
   }
 }

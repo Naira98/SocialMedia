@@ -8,6 +8,7 @@ export interface ReduxState {
   tokens: Token | null;
   posts: Post[] | [];
   isAuth: boolean;
+  isLoading: boolean;
 }
 
 export interface Token {

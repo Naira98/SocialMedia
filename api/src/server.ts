@@ -57,8 +57,10 @@ app.use("/posts", postRoutes);
 
 mongoose.connect(MONGO_URI);
 app.listen(PORT, () => {
+
   /* ADD DATA ONE TIME */
   // User.insertMany(users);
   // Post.insertMany(posts);
+  
   return console.log(`Express is listening at http://localhost:${PORT}`);
 });

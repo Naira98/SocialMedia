@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Post } from "../../../types/Post";
-import { ReduxState } from "../types/reduxState";
+import { Friend, ReduxState } from "../types/reduxState";
 
 const initialState: ReduxState = {
   mode: "light",
@@ -9,6 +9,7 @@ const initialState: ReduxState = {
   tokens: null,
   posts: [],
   isAuth: false,
+  isLoading: false,
 };
 
 export const authSlice = createSlice({
@@ -30,17 +31,20 @@ export const authSlice = createSlice({
       state.tokens = null;
       state.isAuth = false;
     },
-    setFriends: (state, action) => {
-      // _id[]
-      if (state.user) {
-        state.user.friends = action.payload.friends;
-      } else {
-        console.error("User doesn't exists");
-      }
+    setIsLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setUser: (state, action) => {
+      // {_id, fristName, lastName, ...}
+      state.user = action.payload;
     },
     setFriendsData: (state, action) => {
       // Friend[]
       state.friendsData = action.payload.friends;
+      if (state.user) {
+        state.user.friends =
+          action.payload.friends.map((friend: Friend) => friend._id) || [];
+      }
     },
     setPosts: (state, action) => {
       state.posts = action.payload.posts;
@@ -66,7 +70,8 @@ export const {
   setMode,
   setLogin,
   setLogout,
-  setFriends,
+  setIsLoading,
+  setUser,
   setFriendsData,
   setPosts,
   likeCommentPost,

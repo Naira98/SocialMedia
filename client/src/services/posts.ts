@@ -24,8 +24,9 @@ export async function addPost(
       formData
     );
 
-    if (!res.ok) throw new Error("Can't post!");
     const data = await res.json();
+    if (!res.ok) throw new Error(data);
+  
     return data;
   } catch (err) {
     console.log(err);
@@ -47,12 +48,14 @@ export async function getFeed(tokens: Token | null, userId: string) {
       undefined
     );
 
-    if (!res.ok) throw new Error("Can't get feed!");
     const data = await res.json();
+    if (!res.ok) throw new Error(data);
+
     return data;
   } catch (err) {
     console.log(err);
     throw err;
+    throw err
   }
 }
 
@@ -67,12 +70,14 @@ export async function patchLike(postId: string, tokens: Token | null) {
       },
       undefined
     );
-
-    if (!res.ok) throw new Error("Can't get feed!");
+    
     const data = await res.json();
+    if (!res.ok) throw new Error(data);
+
     return data;
   } catch (err) {
     console.log(err);
+    throw err
   }
 }
 
@@ -92,13 +97,14 @@ export async function addComment(
       JSON.stringify({ comment })
     );
 
-    if (!res.ok) throw new Error("Can't add comment!");
     const data = await res.json();
+    if (!res.ok) throw new Error(data);
 
     // updatedPost with userId populated
     return data;
   } catch (err) {
     console.log(err);
+    console.log(err)
     throw err;
   }
 }
@@ -114,11 +120,12 @@ export async function deletePostApi(postId: string, tokens: Token | null) {
       },
       undefined
     );
-
-    if (!res.ok) throw new Error("Can't delete post!");
     const data = await res.json();
+    if (!res.ok) throw new Error(data);
+
     return data;
   } catch (err) {
     console.log(err);
+    throw err
   }
 }

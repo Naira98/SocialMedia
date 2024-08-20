@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { ReduxState } from "../../types/reduxState";
 import { useSelector } from "react-redux";
-import { setFriends } from "../../redux/authSlice";
+import { setFriendsData } from "../../redux/authSlice";
 import { addRemoveFriend as addRemoveFriendApi } from "../../services/users";
 
 export function useAddDeleteFriend({
@@ -21,7 +21,7 @@ export function useAddDeleteFriend({
       queryClient.invalidateQueries({
         queryKey: ["friends", freindId],
       });
-      dispatch(setFriends({ friends: data }));
+      dispatch(setFriendsData({ friends: data }));
     },
     onError: (err) => {
       toast.error(err.message);

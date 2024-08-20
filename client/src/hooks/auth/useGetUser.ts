@@ -1,17 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUser } from "../../services/auth";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { ReduxState } from "../../types/reduxState";
+import { useNavigate } from "react-router-dom";
+import { getUser } from "../../services/auth";
 
 // const refreshToken = localStorage.getItem("refreshToken");
 // if (refreshToken === null) return navigate("/");
 
 export function useGetUser(refreshToken: string | null) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const tokens = useSelector((state: ReduxState) => state.tokens)!;
   // Mutations
   const { data: userDataAndTokens, isPending } = useQuery({
-    queryKey: ["user"],
-    queryFn: () => getUser(refreshToken!, dispatch),
+    queryKey: ["user", tokens.userId],
+    queryFn: () => getUser(refreshToken, dispatch, navigate),
+    enabled: !!refreshToken,
   });
-  // user = {userData: {}, refreshData: {userId, accessToken, refreshToken}}
+  // user = {userData: {}, refreshData: {userId, accessToken, refreshToken}, isToken: true or false}
   return { userDataAndTokens, isPending };
 }

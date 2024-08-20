@@ -9,7 +9,6 @@ import FlexBetween from "./styledComponents/FlexBetween";
 import { registerFromValues } from "../types/form";
 import { palette } from "../types/ThemeWithPalette";
 import { useRegister } from "../hooks/auth/useRegister";
-import Spinner from "./Spinner";
 
 const initialValuesRegister: registerFromValues = {
   firstName: "",
@@ -38,13 +37,11 @@ const RegisterForm = ({
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { palette } = useTheme() as { palette: palette };
-  const { register, isPending } = useRegister();
+  const { register } = useRegister();
 
   const handleFormSubmit = async (values: registerFromValues) => {
     register({ values, setIsLogin });
   };
-
-  if (isPending) return <Spinner />;
 
   return (
     <Formik
