@@ -13,7 +13,7 @@ export async function addPost(
     formData.append("description", post);
     if (image) {
       formData.append("picture", image);
-      formData.append("picturePath", image.name.replaceAll(" ", "-"));
+
     }
 
     const res: Response = await apiReq(

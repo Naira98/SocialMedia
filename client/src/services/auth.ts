@@ -27,10 +27,6 @@ export async function register(
 ) {
   try {
     const formData = new FormData();
-    formData.append(
-      "picturePath",
-      values.picture ? values.picture.name.replaceAll(" ", "-") : ""
-    );
 
     for (const value in values) {
       formData.append(value, values[value as keyof registerFromValues]);

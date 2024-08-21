@@ -1,9 +1,11 @@
 import fs from "fs";
+import path from 'path';
 import { NextFunction, Response } from "express";
 
 import { RequestWithUser } from "../types/RequestWithUser";
 import Post from "../models/Post";
 import { Post as PostType } from "../../../types/Post";
+import { imagesPath } from "../server";
 
 export const getFeed = async (
   req: RequestWithUser,
@@ -138,17 +140,12 @@ export const deletePost = async (
     const { postId } = req.params;
     const { userId } = req.user;
 
-    const post = await Post.findOne({ _id: postId, userId: userId });
-
-    if (post.picturePath) {
-      const postWithSameImage = await Post.find({
-        picturePath: post.picturePath,
-      });
-      console.log(postWithSameImage);
-      if (postWithSameImage.length === 1) deleteImage(post.picturePath);
-    }
+    const picturePath = (await Post.findOne({ _id: postId, userId: userId }))
+      .picturePath;
 
     await Post.findOneAndDelete({ _id: postId, userId: userId });
+    console.log(picturePath);
+    deleteImage(picturePath);
 
     // return id of deleted post only
     res.status(200).json({ postId });
@@ -157,9 +154,8 @@ export const deletePost = async (
   }
 };
 
-const deleteImage = (path: string) => {
-  console.log(path);
-  fs.unlink(path, (err) => {
+const deleteImage = (imagePath: string) => {
+  fs.unlink(path.join(imagesPath, imagePath), (err) => {
     if (err) console.log(err);
   });
 };

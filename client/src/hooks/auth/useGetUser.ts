@@ -17,7 +17,6 @@ export function useGetUser(refreshToken: string | null) {
   const { data: userDataAndTokens, isPending } = useQuery({
     queryKey: ["user", `${refreshToken && tokens ? tokens.userId : null}`],
     queryFn: () => getUser(refreshToken, dispatch, navigate),
-    enabled: !!refreshToken,
   });
   // user = {userData: {}, refreshData: {userId, accessToken, refreshToken}}
   return { userDataAndTokens, isPending };
