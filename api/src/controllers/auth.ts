@@ -20,8 +20,9 @@ export const register = async (req: Request, res: Response) => {
     picturePath,
   } = req.body;
   try {
+    console.log(req.body)
     const user = await User.findOne({ email: email });
-    if (user) return res.status(409).json("Email already exists");
+    if (user) return res.status(409).json({message: "Email already exists"});
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -55,10 +56,10 @@ export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email: email });
-    if (!user) return res.status(401).json("Wrong Credentials");
+    if (!user) return res.status(401).json({ message: "Wrong Credentials" });
 
     const doMatch = await bcrypt.compare(password, user.password);
-    if (!doMatch) return res.status(401).json("Wrong Credentials");
+    if (!doMatch) return res.status(401).json({ message: "Wrong Credentials" });
 
     const accessToken = generateAccessToken({ userId: user._id });
     const refreshToken = generateRefreshToken({ userId: user._id });
@@ -112,7 +113,7 @@ export const refresh = async (req: Request, res: Response) => {
       }
     );
   } catch (err) {
-    return res.status(401).json(err.message);
+    return res.status(401).json(err);
   }
 };
 
@@ -127,6 +128,6 @@ export const logout = async (
     await Token.deleteMany({ userId: userId });
     return res.status(200).json("Logged out!");
   } catch (err) {
-    return res.status(500).json(err.message);
+    return res.status(500).json(err);
   }
 };

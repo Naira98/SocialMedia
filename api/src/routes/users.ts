@@ -5,22 +5,25 @@ import {
   addRemoveFriend,
   updateAccount,
   addTwitter,
-  addLinkedin
+  addLinkedin,
 } from "../controllers/users";
 import { verifyToken } from "../middlewares/is-auth";
+import {
+  linkValidation,
+  updateAccountValidation,
+} from "../validation/user-validation";
 const router = express.Router();
 
 router.get("/:id", verifyToken, getUser);
 
 router.get("/friends/:id", verifyToken, getUserFriends);
 
-router.patch("/user", verifyToken, updateAccount);
+router.patch("/user", verifyToken, updateAccountValidation, updateAccount);
 
-router.patch("/twitter", verifyToken, addTwitter);
+router.patch("/twitter", verifyToken, linkValidation, addTwitter);
 
-router.patch("/linkedin", verifyToken, addLinkedin);
+router.patch("/linkedin", verifyToken, linkValidation, addLinkedin);
 
 router.patch("/:friendId", verifyToken, addRemoveFriend);
-
 
 export default router;

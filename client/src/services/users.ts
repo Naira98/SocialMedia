@@ -13,7 +13,7 @@ export async function addRemoveFriend(friendId: string, tokens: Token | null) {
       undefined
     );
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
     return data;
   } catch (err) {
     console.log(err);
@@ -35,7 +35,7 @@ export async function getFetchFriends(tokens: Token, userId: string) {
     );
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
     return data;
   } catch (err) {
     console.log(err);
@@ -55,7 +55,7 @@ export async function getProfileUser(userId: string, tokens: Token | null) {
     );
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
 
     return data;
   } catch (err) {
@@ -81,7 +81,7 @@ export async function updateAccount(
       JSON.stringify({ userId, firstName, lastName })
     );
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
 
     return data;
   } catch (err) {
@@ -105,7 +105,7 @@ export async function addTwitter(
       JSON.stringify({ userId, link })
     );
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
 
     return data;
   } catch (err) {
@@ -130,7 +130,7 @@ export async function addLinkedin(
       JSON.stringify({ userId, link })
     );
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
     
     return data;
   } catch (err) {

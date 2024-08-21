@@ -16,6 +16,8 @@ import postRoutes from "./routes/posts";
 import { users, posts } from "../data/index.js";
 import User from "./models/User";
 import Post from "./models/Post";
+import { registerValidation } from "./validation/auth-validate";
+import { addPostValidation } from "./validation/posts-validation";
 
 const PORT = 3000;
 const app = express();
@@ -34,7 +36,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "..", "public", "assets"));
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname.replaceAll(' ', '-'));
+    cb(null, file.originalname.replaceAll(" ", "-"));
   },
 });
 
@@ -48,8 +50,19 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), addPost);
+app.post(
+  "/auth/register",
+  upload.single("picture"),
+  registerValidation,
+  register
+);
+app.post(
+  "/posts",
+  verifyToken,
+  upload.single("picture"),
+  addPostValidation,
+  addPost
+);
 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
@@ -57,10 +70,9 @@ app.use("/posts", postRoutes);
 
 mongoose.connect(MONGO_URI);
 app.listen(PORT, () => {
-
   /* ADD DATA ONE TIME */
   // User.insertMany(users);
   // Post.insertMany(posts);
-  
+
   return console.log(`Express is listening at http://localhost:${PORT}`);
 });

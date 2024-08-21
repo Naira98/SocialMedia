@@ -1,5 +1,6 @@
 import fs from "fs";
 import { NextFunction, Response } from "express";
+
 import { RequestWithUser } from "../types/RequestWithUser";
 import Post from "../models/Post";
 import { Post as PostType } from "../../../types/Post";
@@ -70,7 +71,7 @@ export const likePost = async (
       "userId",
       "firstName lastName picturePath"
     );
-    if (!post) return res.status(404).json("Post not found");
+    if (!post) return res.status(404).json({message: "Post not found"});
 
     const isLiked = post.likes.get(userId);
 
@@ -102,7 +103,7 @@ export const commentPost = async (
       "userId",
       "firstName lastName picturePath"
     );
-    if (!post) return res.status(404).json("Post not found");
+    if (!post) return res.status(404).json({message: "Post not found"});
 
     // return updated post only
     res.status(200).json(post);

@@ -13,7 +13,8 @@ export async function login(values: loginFormValues) {
       body: JSON.stringify(values),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    console.log(data);
+    if (!res.ok) throw new Error(data.message);
     return data;
   } catch (err) {
     console.log(err);
@@ -23,7 +24,7 @@ export async function login(values: loginFormValues) {
 
 export async function register(
   values: registerFromValues,
-  setIsLogin: (isLogin: boolean) => void
+  setIsLogin: (isLogin: boolean) => void,
 ) {
   try {
     const formData = new FormData();
@@ -31,22 +32,26 @@ export async function register(
       "picturePath",
       values.picture ? values.picture.name.replaceAll(" ", "-") : ""
     );
+
     for (const value in values) {
       formData.append(value, values[value as keyof registerFromValues]);
     }
+
+    // for (const pair of formData.entries()) {
+    //   console.log(pair[0] + ", " + pair[1]);
+    // }
 
     const res = await fetch("http://localhost:3000/auth/register", {
       method: "POST",
       body: formData,
     });
-    console.log(res);
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
-    console.log(data);
+    if (!res.ok) throw new Error(data.message);
     if (data) setIsLogin(true);
   } catch (err) {
     console.log(err);
+    values.picture = null
     throw err;
   }
 }
@@ -73,7 +78,7 @@ export async function getUser(
     });
 
     const refreshData = await refreshRes.json(); // {userId, accessToken, refreshToken}
-    if (!refreshRes.ok) throw new Error(refreshData);
+    if (!refreshRes.ok) throw new Error(refreshData.message);
 
     localStorage.setItem("refreshToken", refreshData.refreshToken);
 
@@ -89,7 +94,7 @@ export async function getUser(
     );
 
     const userData = await userRes.json(); // userData: {_id, firstName, lastName, ...}
-    if (!userRes.ok) throw new Error(userData);
+    if (!userRes.ok) throw new Error(userData.message);
 
     dispatch(setLogin({ user: userData, tokens: refreshData }));
 
@@ -112,7 +117,7 @@ export async function logout(tokens: Token | null) {
       undefined
     );
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
 
     return data;
   } catch (err) {

@@ -10,7 +10,7 @@ export const getUser = async (
   try {
     const { id } = req.params;
     const user = await User.findById(id, "-password -createdAt -updatedAt");
-    if (!user) return res.status(404).json("User not found");
+    if (!user) return res.status(404).json({ message: "User not found" });
     return res.status(200).json(user);
   } catch (err) {
     return res.status(500).json(err);
@@ -25,7 +25,7 @@ export const getUserFriends = async (
   try {
     const { id } = req.params;
     const user = await User.findById(id);
-    if (!user) return res.status(404).json("User not found");
+    if (!user) return res.status(404).json({ message: "User not found" });
     const friends = await Promise.all(
       user.friends.map((id) =>
         User.findById(id).select(
@@ -50,7 +50,7 @@ export const addRemoveFriend = async (
     const { friendId } = req.params;
 
     if (userId.toString() === friendId.toString())
-      return res.status(400).json("You can't follow yourself");
+      return res.status(400).json({ message: "You can't follow yourself" });
 
     const user = await User.findById(userId);
     const friend = await User.findById(friendId);
@@ -88,7 +88,9 @@ export const updateAccount = async (
     let { userId, firstName, lastName } = req.body;
 
     if (req.user.toString() === userId.toString()) {
-      return res.status(403).json("Can't add link to another user");
+      return res
+        .status(403)
+        .json({ message: "Can't add link to another user" });
     }
 
     const user = await User.findOneAndUpdate(
@@ -124,7 +126,9 @@ export const addTwitter = async (
     let { userId, link } = req.body;
 
     if (req.user.toString() === userId.toString()) {
-      return res.status(403).json("Can't add link to another user");
+      return res
+        .status(403)
+        .json({ message: "Can't add link to another user" });
     }
 
     const user = await User.findOneAndUpdate(
@@ -149,7 +153,9 @@ export const addLinkedin = async (
     let { userId, link } = req.body;
 
     if (req.user.toString() === userId.toString()) {
-      return res.status(403).json("Can't add link to another user");
+      return res
+        .status(403)
+        .json({ message: "Can't add link to another user" });
     }
 
     const user = await User.findOneAndUpdate(
@@ -157,7 +163,6 @@ export const addLinkedin = async (
       { linkedin: link },
       { returnDocument: "after" }
     );
-
 
     // return updatedUser
     res.status(200).json(user);

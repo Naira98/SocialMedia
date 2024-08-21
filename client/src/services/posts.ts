@@ -25,8 +25,8 @@ export async function addPost(
     );
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
-  
+    if (!res.ok) throw new Error(data.message);
+
     return data;
   } catch (err) {
     console.log(err);
@@ -49,13 +49,13 @@ export async function getFeed(tokens: Token | null, userId: string) {
     );
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
 
     return data;
   } catch (err) {
     console.log(err);
     throw err;
-    throw err
+    throw err;
   }
 }
 
@@ -70,14 +70,14 @@ export async function patchLike(postId: string, tokens: Token | null) {
       },
       undefined
     );
-    
+
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
 
     return data;
   } catch (err) {
     console.log(err);
-    throw err
+    throw err;
   }
 }
 
@@ -98,18 +98,18 @@ export async function addComment(
     );
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
 
     // updatedPost with userId populated
     return data;
   } catch (err) {
     console.log(err);
-    console.log(err)
+    console.log(err);
     throw err;
   }
 }
 
-export async function deletePostApi(postId: string, tokens: Token | null) {
+export async function deletePost(postId: string, tokens: Token | null) {
   try {
     const res: Response = await apiReq(
       "DELETE",
@@ -121,11 +121,11 @@ export async function deletePostApi(postId: string, tokens: Token | null) {
       undefined
     );
     const data = await res.json();
-    if (!res.ok) throw new Error(data);
+    if (!res.ok) throw new Error(data.message);
 
     return data;
   } catch (err) {
     console.log(err);
-    throw err
+    throw err;
   }
 }

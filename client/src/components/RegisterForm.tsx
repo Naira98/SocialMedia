@@ -9,6 +9,7 @@ import FlexBetween from "./styledComponents/FlexBetween";
 import { registerFromValues } from "../types/form";
 import { palette } from "../types/ThemeWithPalette";
 import { useRegister } from "../hooks/auth/useRegister";
+import toast from "react-hot-toast";
 
 const initialValuesRegister: registerFromValues = {
   firstName: "",
@@ -17,7 +18,6 @@ const initialValuesRegister: registerFromValues = {
   password: "",
   location: "",
   occupation: "",
-  profilePicPath: "",
   picture: null,
 };
 
@@ -28,7 +28,7 @@ const registerSchema = yup.object().shape({
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+  // picture: yup.string().required("required"),
 });
 
 const RegisterForm = ({
@@ -40,7 +40,11 @@ const RegisterForm = ({
   const { register } = useRegister();
 
   const handleFormSubmit = async (values: registerFromValues) => {
-    register({ values, setIsLogin });
+    if (!values.picture) {
+      toast.error("Please choose a profile picture");
+    } else {
+      register({ values, setIsLogin });
+    }
   };
 
   return (

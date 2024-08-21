@@ -1,9 +1,10 @@
 import { Request } from "express";
 
 export interface RequestWithUser extends Request {
-  user: { userId: string };
+  user: Payload
 }
 
-// type RequestWithUser = Request & {
-//     user: {};
-//   };
+export interface Payload {
+  userId: string
+}
+

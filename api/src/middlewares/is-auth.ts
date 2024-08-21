@@ -1,8 +1,13 @@
 import jwt from "jsonwebtoken";
 import { ACCESS_SECRET } from "../config";
-import { NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
+import { Payload, RequestWithUser } from "../types/RequestWithUser";
 
-export const verifyToken = (req, res, next) => {
+export const verifyToken = (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let token = req.header("Authorization");
     if (!token) return res.status(403).json({ message: "Access Decliend" });
@@ -10,7 +15,7 @@ export const verifyToken = (req, res, next) => {
     if (token.startsWith("Bearer ")) {
       token = token.split(" ").at(1);
     }
-    jwt.verify(token, ACCESS_SECRET, (err, user) => {
+    jwt.verify(token, ACCESS_SECRET, (err, user: Payload) => {
       if (err) return res.status(403).json({ message: "Token invalid" });
       req.user = user;
       next();
