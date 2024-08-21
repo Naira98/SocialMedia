@@ -144,7 +144,6 @@ export const deletePost = async (
       .picturePath;
 
     await Post.findOneAndDelete({ _id: postId, userId: userId });
-    console.log(picturePath);
     deleteImage(picturePath);
 
     // return id of deleted post only
