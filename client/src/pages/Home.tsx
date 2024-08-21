@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { Box, useMediaQuery } from "@mui/material";
+
 import UserWidget from "../components/widgets/UserWidget";
 import AddPostWidget from "../components/widgets/AddPostWidget";
 import PostsWidget from "../components/widgets/PostsWidget";
@@ -9,7 +10,6 @@ import { ReduxState } from "../types/reduxState";
 
 const Home = () => {
   const user = useSelector((state: ReduxState) => state.user);
-  console.log(user)
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
 
   return (

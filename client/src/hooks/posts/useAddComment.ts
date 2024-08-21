@@ -23,6 +23,7 @@ export function useAddComment(
     onSuccess: (post) => {
       // posts = Post  updated post only with userId populated
       queryClient.invalidateQueries({ queryKey: ["posts", tokens.userId] });
+      queryClient.invalidateQueries({ queryKey: ["posts", 'feed'] });
       dispatch(likeCommentPost({ post }));
       setComment("");
     },

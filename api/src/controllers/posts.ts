@@ -33,7 +33,6 @@ export const getProfileFeed = async (
   try {
     // posts/:userId
     const { userId } = req.params;
-    console.log(userId);
 
     const posts: PostType[] = await Post.find({ userId: userId })
       .populate("userId", "firstName lastName picturePath")

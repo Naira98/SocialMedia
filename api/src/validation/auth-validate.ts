@@ -36,7 +36,6 @@ export const registerValidation = async (
   next: NextFunction
 ) => {
   const { body } = req;
-  console.log(req.body);
 
   const registerSchema = Joi.object().keys({
     firstName: Joi.string().alphanum().min(3).max(30).required(),

@@ -13,7 +13,6 @@ export async function login(values: loginFormValues) {
       body: JSON.stringify(values),
     });
     const data = await res.json();
-    console.log(data);
     if (!res.ok) throw new Error(data.message);
     return data;
   } catch (err) {

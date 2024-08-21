@@ -40,7 +40,6 @@ export async function getFeed(
   isProfile: boolean
 ) {
   try {
-    console.log(isProfile);
     if (!tokens?.refreshToken) return null;
 
     let res: Response;

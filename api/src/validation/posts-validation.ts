@@ -7,7 +7,6 @@ export const addPostValidation = async (
   next: NextFunction
 ) => {
   const { body } = req;
-  console.log(req.body);
 
   const addPostSchmea = Joi.object().keys({
     description: Joi.string().required(),
