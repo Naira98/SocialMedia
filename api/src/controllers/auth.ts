@@ -20,7 +20,6 @@ export const register = async (req: Request, res: Response) => {
     picturePath,
   } = req.body;
   try {
-    console.log(req.body)
     const user = await User.findOne({ email: email });
     if (user) return res.status(409).json({message: "Email already exists"});
 

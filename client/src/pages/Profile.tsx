@@ -1,18 +1,30 @@
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Box, useMediaQuery } from "@mui/material";
+import toast from "react-hot-toast";
 
 import UserWidget from "../components/widgets/UserWidget";
 import PostsWidget from "../components/widgets/PostsWidget";
 import FriendListWidget from "../components/widgets/FriendListWidget";
 import AdvertiseWidget from "../components/widgets/AdvertiseWidget";
-import { useProfileUser } from "../hooks/users/useProfileUser";
-import toast from "react-hot-toast";
 import Spinner from "../components/Spinner";
+import { useProfileUser } from "../hooks/users/useProfileUser";
+import { ReduxState } from "../types/reduxState";
+import { User } from "../../../types/User";
 
 const Profile = () => {
   const { userId } = useParams() as { userId: string };
 
-  const { profile, isPending, error } = useProfileUser(userId);
+  const currentUser = useSelector((state: ReduxState) => state.user)!;
+
+  const { data, isPending, error } = useProfileUser(userId);
+
+  let profile: User;
+  if (userId === currentUser._id) {
+    profile = data.user;
+  } else {
+    profile = data;
+  }
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
 
   if (isPending) return <Spinner />;
@@ -34,13 +46,13 @@ const Profile = () => {
           <Box flexBasis="26%">
             <UserWidget
               user={profile}
-              key={profile._id.toString()}
+              key={profile._id}
               isMobileScreen={isMobileScreen}
             />
           </Box>
           <Box flexBasis="64%">
             <PostsWidget
-              userId={userId}
+              userId={profile._id.toString()}
               key={profile._id.toString()}
               isProfile={true}
             />

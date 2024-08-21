@@ -8,6 +8,7 @@ export const getUser = async (
   next: NextFunction
 ) => {
   try {
+    // get current user or profile user (useGetUser, useProfileUser)
     const { id } = req.params;
     const user = await User.findById(id, "-password -createdAt -updatedAt");
     if (!user) return res.status(404).json({ message: "User not found" });

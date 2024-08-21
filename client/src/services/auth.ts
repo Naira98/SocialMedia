@@ -1,7 +1,7 @@
 import apiReq from "./apiReq";
 import { loginFormValues, registerFromValues } from "../types/form";
 import { Token } from "../types/reduxState";
-import { setIsLoading, setLogin } from "../redux/authSlice";
+import { setLogin } from "../redux/authSlice";
 import { Dispatch } from "@reduxjs/toolkit";
 import { NavigateFunction } from "react-router-dom";
 
@@ -24,7 +24,7 @@ export async function login(values: loginFormValues) {
 
 export async function register(
   values: registerFromValues,
-  setIsLogin: (isLogin: boolean) => void,
+  setIsLogin: (isLogin: boolean) => void
 ) {
   try {
     const formData = new FormData();
@@ -51,7 +51,7 @@ export async function register(
     if (data) setIsLogin(true);
   } catch (err) {
     console.log(err);
-    values.picture = null
+    values.picture = null;
     throw err;
   }
 }
@@ -64,10 +64,8 @@ export async function getUser(
   try {
     if (!refreshToken) {
       navigate("/");
-      // return {isToken: false};
+      return null;
     }
-
-    dispatch(setIsLoading(true));
 
     const refreshRes = await fetch("http://localhost:3000/auth/refresh", {
       method: "POST",
@@ -102,8 +100,6 @@ export async function getUser(
   } catch (err) {
     console.log(err);
     throw err;
-  } finally {
-    dispatch(setIsLoading(false));
   }
 }
 

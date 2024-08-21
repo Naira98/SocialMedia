@@ -34,19 +34,37 @@ export async function addPost(
   }
 }
 
-export async function getFeed(tokens: Token | null, userId: string) {
+export async function getFeed(
+  tokens: Token | null,
+  userId: string | null,
+  isProfile: boolean
+) {
   try {
+    console.log(isProfile);
     if (!tokens?.refreshToken) return null;
 
-    const res: Response = await apiReq(
-      "GET",
-      `/posts/${userId}`,
-      tokens,
-      {
-        "Content-Type": "application/json",
-      },
-      undefined
-    );
+    let res: Response;
+    if (!isProfile) {
+      res = await apiReq(
+        "GET",
+        `/posts`,
+        tokens,
+        {
+          "Content-Type": "application/json",
+        },
+        undefined
+      );
+    } else {
+      res = await apiReq(
+        "GET",
+        `/posts/${userId}`,
+        tokens,
+        {
+          "Content-Type": "application/json",
+        },
+        undefined
+      );
+    }
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
@@ -54,7 +72,6 @@ export async function getFeed(tokens: Token | null, userId: string) {
     return data;
   } catch (err) {
     console.log(err);
-    throw err;
     throw err;
   }
 }

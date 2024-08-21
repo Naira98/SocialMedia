@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getFeed,
+  getProfileFeed,
   likePost,
   commentPost,
   deletePost,
@@ -9,7 +10,9 @@ import { verifyToken } from "../middlewares/is-auth";
 import { addCommentValidation } from "../validation/posts-validation";
 const router = express.Router();
 
-router.get("/:userId", verifyToken, getFeed);
+router.get("/", verifyToken, getFeed);
+
+router.get("/:userId", verifyToken, getProfileFeed);
 
 router.patch("/:postId", verifyToken, likePost);
 

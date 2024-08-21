@@ -11,10 +11,11 @@ import { getUser } from "../../services/auth";
 export function useGetUser(refreshToken: string | null) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const tokens = useSelector((state: ReduxState) => state.tokens)!;
+  const tokens = useSelector((state: ReduxState) => state.tokens);
+
   // Mutations
   const { data: userDataAndTokens, isPending } = useQuery({
-    queryKey: ["user", tokens.userId],
+    queryKey: ["user", `${refreshToken && tokens ? tokens.userId : null}`],
     queryFn: () => getUser(refreshToken, dispatch, navigate),
     enabled: !!refreshToken,
   });

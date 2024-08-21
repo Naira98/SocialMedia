@@ -9,7 +9,6 @@ const initialState: ReduxState = {
   tokens: null,
   posts: [],
   isAuth: false,
-  isLoading: false,
 };
 
 export const authSlice = createSlice({
@@ -30,9 +29,6 @@ export const authSlice = createSlice({
       state.user = null;
       state.tokens = null;
       state.isAuth = false;
-    },
-    setIsLoading: (state, action) => {
-      state.isLoading = action.payload;
     },
     setUser: (state, action) => {
       // {_id, fristName, lastName, ...}
@@ -70,7 +66,6 @@ export const {
   setMode,
   setLogin,
   setLogout,
-  setIsLoading,
   setUser,
   setFriendsData,
   setPosts,

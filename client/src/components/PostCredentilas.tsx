@@ -69,7 +69,7 @@ const PostCredentilas = ({
             </Typography>
           </Link>
           <Typography color={medium} fontSize="0.75rem">
-            {date + ' ago' || user.occupation}
+            {date ? date + ' ago' : user.occupation}
           </Typography>
         </Box>
       </FlexBetween>

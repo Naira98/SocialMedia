@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 // dispatch outside
 // dispatch(setPosts({ posts: data }));
 
-export function useGetFeed(refreshToken: string | null, userId: string) {
+export function useGetFeed(refreshToken: string | null, userId: string, isProfile: boolean) {
   const tokens = useSelector((state: ReduxState) => state.tokens)!;
 
   const {
@@ -15,8 +15,8 @@ export function useGetFeed(refreshToken: string | null, userId: string) {
     isPending,
     error,
   } = useQuery({
-    queryKey: ["posts", userId],
-    queryFn: () => getFeed(tokens, userId),
+    queryKey: ["posts", `${isProfile ? userId : 'feed'}`],
+    queryFn: () => getFeed(tokens, userId, isProfile),
     enabled: !!refreshToken,
   });
   return { feed, isPending, error };

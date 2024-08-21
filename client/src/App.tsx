@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { createTheme } from "@mui//material/styles";
 import { Toaster } from "react-hot-toast";
@@ -15,11 +15,8 @@ import { ReduxState } from "./types/reduxState";
 import { ThemeWithPalette } from "./types/ThemeWithPalette";
 import { getRefreshToken } from "./util/helpers";
 import Spinner from "./components/Spinner";
-import { useDispatch } from "react-redux";
-import { getUser } from "./services/auth";
-import { setLogin } from "./redux/authSlice";
 import ProtectedLogin from "./components/ProtectedLogin";
-// import { useGetUser } from "./hooks/auth/useGetUser";
+import { useGetUser } from "./hooks/auth/useGetUser";
 
 const App = () => {
   const mode = useSelector((state: ReduxState) => state.mode);
@@ -29,31 +26,10 @@ const App = () => {
   );
   const refreshToken = getRefreshToken();
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const isLoading = useSelector((state: ReduxState) => state.isLoading);
-  // const {userDataAndTokens, isPending} = useGetUser(refreshToken);
+  const {isPending} = useGetUser(refreshToken);
 
-  // console.log(userDataAndTokens)
 
-  // console.log(userDataAndTokens?.isToken && isPending)
-
-  useEffect(() => {
-    if (refreshToken === null) return navigate("/");
-    const fetchUesr = async () => {
-      const data = await getUser(refreshToken, dispatch, navigate);
-      if (data) {
-        // console.log(data)
-        dispatch(setLogin({ user: data.user, tokens: data.tokens }));
-        if (document.location.pathname == "/") navigate("/home");
-      }
-
-      // console.log(data);
-    };
-    fetchUesr();
-  }, [dispatch, navigate, refreshToken]);
-
-  if (isLoading) return <Spinner />;
+  if (isPending) return <Spinner />;
 
   return (
     <div className="app">

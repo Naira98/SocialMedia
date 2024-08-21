@@ -27,7 +27,8 @@ const PostsWidget = ({
     if (!refreshToken) navigate("/");
   }, [navigate, refreshToken]);
 
-  const { feed, isPending, error } = useGetFeed(refreshToken, userId);
+  const { feed, isPending, error } = useGetFeed(refreshToken, userId, isProfile);
+  
   useEffect(() => {
     if (feed) dispatch(setPosts({ posts: feed }));
   }, [dispatch, feed]);
@@ -42,6 +43,7 @@ const PostsWidget = ({
       key={`${post._id.toString()}-${i}`}
       post={post}
       isProfile={isProfile}
+      i = {i}
     />
   ));
 };

@@ -26,9 +26,11 @@ import { useAddComment } from "../../hooks/posts/useAddComment";
 const PostWidget = ({
   post,
   isProfile,
+  i
 }: {
   post: Post;
   isProfile: boolean;
+  i: number
 }) => {
   const {
     _id: postId,
@@ -58,7 +60,7 @@ const PostWidget = ({
   const primary = palette.primary.main;
 
   return (
-    <WidgetWrapper palette={palette} m="2rem 0">
+    <WidgetWrapper palette={palette} m={isProfile && i === 0 ? "0": "2rem 0"}>
       <PostCredentilas
         user={userData}
         createdAt={createdAt}

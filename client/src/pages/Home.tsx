@@ -9,6 +9,7 @@ import { ReduxState } from "../types/reduxState";
 
 const Home = () => {
   const user = useSelector((state: ReduxState) => state.user);
+  console.log(user)
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
 
   return (
