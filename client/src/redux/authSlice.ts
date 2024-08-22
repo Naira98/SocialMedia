@@ -3,7 +3,7 @@ import { Post } from "../../../types/Post";
 import { Friend, ReduxState } from "../types/reduxState";
 
 const initialState: ReduxState = {
-  mode: localStorage.getItem('mode')  || "light",
+  mode: localStorage.getItem("mode") || "light",
   user: null,
   friendsData: null,
   tokens: null,
@@ -18,6 +18,12 @@ export const authSlice = createSlice({
     setMode: (state) => {
       localStorage.setItem("mode", state.mode === "light" ? "dark" : "light");
       state.mode = state.mode === "light" ? "dark" : "light";
+    },
+    setTokens: (state, action) => {
+      // payload = {accessToken, refreshToken, userId}
+      if (state.user && state.tokens?.userId === state.user._id) {
+        state.tokens = action.payload;
+      }
     },
     setLogin: (state, action) => {
       // payload = {user: {}, tokens: {}}
@@ -66,6 +72,7 @@ export const {
   setMode,
   setLogin,
   setLogout,
+  setTokens,
   setUser,
   setFriendsData,
   setPosts,

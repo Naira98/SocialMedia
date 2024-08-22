@@ -1,9 +1,9 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { createTheme } from "@mui//material/styles";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { themeSettings } from "./theme";
 
 import Home from "./pages/Home";
@@ -25,9 +25,14 @@ const App = () => {
     [mode]
   );
   const refreshToken = getRefreshToken();
+  const navigate = useNavigate();
 
-  const {isPending} = useGetUser(refreshToken);
-
+  const { userDataAndTokens, isPending, error } = useGetUser(refreshToken);
+  
+  useEffect(() => {
+    if (userDataAndTokens == null) navigate("/");
+  }, [userDataAndTokens, navigate]);
+  if (error) toast.error(error.message);
 
   if (isPending) return <Spinner />;
 

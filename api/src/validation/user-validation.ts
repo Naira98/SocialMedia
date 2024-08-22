@@ -37,8 +37,8 @@ export const linkValidation = async (
   const { body } = req;
 
   const addTwitterSchema = Joi.object().keys({
-    userId: Joi.string().min(1).max(25).required(),
-    link: Joi.string().min(3).max(50).required(),
+    userId: Joi.string().alphanum().min(1).max(25).required(),
+    link: Joi.string().alphanum().min(3).max(50).required(),
   });
 
   const result = addTwitterSchema.validate(body);

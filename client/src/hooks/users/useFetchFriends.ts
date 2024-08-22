@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
+import { useSelector, useDispatch } from "react-redux";
+
 import { Friend, ReduxState } from "../../types/reduxState";
-import { useSelector } from "react-redux";
 import { getFetchFriends } from "../../services/users";
+import { useNavigate } from "react-router-dom";
 
 // if (!token)
 // dispatch outside
@@ -10,14 +12,16 @@ import { getFetchFriends } from "../../services/users";
 // open profile page and return profile friends
 export function useFetchFriends(refreshToken: string | null, userId: string) {
   const tokens = useSelector((state: ReduxState) => state.tokens)!;
-  
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+
   const {
     data: friends,
     isPending,
     error,
   } = useQuery({
     queryKey: ["friends", userId],
-    queryFn: (): Promise<Friend[]> => getFetchFriends(tokens, userId),
+    queryFn: (): Promise<Friend[]> => getFetchFriends(tokens, userId, dispatch, navigate),
     enabled: !!refreshToken,
   });
 

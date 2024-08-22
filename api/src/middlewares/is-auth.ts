@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { ACCESS_SECRET } from "../config";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { Payload, RequestWithUser } from "../types/RequestWithUser";
 
 export const verifyToken = (

@@ -20,9 +20,8 @@ import {
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
 import FlexBetween from "./styledComponents/FlexBetween";
-import { setMode } from "../redux/authSlice";
+import { setLogout, setMode } from "../redux/authSlice";
 import UserImage from "./UserImage";
-import { useLogout } from "../hooks/auth/useLogout";
 import { ReduxState } from "../types/reduxState";
 import { ThemeWithPalette } from "../types/ThemeWithPalette";
 
@@ -34,7 +33,6 @@ const Nvabar = () => {
   const tokens = useSelector((state: ReduxState) => state.tokens);
   const mode = useSelector((state: ReduxState) => state.mode) && modeStorage;
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
-  const { logout } = useLogout();
 
   const theme = useTheme() as ThemeWithPalette;
   const neutralLight = theme.palette.neutral.light;
@@ -42,6 +40,12 @@ const Nvabar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user?.firstName} ${user?.lastName}`;
+
+  const logout = () => {
+    dispatch(setLogout());
+    localStorage.removeItem("refreshToken");
+    navigate("/");
+  };
 
   return (
     <div style={{ position: "sticky", top: "0", left: "0", zIndex: "99" }}>

@@ -8,6 +8,7 @@ import {
 } from "../controllers/posts";
 import { verifyToken } from "../middlewares/is-auth";
 import { addCommentValidation } from "../validation/posts-validation";
+
 const router = express.Router();
 
 router.get("/", verifyToken, getFeed);

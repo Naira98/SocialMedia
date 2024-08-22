@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFeed } from "../../services/posts";
 import { ReduxState } from "../../types/reduxState";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // if (!token)
 // dispatch outside
@@ -9,6 +10,8 @@ import { useSelector } from "react-redux";
 
 export function useGetFeed(refreshToken: string | null, userId: string, isProfile: boolean) {
   const tokens = useSelector((state: ReduxState) => state.tokens)!;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     data: feed,
@@ -16,7 +19,7 @@ export function useGetFeed(refreshToken: string | null, userId: string, isProfil
     error,
   } = useQuery({
     queryKey: ["posts", `${isProfile ? userId : 'feed'}`],
-    queryFn: () => getFeed(tokens, userId, isProfile),
+    queryFn: () => getFeed(tokens, userId, isProfile, dispatch, navigate),
     enabled: !!refreshToken,
   });
   return { feed, isPending, error };

@@ -1,21 +1,25 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+
 import { deletePost as deletePostApi } from "../../services/posts";
 import { ReduxState } from "../../types/reduxState";
-import { useSelector } from "react-redux";
 import { deletePost as deletePostAction } from "../../redux/authSlice";
+import { useNavigate } from "react-router-dom";
 
 export function useDeletePost() {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const tokens = useSelector((state: ReduxState) => state.tokens)!;
   // Mutations
   const { mutate: deletePost } = useMutation({
-    mutationFn: (postId: string) => deletePostApi(postId, tokens),
+    mutationFn: (postId: string) =>
+      deletePostApi(postId, tokens, dispatch, navigate),
     onSuccess: (data) => {
       //data= postId
       queryClient.invalidateQueries({ queryKey: ["posts", tokens.userId] });
+      queryClient.invalidateQueries({ queryKey: ["posts", "feed"] });
       dispatch(deletePostAction(data));
     },
     onError: (err) => {

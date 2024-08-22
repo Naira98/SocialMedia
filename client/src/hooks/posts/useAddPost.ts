@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { addPost as addPostApi } from "../../services/posts";
 import { ReduxState } from "../../types/reduxState";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export function useAddPost(
   setImage: React.Dispatch<React.SetStateAction<File | null>>,
@@ -13,6 +14,7 @@ export function useAddPost(
 ) {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const tokens = useSelector((state: ReduxState) => state.tokens)!;
   // Mutations
   const {
@@ -28,7 +30,7 @@ export function useAddPost(
       post: string;
       image: File | null;
       location: string;
-    }) => addPostApi(post, image, tokens, location),
+    }) => addPostApi(post, image, tokens, location, dispatch, navigate),
     onSuccess: (posts) => {
       // posts = Post[] allPosts
       queryClient.setQueryData(["posts", tokens.userId], posts);

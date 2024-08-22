@@ -1,9 +1,8 @@
-import apiReq from "./apiReq";
 import { loginFormValues, registerFromValues } from "../types/form";
-import { Token } from "../types/reduxState";
 import { setLogin } from "../redux/authSlice";
 import { Dispatch } from "@reduxjs/toolkit";
 import { NavigateFunction } from "react-router-dom";
+import { User } from "../../../types/User";
 
 export async function login(values: loginFormValues) {
   try {
@@ -52,6 +51,7 @@ export async function register(
 }
 
 export async function getUser(
+  user: User | null,
   refreshToken: string | null,
   dispatch: Dispatch,
   navigate: NavigateFunction
@@ -70,10 +70,12 @@ export async function getUser(
       body: JSON.stringify({ refreshToken }),
     });
 
-    const refreshData = await refreshRes.json(); // {userId, accessToken, refreshToken}
-    if (!refreshRes.ok) throw new Error(refreshData.message);
+    const refreshData = await refreshRes.json(); // {userId, accessToken}
 
-    localStorage.setItem("refreshToken", refreshData.refreshToken);
+    if (!refreshRes.ok) {
+      navigate("/");
+      return null;
+    }
 
     const userRes = await fetch(
       `http://localhost:3000/users/${refreshData.userId}`,
@@ -87,30 +89,17 @@ export async function getUser(
     );
 
     const userData = await userRes.json(); // userData: {_id, firstName, lastName, ...}
+
     if (!userRes.ok) throw new Error(userData.message);
 
-    dispatch(setLogin({ user: userData, tokens: refreshData }));
+    console.log(user);
+    console.log(userData._id);
+    if (user?._id !== userData._id)
+      console.log(userData)
+    console.log(refreshData)
+      dispatch(setLogin({ user: userData, tokens: refreshData }));
 
-    return { user: userData, tokens: refreshData };
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-}
-
-export async function logout(tokens: Token | null) {
-  try {
-    const res: Response = await apiReq(
-      "POST",
-      "/auth/logout",
-      tokens,
-      { "Content-Type": "application/json" },
-      undefined
-    );
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message);
-
-    return data;
+    return { user: userData, tokens: refreshToken };
   } catch (err) {
     console.log(err);
     throw err;

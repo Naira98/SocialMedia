@@ -12,6 +12,7 @@ import {
   linkValidation,
   updateAccountValidation,
 } from "../validation/user-validation";
+
 const router = express.Router();
 
 router.get("/:id", verifyToken, getUser);

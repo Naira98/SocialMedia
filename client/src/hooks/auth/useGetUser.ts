@@ -12,12 +12,13 @@ export function useGetUser(refreshToken: string | null) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const tokens = useSelector((state: ReduxState) => state.tokens);
+  const user = useSelector((state: ReduxState) => state.user);
 
   // Mutations
-  const { data: userDataAndTokens, isPending } = useQuery({
+  const { data: userDataAndTokens, isPending, error } = useQuery({
     queryKey: ["user", `${refreshToken && tokens ? tokens.userId : null}`],
-    queryFn: () => getUser(refreshToken, dispatch, navigate),
+    queryFn: () => getUser(user, refreshToken, dispatch, navigate),
   });
-  // user = {userData: {}, refreshData: {userId, accessToken, refreshToken}}
-  return { userDataAndTokens, isPending };
+  // user = {userData: {}, refreshData: {userId, accessToken}}
+  return { userDataAndTokens, isPending, error };
 }

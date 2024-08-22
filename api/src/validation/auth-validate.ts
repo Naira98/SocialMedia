@@ -44,8 +44,8 @@ export const registerValidation = async (
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
       .required(),
     password: Joi.string().min(4).max(10).required(),
-    location: Joi.string().alphanum().min(3).max(30).required(),
-    occupation: Joi.string().alphanum().min(3).max(30).required(),
+    location: Joi.string().min(3).max(30).required(),
+    occupation: Joi.string().min(3).max(30).required(),
     picturePath: Joi.required(),
   });
 

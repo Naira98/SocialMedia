@@ -1,11 +1,15 @@
+import { Dispatch } from "@reduxjs/toolkit";
 import { Token } from "../types/reduxState";
 import apiReq from "./apiReq";
+import { NavigateFunction } from "react-router-dom";
 
 export async function addPost(
   post: string,
   image: File | null,
   tokens: Token,
-  location: string
+  location: string,
+  dispatch: Dispatch,
+  navigate: NavigateFunction
 ) {
   try {
     const formData = new FormData();
@@ -13,15 +17,16 @@ export async function addPost(
     formData.append("description", post);
     if (image) {
       formData.append("picture", image);
-
     }
 
     const res: Response = await apiReq(
       "POST",
       "/posts",
       tokens,
+      dispatch,
+      navigate,
       undefined,
-      formData
+      formData,
     );
 
     const data = await res.json();
@@ -37,7 +42,9 @@ export async function addPost(
 export async function getFeed(
   tokens: Token | null,
   userId: string | null,
-  isProfile: boolean
+  isProfile: boolean,
+  dispatch: Dispatch,
+  navigate: NavigateFunction
 ) {
   try {
     if (!tokens?.refreshToken) return null;
@@ -48,20 +55,24 @@ export async function getFeed(
         "GET",
         `/posts`,
         tokens,
+        dispatch,
+        navigate,
         {
           "Content-Type": "application/json",
         },
-        undefined
+        undefined,
       );
     } else {
       res = await apiReq(
         "GET",
         `/posts/${userId}`,
         tokens,
+        dispatch,
+        navigate,
         {
           "Content-Type": "application/json",
         },
-        undefined
+        undefined,
       );
     }
 
@@ -75,16 +86,23 @@ export async function getFeed(
   }
 }
 
-export async function patchLike(postId: string, tokens: Token | null) {
+export async function patchLike(
+  postId: string,
+  tokens: Token | null,
+  dispatch: Dispatch,
+  navigate: NavigateFunction
+) {
   try {
     const res: Response = await apiReq(
       "PATCH",
       `/posts/${postId}`,
       tokens,
+      dispatch,
+      navigate,
       {
         "Content-Type": "application/json",
       },
-      undefined
+      undefined,
     );
 
     const data = await res.json();
@@ -100,17 +118,22 @@ export async function patchLike(postId: string, tokens: Token | null) {
 export async function addComment(
   comment: string,
   postId: string,
-  tokens: Token
+  tokens: Token,
+  dispatch: Dispatch,
+  navigate: NavigateFunction
+  
 ) {
   try {
     const res: Response = await apiReq(
       "POST",
       `/posts/${postId}`,
       tokens,
+      dispatch,
+      navigate,
       {
         "Content-Type": "application/json",
       },
-      JSON.stringify({ comment })
+      JSON.stringify({ comment }),
     );
 
     const data = await res.json();
@@ -125,16 +148,23 @@ export async function addComment(
   }
 }
 
-export async function deletePost(postId: string, tokens: Token | null) {
+export async function deletePost(
+  postId: string,
+  tokens: Token | null,
+  dispatch: Dispatch,
+  navigate: NavigateFunction
+) {
   try {
     const res: Response = await apiReq(
       "DELETE",
       `/posts/${postId}`,
       tokens,
+      dispatch,
+      navigate,
       {
         "Content-Type": "application/json",
       },
-      undefined
+      undefined,
     );
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);

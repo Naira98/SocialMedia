@@ -9,6 +9,10 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { getRefreshToken } from "../../util/helpers";
 import Spinner from "../Spinner";
+import { Typography } from "@mui/material";
+import { useTheme } from "@emotion/react";
+import { palette } from "../../types/ThemeWithPalette";
+import WidgetWrapper from "../styledComponents/WidgetWrapper";
 
 const PostsWidget = ({
   userId,
@@ -19,6 +23,7 @@ const PostsWidget = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { palette } = useTheme() as { palette: palette };
 
   const posts = useSelector((state: ReduxState) => state.posts);
   const refreshToken = getRefreshToken();
@@ -27,8 +32,12 @@ const PostsWidget = ({
     if (!refreshToken) navigate("/");
   }, [navigate, refreshToken]);
 
-  const { feed, isPending, error } = useGetFeed(refreshToken, userId, isProfile);
-  
+  const { feed, isPending, error } = useGetFeed(
+    refreshToken,
+    userId,
+    isProfile
+  );
+
   useEffect(() => {
     if (feed) dispatch(setPosts({ posts: feed }));
   }, [dispatch, feed]);
@@ -36,14 +45,21 @@ const PostsWidget = ({
   if (isPending) return <Spinner />;
   if (error) toast.error(error.message);
 
-  if (!posts || !posts.length) return <h1>No posts to show</h1>;
+  if (!posts || !posts.length)
+    return (
+      <WidgetWrapper palette={palette} style={{ textAlign: "center", padding: '3rem' }}>
+        <Typography color={palette.neutral.medium} fontSize="1.5rem">
+          No posts to show
+        </Typography>
+      </WidgetWrapper>
+    );
 
   return posts.map((post, i) => (
     <PostWidget
       key={`${post._id.toString()}-${i}`}
       post={post}
       isProfile={isProfile}
-      i = {i}
+      i={i}
     />
   ));
 };

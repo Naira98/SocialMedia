@@ -1,7 +1,9 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
+
 import { ReduxState } from "../../types/reduxState";
 import { getProfileUser } from "../../services/users";
+import { useNavigate } from "react-router-dom";
 
 // if (!token)
 // dispatch outside
@@ -11,6 +13,9 @@ export function useProfileUser(
   userId: string,
 ) {
   const tokens = useSelector((state: ReduxState) => state.tokens)!;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const {
     data,
     isPending,
@@ -18,7 +23,7 @@ export function useProfileUser(
   } = useQuery({
     queryKey: ["user", userId],
     // open profile page and return profile data
-    queryFn: () => getProfileUser(userId, tokens),
+    queryFn: () => getProfileUser(userId, tokens, dispatch, navigate),
   });
   return { data, isPending, error };
 }

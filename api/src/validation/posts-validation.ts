@@ -11,7 +11,7 @@ export const addPostValidation = async (
   const addPostSchmea = Joi.object().keys({
     description: Joi.string().required(),
     picturePath: Joi.allow(),
-    location: Joi.string().alphanum().min(3).max(30).required(),
+    location: Joi.string().min(3).max(30).required(),
   });
 
   const result = addPostSchmea.validate(body);
