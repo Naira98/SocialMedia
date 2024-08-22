@@ -21,3 +21,5 @@
 - React dropzone
 - Formik for form handling
 - Yup for frontend validation
+
+- Responsive Design
