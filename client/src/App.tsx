@@ -27,11 +27,11 @@ const App = () => {
   const refreshToken = getRefreshToken();
   const navigate = useNavigate();
 
-  const { userDataAndTokens, isPending, error } = useGetUser(refreshToken);
+  const { userData, isPending, error } = useGetUser(refreshToken);
   
   useEffect(() => {
-    if (userDataAndTokens == null) navigate("/");
-  }, [userDataAndTokens, navigate]);
+    if (userData == null) navigate("/");
+  }, [userData, navigate]);
   if (error) toast.error(error.message);
 
   if (isPending) return <Spinner />;

@@ -99,7 +99,7 @@ export async function getUser(
     console.log(refreshData)
       dispatch(setLogin({ user: userData, tokens: refreshData }));
 
-    return { user: userData, tokens: refreshToken };
+    return userData;
   } catch (err) {
     console.log(err);
     throw err;

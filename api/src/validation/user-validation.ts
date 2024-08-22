@@ -10,8 +10,8 @@ export const updateAccountValidation = async (
 
   const updateProfileSchema = Joi.object().keys({
     userId: Joi.string().min(1).max(25).required(),
-    firstName: Joi.string().min(3).max(15).required(),
-    lastName: Joi.string().min(3).max(15).required(),
+    firstName: Joi.string().pattern(/^[a-zA-Z]+$/).min(3).max(15).required(),
+    lastName: Joi.string().pattern(/^[a-zA-Z]+$/).min(3).max(15).required(),
   });
 
   const result = updateProfileSchema.validate(body);
@@ -21,7 +21,7 @@ export const updateAccountValidation = async (
 
   if (!valid) {
     res.status(422).json({
-      message: error.details[0].message,
+      message: error.details[0].type === 'string.pattern.base' ? 'username must contain alphabetic characters only' : error.details[0].message,
       data: body,
     });
   } else {

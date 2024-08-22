@@ -49,7 +49,7 @@ if (friends) dispatch(setFriendsData({ friends }));
         left: "0",
         zIndex: "99",
         overflow: "scroll",
-        height: "20rem",
+        height: "19rem",
       }}
     >
       <Typography

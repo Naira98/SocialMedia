@@ -21,7 +21,7 @@ const Profile = () => {
 
   let profile: User;
   if (userId === currentUser._id) {
-    profile = data.user;
+    profile = data;
   } else {
     profile = data;
   }
