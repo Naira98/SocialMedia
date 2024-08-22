@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +14,6 @@ import FlexBetween from "../styledComponents/FlexBetween";
 import { palette } from "../../types/ThemeWithPalette";
 import { ReduxState } from "../../types/reduxState";
 import { User } from "../../../../types/User";
-import { useState } from "react";
 import { useUpdateAccount } from "../../hooks/users/useUpdateProfile";
 import { useAddTwitter } from "../../hooks/users/useAddTwitter";
 import { useAddLinkedin } from "../../hooks/users/useAddLinkedin";

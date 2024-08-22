@@ -11,11 +11,13 @@
 # Features
 - Authentication
 - Authorization
-- Helmet
-- Multer
-- React dropzone
-- Formik for form handling
-- Yup for validation
+- Helmet for security
+- Joi for backend validation
+- Multer for image handling
+
 - React Router
 - Material ui
 - Media query
+- React dropzone
+- Formik for form handling
+- Yup for frontend validation
