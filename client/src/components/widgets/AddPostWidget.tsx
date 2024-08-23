@@ -30,7 +30,6 @@ const AddPostWidget = ({ picturePath }: { picturePath: string }) => {
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState<State>(null);
   const tokens: Token = useSelector((state: ReduxState) => state.tokens)!;
-  const { location } = useSelector((state: ReduxState) => state.user)!;
   const { addPost } = useAddPost(setImage,setIsImage, setPost);
 
   const { palette } = useTheme() as { palette: palette };
@@ -145,7 +144,7 @@ const AddPostWidget = ({ picturePath }: { picturePath: string }) => {
         {tokens && (
           <Button
             disabled={!post}
-            onClick={() => addPost({ post, image, location: location! })}
+            onClick={() => addPost({ post, image})}
             sx={{
               color: palette.background.alt,
               backgroundColor: main,

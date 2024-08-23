@@ -7,13 +7,11 @@ export async function addPost(
   post: string,
   image: File | null,
   tokens: Token,
-  location: string,
   dispatch: Dispatch,
   navigate: NavigateFunction
 ) {
   try {
     const formData = new FormData();
-    formData.append("location", location);
     formData.append("description", post);
     if (image) {
       formData.append("picture", image);

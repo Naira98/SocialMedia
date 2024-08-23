@@ -55,13 +55,12 @@ export const addPost = async (
   next: NextFunction
 ) => {
   try {
-    const { description, picturePath, location } = req.body;
+    const { description, picturePath } = req.body;
     const { userId } = req.user;
     const newPost = new Post({
       userId,
       description,
       picturePath,
-      location,
       likes: {},
     });
     const addedPost = await newPost.save();

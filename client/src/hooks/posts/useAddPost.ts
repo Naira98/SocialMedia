@@ -25,12 +25,10 @@ export function useAddPost(
     mutationFn: ({
       post,
       image,
-      location,
     }: {
       post: string;
       image: File | null;
-      location: string;
-    }) => addPostApi(post, image, tokens, location, dispatch, navigate),
+    }) => addPostApi(post, image, tokens, dispatch, navigate),
     onSuccess: (posts) => {
       // posts = Post[] allPosts
       queryClient.setQueryData(["posts", tokens.userId], posts);

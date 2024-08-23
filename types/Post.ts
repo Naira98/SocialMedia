@@ -5,7 +5,6 @@ export interface Post {
   _id: Types.ObjectId;
   userId: User;
   description: string;
-  location: string;
   picturePath: string;
   likes: Map<string, boolean>;
   // likes: {
