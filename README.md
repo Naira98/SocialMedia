@@ -1,7 +1,7 @@
 # Social Media  
 ## An online platform allows users to create, share their content and connect with friends. Also users can post updates, photos, like and comment on others' posts and attaching their personal links of other social platforms.
 
-## With enhancing of user experience by adding dark mode support and responsive design for smaller screens.git s
+### With enhancing of user experience by adding dark mode support and responsive design for smaller screens
 
 ### Technologies
 
