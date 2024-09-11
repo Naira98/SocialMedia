@@ -7,10 +7,6 @@ const tokenSchema = new mongoose.Schema<Token>({
     type: mongoose.Schema.Types.ObjectId,
     ref: User,
   },
-  accessToken: {
-    type: String,
-    required: true,
-  },
   refreshToken: {
     type: String,
     required: true,

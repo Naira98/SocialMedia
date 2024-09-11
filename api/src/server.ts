@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import helmet from "helmet";
 import cors from "cors";
 import multer from "multer";
-import { nanoid } from 'nanoid'
+import { nanoid } from "nanoid";
 
 import { MONGO_URI } from "./config";
 import { register } from "./controllers/auth";
@@ -22,7 +22,13 @@ import { addPostValidation } from "./validation/posts-validation";
 
 const PORT = 3000;
 const app = express();
-export const imagesPath = path.join(__dirname, "..", "public", "assets")
+export const imagesPath = path.join(__dirname, "..", "public", "assets");
+
+declare module "express" {
+  interface Request {
+    userId?: string;
+  }
+}
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -39,9 +45,9 @@ const storage = multer.diskStorage({
     cb(null, imagesPath);
   },
   filename: function (req, file, cb) {
-    const randomeName = nanoid() + path.extname(file.originalname)
+    const randomeName = nanoid() + path.extname(file.originalname);
     cb(null, randomeName);
-    req.body.picturePath = randomeName
+    req.body.picturePath = randomeName;
   },
 });
 
@@ -75,7 +81,6 @@ app.use("/posts", postRoutes);
 
 mongoose.connect(MONGO_URI);
 app.listen(PORT, () => {
-
   /* ADD DATA ONE TIME */
   // User.insertMany(users);
   // Post.insertMany(posts);

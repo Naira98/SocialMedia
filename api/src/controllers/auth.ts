@@ -5,6 +5,7 @@ import User from "../models/User";
 import { REFRESH_SECRET } from "../config";
 import { generateAccessToken, generateRefreshToken } from "../../lib/helpers";
 import { Token as TokenType } from "../types/Token";
+import Token from "../models/Token";
 
 /* REGISTER */
 export const register = async (req: Request, res: Response) => {
@@ -61,14 +62,18 @@ export const login = async (req: Request, res: Response) => {
     const accessToken = generateAccessToken({ userId: user._id });
     const refreshToken = generateRefreshToken({ userId: user._id });
 
-    const tokens = {
+    const tokens = new Token({
       userId: user._id,
-      accessToken,
       refreshToken,
-    };
+    });
+
+    await tokens.save();
+
     delete user.password;
 
-    return res.status(200).json({ tokens, user });
+    return res
+      .status(200)
+      .json({ tokens: { userId: user._id, accessToken, refreshToken }, user });
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -79,6 +84,9 @@ export const refresh = async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.body;
 
+    const tokenInDB = await Token.findOne({ refreshToken });
+    if (!tokenInDB) return res.status(401).json({ message: "Invalid Token" });
+
     jwt.verify(
       refreshToken,
       REFRESH_SECRET,
@@ -87,11 +95,22 @@ export const refresh = async (req: Request, res: Response) => {
           return res.status(401).json({ message: "You are not authenticated" });
 
         const newAccessToken = generateAccessToken({ userId: userData.userId });
-        return res
-          .status(200)
-          .json({ accessToken: newAccessToken, userId: userData.userId, refreshToken });
+        return res.status(200).json({
+          accessToken: newAccessToken,
+          userId: userData.userId,
+          refreshToken,
+        });
       }
     );
+  } catch (err) {
+    return res.status(401).json(err);
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    await Token.findOneAndDelete({userId: req.userId})
+    return res.status(200).json({message: 'Logged out'})
   } catch (err) {
     return res.status(401).json(err);
   }
