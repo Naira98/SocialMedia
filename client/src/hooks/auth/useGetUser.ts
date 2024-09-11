@@ -15,10 +15,10 @@ export function useGetUser(refreshToken: string | null) {
   const user = useSelector((state: ReduxState) => state.user);
 
   // Mutations
-  const { data: userData, isPending, error } = useQuery({
+  const { isPending, error } = useQuery({
     queryKey: ["user", `${refreshToken && tokens ? tokens.userId : null}`],
     queryFn: () => getUser(user, refreshToken, dispatch, navigate),
   });
   // user = {userData: {}, refreshData: {userId, accessToken}}
-  return { userData, isPending, error };
+  return { isPending, error };
 }
