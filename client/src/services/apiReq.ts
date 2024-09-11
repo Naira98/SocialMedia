@@ -2,14 +2,12 @@ import { jwtDecode } from "jwt-decode";
 import { Token } from "../types/reduxState";
 import { Dispatch } from "@reduxjs/toolkit";
 import { setTokens } from "../redux/authSlice";
-import { NavigateFunction } from "react-router-dom";
 
 const apiReq = async (
   method: string,
   endpoint: string,
   tokens: Token | null,
   dispatch: Dispatch,
-  navigate: NavigateFunction,
   headers?: { [key: string]: string },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: any

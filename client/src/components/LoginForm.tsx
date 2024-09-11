@@ -3,7 +3,7 @@ import { useTheme } from "@emotion/react";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-import { palette } from "../types/ThemeWithPalette";
+import { Palette } from "../types/ThemeWithPalette";
 import { useLogin } from "../hooks/auth/useLogin";
 import { loginFormValues } from "../types/form";
 
@@ -21,7 +21,7 @@ const LoginForm = ({
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { login, isPending } = useLogin();
-  const { palette } = useTheme() as { palette: palette };
+  const { palette } = useTheme() as { palette: Palette };
 
   const handleFormSubmit = async (values: loginFormValues) => {
     login({ values });

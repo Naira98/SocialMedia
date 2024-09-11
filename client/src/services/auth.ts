@@ -27,8 +27,9 @@ export async function register(
   try {
     const formData = new FormData();
 
-    for (const value in values) {
-      formData.append(value, values[value as keyof registerFromValues]);
+    for (const key in values) {
+      const value = values[key as keyof registerFromValues];
+      if (value != null) formData.append(key, value);
     }
 
     // for (const pair of formData.entries()) {
@@ -92,14 +93,25 @@ export async function getUser(
 
     if (!userRes.ok) throw new Error(userData.message);
 
-    console.log(user);
-    console.log(userData._id);
     if (user?._id !== userData._id)
-      console.log(userData)
-    console.log(refreshData)
       dispatch(setLogin({ user: userData, tokens: refreshData }));
 
     return userData;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export async function logout() {
+  try {
+    const res = await fetch("http://localhost:3000/auth/logout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+    return data;
   } catch (err) {
     console.log(err);
     throw err;

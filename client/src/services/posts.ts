@@ -1,14 +1,12 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { Token } from "../types/reduxState";
 import apiReq from "./apiReq";
-import { NavigateFunction } from "react-router-dom";
 
 export async function addPost(
   post: string,
   image: File | null,
   tokens: Token,
   dispatch: Dispatch,
-  navigate: NavigateFunction
 ) {
   try {
     const formData = new FormData();
@@ -22,7 +20,6 @@ export async function addPost(
       "/posts",
       tokens,
       dispatch,
-      navigate,
       undefined,
       formData,
     );
@@ -42,7 +39,6 @@ export async function getFeed(
   userId: string | null,
   isProfile: boolean,
   dispatch: Dispatch,
-  navigate: NavigateFunction
 ) {
   try {
     if (!tokens?.refreshToken) return null;
@@ -54,7 +50,6 @@ export async function getFeed(
         `/posts`,
         tokens,
         dispatch,
-        navigate,
         {
           "Content-Type": "application/json",
         },
@@ -66,7 +61,6 @@ export async function getFeed(
         `/posts/${userId}`,
         tokens,
         dispatch,
-        navigate,
         {
           "Content-Type": "application/json",
         },
@@ -88,7 +82,6 @@ export async function patchLike(
   postId: string,
   tokens: Token | null,
   dispatch: Dispatch,
-  navigate: NavigateFunction
 ) {
   try {
     const res: Response = await apiReq(
@@ -96,7 +89,6 @@ export async function patchLike(
       `/posts/${postId}`,
       tokens,
       dispatch,
-      navigate,
       {
         "Content-Type": "application/json",
       },
@@ -118,7 +110,6 @@ export async function addComment(
   postId: string,
   tokens: Token,
   dispatch: Dispatch,
-  navigate: NavigateFunction
   
 ) {
   try {
@@ -127,7 +118,6 @@ export async function addComment(
       `/posts/${postId}`,
       tokens,
       dispatch,
-      navigate,
       {
         "Content-Type": "application/json",
       },
@@ -150,7 +140,6 @@ export async function deletePost(
   postId: string,
   tokens: Token | null,
   dispatch: Dispatch,
-  navigate: NavigateFunction
 ) {
   try {
     const res: Response = await apiReq(
@@ -158,7 +147,6 @@ export async function deletePost(
       `/posts/${postId}`,
       tokens,
       dispatch,
-      navigate,
       {
         "Content-Type": "application/json",
       },

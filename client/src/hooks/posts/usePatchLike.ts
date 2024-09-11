@@ -5,16 +5,14 @@ import { patchLike as patchLikeApi } from "../../services/posts";
 import { ReduxState } from "../../types/reduxState";
 import { useSelector } from "react-redux";
 import { likeCommentPost } from "../../redux/authSlice";
-import { useNavigate } from "react-router-dom";
 
 export function usePatchLike() {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const tokens = useSelector((state: ReduxState) => state.tokens)!;
   // Mutations
   const { mutate: patchLike } = useMutation({
-    mutationFn: (postId: string) => patchLikeApi(postId, tokens, dispatch, navigate),
+    mutationFn: (postId: string) => patchLikeApi(postId, tokens, dispatch),
     onSuccess: (data) => {
       //data= postId
       queryClient.invalidateQueries({ queryKey: ["posts", tokens.userId] });

@@ -9,7 +9,7 @@ import { formatDistanceToNow } from "date-fns";
 
 import UserImage from "./UserImage";
 import FlexBetween from "./styledComponents/FlexBetween";
-import { palette } from "../types/ThemeWithPalette";
+import { Palette } from "../types/ThemeWithPalette";
 import { Friend, ReduxState } from "../types/reduxState";
 import { useAddDeleteFriend } from "../hooks/users/useAddRemoveFriend";
 import { useDeletePost } from "../hooks/posts/useDeletePost";
@@ -34,7 +34,7 @@ const PostCredentilas = ({
   const { deletePost } = useDeletePost();
 
 
-  const { palette } = useTheme() as { palette: palette };
+  const { palette } = useTheme() as { palette: Palette };
   const primaryLight = palette.primary.light;
   const primaryMain = palette.primary.main;
   const primaryDark = palette.primary.dark;

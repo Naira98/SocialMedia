@@ -7,7 +7,7 @@ import Dropzone from "react-dropzone";
 
 import FlexBetween from "./styledComponents/FlexBetween";
 import { registerFromValues } from "../types/form";
-import { palette } from "../types/ThemeWithPalette";
+import { Palette } from "../types/ThemeWithPalette";
 import { useRegister } from "../hooks/auth/useRegister";
 import toast from "react-hot-toast";
 
@@ -36,7 +36,7 @@ const RegisterForm = ({
 }: {
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { palette } = useTheme() as { palette: palette };
+  const { palette } = useTheme() as { palette: Palette };
   const { register } = useRegister();
 
   const handleFormSubmit = async (values: registerFromValues) => {

@@ -5,14 +5,12 @@ import { likeCommentPost } from "../../redux/authSlice";
 import toast from "react-hot-toast";
 import { addComment as addCommentApi } from "../../services/posts";
 import { ReduxState } from "../../types/reduxState";
-import { useNavigate } from "react-router-dom";
 
 export function useAddComment(
   setComment: React.Dispatch<React.SetStateAction<string>>
 ) {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const tokens = useSelector((state: ReduxState) => state.tokens)!;
   // Mutations
   const {
@@ -21,7 +19,7 @@ export function useAddComment(
     error,
   } = useMutation({
     mutationFn: ({ comment, postId }: { comment: string; postId: string }) =>
-      addCommentApi(comment, postId, tokens, dispatch, navigate),
+      addCommentApi(comment, postId, tokens, dispatch),
     onSuccess: (post) => {
       // posts = Post  updated post only with userId populated
       queryClient.invalidateQueries({ queryKey: ["posts", tokens.userId] });

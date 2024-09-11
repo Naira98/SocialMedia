@@ -6,7 +6,9 @@ import { ReduxState } from "../types/reduxState";
 const ProtectedRoutes = ({ children }: { children: ReactElement }) => {
   const isAuth = useSelector((state: ReduxState) => state.isAuth);
 
-  if (!isAuth) return <Navigate to="/" replace />;
+  console.log({ isAuth });
+
+  if (!isAuth) return <Navigate to={'/'} replace />;
 
   return children;
 };

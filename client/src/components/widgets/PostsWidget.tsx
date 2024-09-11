@@ -11,7 +11,7 @@ import { getRefreshToken } from "../../util/helpers";
 import Spinner from "../Spinner";
 import { Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import { palette } from "../../types/ThemeWithPalette";
+import { Palette } from "../../types/ThemeWithPalette";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 
 const PostsWidget = ({
@@ -23,7 +23,7 @@ const PostsWidget = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { palette } = useTheme() as { palette: palette };
+  const { palette } = useTheme() as { palette: Palette };
 
   const posts = useSelector((state: ReduxState) => state.posts);
   const refreshToken = getRefreshToken();

@@ -1,13 +1,11 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { Token } from "../types/reduxState";
 import apiReq from "./apiReq";
-import { NavigateFunction } from "react-router-dom";
 
 export async function addRemoveFriend(
   friendId: string,
   tokens: Token | null,
   dispatch: Dispatch,
-  navigate: NavigateFunction
 ) {
   try {
     const res: Response = await apiReq(
@@ -15,7 +13,6 @@ export async function addRemoveFriend(
       `/users/${friendId}`,
       tokens,
       dispatch,
-      navigate,
       {
         "Content-Type": "application/json",
       },
@@ -34,7 +31,6 @@ export async function getFetchFriends(
   tokens: Token,
   userId: string,
   dispatch: Dispatch,
-  navigate: NavigateFunction
 ) {
   try {
     if (!tokens.refreshToken) return null;
@@ -43,7 +39,6 @@ export async function getFetchFriends(
       `/users/friends/${userId}`,
       tokens,
       dispatch,
-      navigate,
       {
         "Content-Type": "application/json",
       },
@@ -62,7 +57,6 @@ export async function getProfileUser(
   userId: string,
   tokens: Token | null,
   dispatch: Dispatch,
-  navigate: NavigateFunction
 ) {
   try {
     const res: Response = await apiReq(
@@ -70,7 +64,6 @@ export async function getProfileUser(
       `/users/${userId}`,
       tokens,
       dispatch,
-      navigate,
       {
         "Content-Type": "application/json",
       },
@@ -93,7 +86,6 @@ export async function updateAccount(
   lastName: string,
   tokens: Token | null,
   dispatch: Dispatch,
-  navigate: NavigateFunction
 ) {
   try {
     const res: Response = await apiReq(
@@ -101,7 +93,6 @@ export async function updateAccount(
       `/users/user`,
       tokens,
       dispatch,
-      navigate,
       {
         "Content-Type": "application/json",
       },
@@ -121,7 +112,6 @@ export async function addTwitter(
   link: string,
   tokens: Token | null,
   dispatch: Dispatch,
-  navigate: NavigateFunction
 ) {
   try {
     const res: Response = await apiReq(
@@ -129,7 +119,6 @@ export async function addTwitter(
       `/users/twitter`,
       tokens,
       dispatch,
-      navigate,
       {
         "Content-Type": "application/json",
       },
@@ -150,7 +139,6 @@ export async function addLinkedin(
   link: string,
   tokens: Token | null,
   dispatch: Dispatch,
-  navigate: NavigateFunction
 ) {
   try {
     const res: Response = await apiReq(
@@ -158,7 +146,6 @@ export async function addLinkedin(
       `/users/linkedin`,
       tokens,
       dispatch,
-      navigate,
       {
         "Content-Type": "application/json",
       },

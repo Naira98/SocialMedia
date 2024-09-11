@@ -19,7 +19,7 @@ import {
 import UserImage from "../UserImage";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
-import { palette } from "../../types/ThemeWithPalette";
+import { Palette } from "../../types/ThemeWithPalette";
 import { ReduxState, Token } from "../../types/reduxState";
 import { useAddPost } from "../../hooks/posts/useAddPost";
 
@@ -32,7 +32,7 @@ const AddPostWidget = ({ picturePath }: { picturePath: string }) => {
   const tokens: Token = useSelector((state: ReduxState) => state.tokens)!;
   const { addPost } = useAddPost(setImage,setIsImage, setPost);
 
-  const { palette } = useTheme() as { palette: palette };
+  const { palette } = useTheme() as { palette: Palette };
   const main = palette.primary.main;
   const light = palette.neutral.light;
   const mediumMain = palette.neutral.mediumMain;

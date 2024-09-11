@@ -19,8 +19,9 @@ import {
 } from "@mui/icons-material";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
+import { useLogut } from "../hooks/auth/useLogout";
 import FlexBetween from "./styledComponents/FlexBetween";
-import { setLogout, setMode } from "../redux/authSlice";
+import { setMode } from "../redux/authSlice";
 import UserImage from "./UserImage";
 import { ReduxState } from "../types/reduxState";
 import { ThemeWithPalette } from "../types/ThemeWithPalette";
@@ -28,6 +29,7 @@ import { ThemeWithPalette } from "../types/ThemeWithPalette";
 const Nvabar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { logout } = useLogut();
   const modeStorage = localStorage.getItem("mode");
   const user = useSelector((state: ReduxState) => state.user);
   const tokens = useSelector((state: ReduxState) => state.tokens);
@@ -40,12 +42,6 @@ const Nvabar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user?.firstName} ${user?.lastName}`;
-
-  const logout = () => {
-    dispatch(setLogout());
-    localStorage.removeItem("refreshToken");
-    navigate("/");
-  };
 
   return (
     <div style={{ position: "sticky", top: "0", left: "0", zIndex: "99" }}>

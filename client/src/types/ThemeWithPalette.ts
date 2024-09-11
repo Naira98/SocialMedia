@@ -1,16 +1,20 @@
-import { Theme } from "@emotion/react";
+import { Theme, Palette as MUIPalette, TypeBackground } from "@mui/material";
 
 export interface ThemeWithPalette extends Theme {
-  palette: {
-    mode: "string";
-    primary: { [key: string]: string };
-    neutral: { [key: string]: string };
-    background: { [key: string]: string };
+  palette: Palette
+}
+
+export interface Palette extends MUIPalette {
+  neutral: {
+    dark: string;
+    main: string;
+    mediumMain: string;
+    medium: string;
+    light: string;
   };
+  background: Background
 }
-export interface palette {
-  mode: "string";
-  primary: { [key: string]: string };
-  neutral: { [key: string]: string };
-  background: { [key: string]: string };
-}
+
+ interface Background extends TypeBackground {
+  alt: string;
+ }

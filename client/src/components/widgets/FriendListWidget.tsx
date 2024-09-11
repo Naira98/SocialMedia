@@ -6,7 +6,7 @@ import { useTheme } from "@emotion/react";
 
 import PostCredentilas from "../PostCredentilas";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
-import { palette } from "../../types/ThemeWithPalette";
+import { Palette } from "../../types/ThemeWithPalette";
 import { Friend, ReduxState } from "../../types/reduxState";
 import { useFetchFriends } from "../../hooks/users/useFetchFriends";
 import toast from "react-hot-toast";
@@ -15,7 +15,7 @@ import { getRefreshToken } from "../../util/helpers";
 import Spinner from "../Spinner";
 
 const FriendListWidget = ({ userId }: { userId: string }) => {
-  const { palette } = useTheme() as { palette: palette };
+  const { palette } = useTheme() as { palette: Palette };
   const friendsData = useSelector((state: ReduxState) => state.friendsData);
   const dispatch = useDispatch();
   const navigate = useNavigate();

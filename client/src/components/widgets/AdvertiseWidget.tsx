@@ -3,10 +3,10 @@ import { Typography } from "@mui/material";
 
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
-import { palette } from "../../types/ThemeWithPalette";
+import { Palette } from "../../types/ThemeWithPalette";
 
 const AdvertiseWidget = () => {
-  const { palette } = useTheme() as { palette: palette };
+  const { palette } = useTheme() as { palette: Palette };
   const dark = palette.neutral.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;

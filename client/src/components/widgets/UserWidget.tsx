@@ -11,7 +11,7 @@ import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import UserImage from "../UserImage";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
-import { palette } from "../../types/ThemeWithPalette";
+import { Palette } from "../../types/ThemeWithPalette";
 import { ReduxState } from "../../types/reduxState";
 import { User } from "../../../../types/User";
 import { useUpdateAccount } from "../../hooks/users/useUpdateProfile";
@@ -43,7 +43,7 @@ const UserWidget = ({
   const { addTwitter } = useAddTwitter(setIsTwitter);
   const { addLinkedin } = useAddLinkedin(setIsLinkedin);
 
-  const { palette } = useTheme() as { palette: palette };
+  const { palette } = useTheme() as { palette: Palette };
 
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;

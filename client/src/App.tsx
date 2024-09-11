@@ -21,16 +21,16 @@ import { useGetUser } from "./hooks/auth/useGetUser";
 const App = () => {
   const mode = useSelector((state: ReduxState) => state.mode);
   const theme: ThemeWithPalette = useMemo(
-    () => createTheme(themeSettings(mode)),
+    () => createTheme(themeSettings(mode)) as ThemeWithPalette,
     [mode]
   );
   const refreshToken = getRefreshToken();
   const navigate = useNavigate();
 
   const { userData, isPending, error } = useGetUser(refreshToken);
-  
+
   useEffect(() => {
-    if (userData == null) navigate("/");
+    // if (userData == null) navigate("/");
   }, [userData, navigate]);
   if (error) toast.error(error.message);
 

@@ -19,7 +19,7 @@ import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
 import { ReduxState } from "../../types/reduxState";
 import { Post } from "../../../../types/Post";
-import { palette } from "../../types/ThemeWithPalette";
+import { Palette } from "../../types/ThemeWithPalette";
 import { usePatchLike } from "../../hooks/posts/usePatchLike";
 import { useAddComment } from "../../hooks/posts/useAddComment";
 
@@ -54,7 +54,7 @@ const PostWidget = ({
   const { patchLike } = usePatchLike();
   const { addComment } = useAddComment(setComment);
 
-  const { palette } = useTheme() as { palette: palette };
+  const { palette } = useTheme() as { palette: Palette };
   const primatyMain = palette.primary.main;
   const main = palette.neutral.main;
   const primary = palette.primary.main;

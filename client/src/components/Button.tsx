@@ -1,6 +1,6 @@
 import { useTheme } from "@emotion/react";
 import { Button as ButtonMui } from "@mui/material";
-import { palette } from "../types/ThemeWithPalette";
+import { Palette } from "../types/ThemeWithPalette";
 
 const Button = ({
   onClick,
@@ -13,7 +13,7 @@ const Button = ({
   isMobileScreen: boolean;
   children: string;
 }) => {
-  const { palette } = useTheme() as { palette: palette };
+  const { palette } = useTheme() as { palette: Palette };
   const primatyMain = palette.primary.main;
   const backAlt = palette.background.alt;
 
