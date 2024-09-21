@@ -17,7 +17,7 @@ export interface IUser {
 
 export interface IUserModel extends IUser, Document<ObjectId> {}
 
-const userSchema: Schema = new mongoose.Schema(
+const userSchema: Schema = new Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },

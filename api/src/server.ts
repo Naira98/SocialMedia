@@ -47,5 +47,5 @@ app.listen(PORT, () => {
   // User.insertMany(users);
   // Post.insertMany(posts);
 
-  return console.log(`Express is listening at http://localhost:${PORT}`);
+  return console.log(`Server starts on port: ${PORT}`);
 });

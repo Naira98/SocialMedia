@@ -1,6 +1,5 @@
 import mongoose, { Document, ObjectId, Schema } from "mongoose";
 import User from "./User";
-import { Post } from "../../../types/Post";
 
 export interface IPost {
   userId: ObjectId;
@@ -12,7 +11,7 @@ export interface IPost {
 
 export interface IPostModel extends IPost, Document<ObjectId> {}
 
-const postSchema: Schema = new mongoose.Schema<Post>(
+const postSchema: Schema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +26,6 @@ const postSchema: Schema = new mongoose.Schema<Post>(
       type: Map,
       of: Boolean,
     },
-
     comments: { type: [{ type: String }], default: [] },
   },
   { timestamps: true }
