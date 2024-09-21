@@ -1,5 +1,4 @@
 import mongoose, { Document, ObjectId, Schema } from "mongoose";
-import { User } from "../../../types/User";
 
 export interface IUser {
   firstName: string;
@@ -18,7 +17,7 @@ export interface IUser {
 
 export interface IUserModel extends IUser, Document<ObjectId> {}
 
-const userSchema: Schema = new mongoose.Schema<User>(
+const userSchema: Schema = new mongoose.Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
