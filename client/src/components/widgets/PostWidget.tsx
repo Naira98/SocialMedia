@@ -48,7 +48,7 @@ const PostWidget = ({
   const { _id: loggedInUserId } = useSelector(
     (state: ReduxState) => state.user
   )!;
-  const isLiked = Boolean(likes[loggedInUserId.toString()]);
+  const isLiked = Boolean(likes.get(loggedInUserId.toString()));
   const likeCount = Object.keys(likes).length;
   const name = `${userData.firstName} ${userData.lastName}`;
   const { patchLike } = usePatchLike();
