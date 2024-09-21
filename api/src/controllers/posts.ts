@@ -1,11 +1,9 @@
 import fs from "fs";
-import path from 'path';
+import path from "path";
 import { NextFunction, Response } from "express";
-
 import { RequestWithUser } from "../types/RequestWithUser";
 import Post from "../models/Post";
-import { Post as PostType } from "../../../types/Post";
-import { imagesPath } from "../server";
+import { IMAGES_PATH } from "../server";
 
 export const getFeed = async (
   req: RequestWithUser,
@@ -13,20 +11,17 @@ export const getFeed = async (
   next: NextFunction
 ) => {
   try {
-    // posts
-
-    const posts: PostType[] = await Post.find()
+    const posts = await Post.find()
       .populate("userId", "firstName lastName picturePath")
       .sort({ createdAt: -1 });
-
-    // console.log(posts)
 
     // return all posts
     return res.status(200).json(posts);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
+
 export const getProfileFeed = async (
   req: RequestWithUser,
   res: Response,
@@ -36,16 +31,14 @@ export const getProfileFeed = async (
     // posts/:userId
     const { userId } = req.params;
 
-    const posts: PostType[] = await Post.find({ userId: userId })
+    const posts = await Post.find({ userId: userId })
       .populate("userId", "firstName lastName picturePath")
       .sort({ createdAt: -1 });
-
-    // console.log(posts)
 
     // return all posts
     return res.status(200).json(posts);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
@@ -72,7 +65,7 @@ export const addPost = async (
     // return all posts
     res.status(201).json(posts);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
@@ -90,9 +83,7 @@ export const likePost = async (
       "firstName lastName picturePath"
     );
     if (!post) return res.status(404).json({ message: "Post not found" });
-
     const isLiked = post.likes.get(userId);
-
     if (isLiked) {
       post.likes.delete(userId);
     } else {
@@ -100,11 +91,10 @@ export const likePost = async (
     }
 
     const updatedPost = await post.save();
-
     // return updated post only
     res.status(200).json(updatedPost);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
@@ -126,7 +116,7 @@ export const commentPost = async (
     // return updated post only
     res.status(200).json(post);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
@@ -148,12 +138,12 @@ export const deletePost = async (
     // return id of deleted post only
     res.status(200).json({ postId });
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
 const deleteImage = (imagePath: string) => {
-  fs.unlink(path.join(imagesPath, imagePath), (err) => {
+  fs.unlink(path.join(IMAGES_PATH, imagePath), (err) => {
     if (err) console.log(err);
   });
 };
