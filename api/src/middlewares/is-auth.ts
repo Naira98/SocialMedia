@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { ACCESS_SECRET } from "../config";
+import { ACCESS_SECRET } from "../config/config";
 import { NextFunction, Response } from "express";
 import { Payload, RequestWithUser } from "../types/RequestWithUser";
 

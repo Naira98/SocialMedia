@@ -1,7 +1,23 @@
-import mongoose from "mongoose";
-import { User } from "../../../types/User";
+import mongoose, { Document, ObjectId, Schema } from "mongoose";
 
-const userSchema = new mongoose.Schema<User>(
+export interface IUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  picturePath: string;
+  friends: string[];
+  location: string;
+  occupation: string;
+  viewedProfile: number;
+  impressions: number;
+  twitter: string;
+  linkedin: string;
+}
+
+export interface IUserModel extends IUser, Document<ObjectId> {}
+
+const userSchema: Schema = new mongoose.Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -19,5 +35,4 @@ const userSchema = new mongoose.Schema<User>(
   { timestamps: true }
 );
 
-const User = mongoose.model<User>("User", userSchema);
-export default User;
+export default mongoose.model<IUserModel>("User", userSchema);

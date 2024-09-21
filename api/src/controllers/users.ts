@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { RequestWithUser } from "../types/RequestWithUser";
-import User from "../models/User";
+import User, { IUserModel } from "../models/User";
 
 export const getUser = async (
   req: RequestWithUser,
@@ -14,7 +14,7 @@ export const getUser = async (
     if (!user) return res.status(404).json({ message: "User not found" });
     return res.status(200).json(user);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
@@ -34,10 +34,9 @@ export const getUserFriends = async (
         )
       )
     );
-
     return res.status(200).json(friends);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
@@ -64,8 +63,7 @@ export const addRemoveFriend = async (
       friend.friends.push(userId);
     }
 
-    await user.save();
-    await friend.save();
+    await Promise.all([await user.save(), await friend.save()]);
 
     const friends = await Promise.all(
       user.friends.map((id) =>
@@ -76,7 +74,7 @@ export const addRemoveFriend = async (
     );
     return res.status(200).json(friends);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
@@ -100,21 +98,16 @@ export const updateAccount = async (
       { returnDocument: "after" }
     );
 
-    // const returnedUser = Object.keys(user)
-    //   .filter((objKey) => objKey !== "password")
-    //   .reduce((newObj, key) => {
-    //     newObj[key] = user[key];
-    //     return newObj;
-    //   }, {});
-
-    // delete user.password;
-
-    // const user = User.findById(userId, "-password -createdAt -updatedAt");
+    delete (
+      user as Omit<IUserModel, "password"> & {
+        password?: IUserModel["password"];
+      }
+    ).password;
 
     // return updatedUser
     res.status(200).json(user);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
@@ -141,7 +134,7 @@ export const addTwitter = async (
     // return updatedUser
     res.status(200).json(user);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
@@ -168,6 +161,6 @@ export const addLinkedin = async (
     // return updatedUser
     res.status(200).json(user);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };

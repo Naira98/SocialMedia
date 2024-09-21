@@ -1,14 +1,18 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "../models/User";
-import { REFRESH_SECRET } from "../config";
+import User, { IUserModel } from "../models/User";
+import { REFRESH_SECRET } from "../config/config";
 import { generateAccessToken, generateRefreshToken } from "../../lib/helpers";
 import { Token as TokenType } from "../types/Token";
 import Token from "../models/Token";
 
 /* REGISTER */
-export const register = async (req: Request, res: Response) => {
+export const register = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const {
     email,
     firstName,
@@ -39,18 +43,26 @@ export const register = async (req: Request, res: Response) => {
       twitter: "",
       linkedin: "",
     });
-    await newUser.save();
+    const addedUser = await newUser.save();
 
-    delete newUser.password;
+    delete (
+      addedUser as Omit<IUserModel, "password"> & {
+        password?: IUserModel["password"];
+      }
+    ).password;
 
     return res.status(201).json(newUser);
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
 /* LOGIN */
-export const login = async (req: Request, res: Response) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email: email });
@@ -75,12 +87,16 @@ export const login = async (req: Request, res: Response) => {
       .status(200)
       .json({ tokens: { userId: user._id, accessToken, refreshToken }, user });
   } catch (err) {
-    return res.status(500).json(err);
+    next(err);
   }
 };
 
 /* REFRESH */
-export const refresh = async (req: Request, res: Response) => {
+export const refresh = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { refreshToken } = req.body;
 
@@ -107,10 +123,14 @@ export const refresh = async (req: Request, res: Response) => {
   }
 };
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    await Token.findOneAndDelete({userId: req.userId})
-    return res.status(200).json({message: 'Logged out'})
+    await Token.findOneAndDelete({ userId: req.userId });
+    return res.status(200).json({ message: "Logged out" });
   } catch (err) {
     return res.status(401).json(err);
   }
