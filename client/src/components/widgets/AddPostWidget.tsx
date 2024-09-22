@@ -11,7 +11,6 @@ import {
   InputBase,
   Typography,
 } from "@mui/material";
-
 import UserImage from "../UserImage";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";

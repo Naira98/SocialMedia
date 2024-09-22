@@ -1,14 +1,14 @@
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
+import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/useAuth";
 import { useFetchFriends } from "../hooks/users/useFetchFriends";
-import { Friend } from "../types/User";
-import { Palette } from "../types/ThemeWithPalette";
 import FlexBetween from "./styledComponents/FlexBetween";
-import { Link } from "react-router-dom";
 import UserImage from "./UserImage";
 import { useAddRemoveFriend } from "../hooks/users/useAddRemoveFriend";
+import { Friend } from "../types/User";
+import { Palette } from "../types/ThemeWithPalette";
 
 const FriendListItem = ({ user }: { user: Friend }) => {
   const { _id: friendId, firstName, lastName, picturePath, occupation } = user;

@@ -1,7 +1,7 @@
 import express from "express";
 import {
   getMe,
-  getUser,
+  getProfileUser,
   getUserFriends,
   addRemoveFriend,
   updateAccount,
@@ -18,7 +18,7 @@ const router = express.Router();
 
 router.get("/me", verifyToken, getMe);
 
-router.get("/:id", verifyToken, getUser);
+router.get("/:id", verifyToken, getProfileUser);
 
 router.get("/friends/:id", verifyToken, getUserFriends);
 

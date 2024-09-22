@@ -2,10 +2,10 @@ import { useTheme } from "@emotion/react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
+import toast from "react-hot-toast";
 import { registerFromValues } from "../types/Forms";
 import { Palette } from "../types/ThemeWithPalette";
 import { useRegister } from "../hooks/auth/useRegister";
-import toast from "react-hot-toast";
 import Dropzone from "./Dropzone";
 
 const initialValuesRegister: registerFromValues = {
@@ -25,7 +25,6 @@ const registerSchema = yup.object().shape({
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  // picture: yup.string().required("required"),
 });
 
 const RegisterForm = ({

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   FormControl,
   IconButton,
@@ -27,11 +27,9 @@ import { useGetMe } from "../hooks/auth/useGetMe";
 import Spinner from "./Spinner";
 
 const Nvabar = () => {
-  const navigate = useNavigate();
   const { mode, changeMode } = useMode();
   const { userId, setUserId } = useAuth();
   const { me, isPending } = useGetMe(userId, setUserId);
-  console.log(me)
   const { logout } = useLogut(setUserId);
 
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
@@ -41,7 +39,7 @@ const Nvabar = () => {
   const neutralMediumMain = theme.palette.neutral.mediumMain;
   const alt = theme.palette.background.alt;
 
-  if (isPending) return <Spinner />
+  if (isPending) return <Spinner />;
 
   const fullName = `${me!.firstName} ${me!.lastName}`;
 
@@ -54,22 +52,28 @@ const Nvabar = () => {
           gap: "1.5rem",
         }}
       >
-        <FlexBetween>
-          <Typography
-            fontWeight="bold"
-            fontSize="clamp(1.5rem, 2rem, 2.5rem)"
-            color="primary"
-            noWrap={true}
-            onClick={() => navigate("/home")}
-            sx={{
-              "&:hover": {
-                cursor: "pointer",
-              },
-            }}
-          >
-            Social Media
-          </Typography>
-        </FlexBetween>
+        <Link to="/home" style={{ textDecoration: "none" }} >
+          <FlexBetween style={{ gap: "10px" }}>
+            <img
+              src="logo.png"
+              alt="logo"
+              style={{ width: "50px", cursor: "pointer" }}
+            />
+            <Typography
+              fontWeight="bold"
+              fontSize="clamp(1.5rem, 2rem, 2.5rem)"
+              color="primary"
+              noWrap={true}
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                },
+              }}
+            >
+              Social Media
+            </Typography>
+          </FlexBetween>
+        </Link>
 
         <FlexBetween gap="2rem">
           {!isMobileScreen && (

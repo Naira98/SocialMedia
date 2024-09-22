@@ -8,7 +8,6 @@ export const getMe = async (
   next: NextFunction
 ) => {
   try {
-    // get current user or profile user (useGetUser, useProfileUser)
     const { userId } = req.user;
     const user = await User.findById(userId, "-friends -email -password -createdAt -updatedAt ").lean();
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -19,7 +18,7 @@ export const getMe = async (
   }
 };
 
-export const getUser = async (
+export const getProfileUser = async (
   req: RequestWithUser,
   res: Response,
   next: NextFunction
@@ -51,7 +50,6 @@ export const getUserFriends = async (
         )
       )
     );
-    console.log(friends)
     return res.status(200).json(friends);
   } catch (err) {
     next(err);

@@ -1,6 +1,5 @@
 import { useTheme } from "@emotion/react";
 import { Typography } from "@mui/material";
-
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
 import { Palette } from "../../types/ThemeWithPalette";

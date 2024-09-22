@@ -28,7 +28,6 @@ const apiReq = async (
           },
           body: JSON.stringify({ refreshToken }),
         });
-        // data = {accessToken: ''}
         const data = await res.json();
         if (res.ok) {
           setAccessToken(data.accessToken);
@@ -49,7 +48,6 @@ const apiReq = async (
         body: body,
       });
     } else {
-      // navigate("/");
       throw new Error("You are not authenticated");
     }
   } catch (err) {

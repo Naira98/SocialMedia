@@ -1,10 +1,10 @@
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import FlexBetween from "./styledComponents/FlexBetween";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import FlexBetween from "./styledComponents/FlexBetween";
 import { Palette } from "../types/ThemeWithPalette";
-import React, { useCallback } from "react";
 
 const Dropzone = ({
   picture,

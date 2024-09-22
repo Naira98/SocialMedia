@@ -28,9 +28,7 @@ export const getProfileFeed = async (
   next: NextFunction
 ) => {
   try {
-    // posts/:userId
     const { userId } = req.params;
-
     const posts = await Post.find({ userId: userId })
       .populate("userId", "firstName lastName picturePath friends")
       .sort({ createdAt: -1 });
