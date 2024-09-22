@@ -43,15 +43,9 @@ export const register = async (
       twitter: "",
       linkedin: "",
     });
-    const addedUser = await newUser.save();
+    await newUser.save();
 
-    delete (
-      addedUser as Omit<IUserModel, "password"> & {
-        password?: IUserModel["password"];
-      }
-    ).password;
-
-    return res.status(201).json(newUser);
+    return res.status(201).json({ message: "You registered successfully" });
   } catch (err) {
     next(err);
   }
@@ -65,7 +59,7 @@ export const login = async (
 ) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).lean();
     if (!user) return res.status(401).json({ message: "Wrong Credentials" });
 
     const doMatch = await bcrypt.compare(password, user.password);
@@ -82,10 +76,11 @@ export const login = async (
     await tokens.save();
 
     delete user.password;
+    delete user.friends;
 
     return res
       .status(200)
-      .json({ tokens: { userId: user._id, accessToken, refreshToken }, user });
+      .json({ tokens: { accessToken, refreshToken }, user });
   } catch (err) {
     next(err);
   }
@@ -110,11 +105,9 @@ export const refresh = async (
         if (err)
           return res.status(401).json({ message: "You are not authenticated" });
 
-        const newAccessToken = generateAccessToken({ userId: userData.userId });
+        const accessToken = generateAccessToken({ userId: userData.userId });
         return res.status(200).json({
-          accessToken: newAccessToken,
-          userId: userData.userId,
-          refreshToken,
+          accessToken,
         });
       }
     );

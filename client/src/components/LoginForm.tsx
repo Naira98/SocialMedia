@@ -5,7 +5,8 @@ import * as yup from "yup";
 
 import { Palette } from "../types/ThemeWithPalette";
 import { useLogin } from "../hooks/auth/useLogin";
-import { loginFormValues } from "../types/form";
+import { loginFormValues } from "../types/Forms";
+import { useAuth } from "../contexts/useAuth";
 
 const initialValuesLogin = {
   email: "",
@@ -20,7 +21,8 @@ const LoginForm = ({
 }: {
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { login, isPending } = useLogin();
+  const { setUserId } = useAuth();
+  const { login, isPending } = useLogin(setUserId);
   const { palette } = useTheme() as { palette: Palette };
 
   const handleFormSubmit = async (values: loginFormValues) => {

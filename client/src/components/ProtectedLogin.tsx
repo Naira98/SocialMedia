@@ -1,12 +1,11 @@
 import { ReactElement } from "react";
 import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { ReduxState } from "../types/reduxState";
+import { useAuth } from "../contexts/useAuth";
 
 const ProtectedLogin = ({ children }: { children: ReactElement }) => {
-  const isAuth = useSelector((state: ReduxState) => state.isAuth);
+  const { userId } = useAuth();
 
-  if (isAuth) return <Navigate to="/home" replace />;
+  if (userId) return <Navigate to="/home" replace />;
 
   return children;
 };

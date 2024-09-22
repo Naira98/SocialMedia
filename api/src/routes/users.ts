@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getMe,
   getUser,
   getUserFriends,
   addRemoveFriend,
@@ -14,6 +15,8 @@ import {
 } from "../validation/user-validation";
 
 const router = express.Router();
+
+router.get("/me", verifyToken, getMe);
 
 router.get("/:id", verifyToken, getUser);
 

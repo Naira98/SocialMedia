@@ -1,27 +1,35 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login as loginApi } from "../../services/auth";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setLogin } from "../../redux/authSlice";
 import toast from "react-hot-toast";
-import { loginFormValues } from "../../types/form";
+import { loginFormValues } from "../../types/Forms";
+import { setAccessToken, setRefreshToken } from "../../util/helpers";
 
-export function useLogin() {
+interface Data {
+  user: IUser;
+  tokens: { accessToken: string; refreshToken: string };
+}
+
+import React from "react";
+import { IUser } from "../../types/User";
+
+export function useLogin(
+  setUserId: React.Dispatch<React.SetStateAction<string | null>>
+) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  // Mutations
+
   const {
     mutate: login,
     isPending,
     error,
   } = useMutation({
     mutationFn: ({ values }: { values: loginFormValues }) => loginApi(values),
-    onSuccess: (data) => {
-      // data = {user: {}, tokens: {}}
-      queryClient.setQueryData(["user"], data.user);
-      dispatch(setLogin({ user: data.user, tokens: data.tokens }));
-      localStorage.setItem("refreshToken", data.tokens.refreshToken);
+    onSuccess: (data: Data) => {
+      queryClient.setQueryData(["user", "me"], data.user);
+      setAccessToken(data.tokens.accessToken);
+      setRefreshToken(data.tokens.refreshToken);
+      setUserId(data.user._id);
 
       navigate("/home", { replace: true });
     },

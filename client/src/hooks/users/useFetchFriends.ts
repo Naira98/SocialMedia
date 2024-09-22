@@ -1,24 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSelector, useDispatch } from "react-redux";
-
-import { Friend, ReduxState } from "../../types/reduxState";
 import { getFetchFriends } from "../../services/users";
+import { Friend } from "../../types/User";
 
-// open profile page and return profile friends
-export function useFetchFriends(refreshToken: string | null, userId: string) {
-  const tokens = useSelector((state: ReduxState) => state.tokens)!;
-  const dispatch = useDispatch()
-
+// get friends of you or profile friends
+export function useFetchFriends(userId: string) {
   const {
     data: friends,
     isPending,
     error,
-  } = useQuery({
+  } = useQuery<Friend[]>({
     queryKey: ["friends", userId],
-    queryFn: (): Promise<Friend[]> => getFetchFriends(tokens, userId, dispatch),
-    enabled: !!refreshToken,
+    queryFn: () => getFetchFriends(userId),
   });
-
-  // data=[{_id, firstName, lastName, occupation, picturePath, viewedProfile, impressions}]
   return { friends, isPending, error };
 }

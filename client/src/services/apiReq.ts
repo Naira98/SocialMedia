@@ -1,20 +1,19 @@
 import { jwtDecode } from "jwt-decode";
-import { Token } from "../types/reduxState";
-import { Dispatch } from "@reduxjs/toolkit";
-import { setTokens } from "../redux/authSlice";
+import {
+  getTokens,
+  setAccessToken,
+} from "../util/helpers";
 
 const apiReq = async (
   method: string,
   endpoint: string,
-  tokens: Token | null,
-  dispatch: Dispatch,
   headers?: { [key: string]: string },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: any
 ) => {
   try {
-    let accessToken = tokens?.accessToken;
-    const refreshToken = tokens?.refreshToken;
+    // eslint-disable-next-line prefer-const
+    let {accessToken, refreshToken} = getTokens()
 
     if (accessToken && refreshToken) {
       const decodedToken = jwtDecode(accessToken);
@@ -29,10 +28,10 @@ const apiReq = async (
           },
           body: JSON.stringify({ refreshToken }),
         });
-        // data = {accessToken,refreshToken, userId}
+        // data = {accessToken: ''}
         const data = await res.json();
         if (res.ok) {
-          dispatch(setTokens({ tokens: data }));
+          setAccessToken(data.accessToken);
           accessToken = data.accessToken;
         } else {
           throw new Error(data.message);
@@ -53,8 +52,6 @@ const apiReq = async (
       // navigate("/");
       throw new Error("You are not authenticated");
     }
-
-    // no tokens in redux
   } catch (err) {
     console.log(err);
     throw err;

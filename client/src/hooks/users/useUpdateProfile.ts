@@ -1,20 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-
-import { ReduxState } from "../../types/reduxState";
-import { setUser } from "../../redux/authSlice";
 import { updateAccount as updateAccountApi } from "../../services/users";
+import { IUser } from "../../types/User";
 
 export function useUpdateAccount(
   setIsUpdate: React.Dispatch<React.SetStateAction<boolean>>
 ) {
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
 
-  const tokens = useSelector((state: ReduxState) => state.tokens)!;
-
-  // Mutations
   const { mutate: updateAccount } = useMutation({
     mutationFn: ({
       userId,
@@ -24,12 +17,9 @@ export function useUpdateAccount(
       userId: string;
       firstName: string;
       lastName: string;
-    }) =>
-      updateAccountApi(userId, firstName, lastName, tokens, dispatch),
-    onSuccess: (user) => {
-      // data = updatedUser
-      queryClient.setQueryData(["user", tokens.userId], user);
-      dispatch(setUser(user));
+    }) => updateAccountApi(firstName, lastName, userId),
+    onSuccess: (user: IUser) => {
+      queryClient.setQueryData(["user", "me"], user);
       setIsUpdate(false);
     },
     onError: (err) => {

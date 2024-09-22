@@ -1,11 +1,7 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import Dropzone from "react-dropzone";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import CollectionsOutlinedIcon from "@mui/icons-material/CollectionsOutlined";
 import MoodOutlinedIcon from "@mui/icons-material/MoodOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useTheme } from "@emotion/react";
 import {
   Box,
@@ -20,8 +16,9 @@ import UserImage from "../UserImage";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
 import { Palette } from "../../types/ThemeWithPalette";
-import { ReduxState, Token } from "../../types/reduxState";
 import { useAddPost } from "../../hooks/posts/useAddPost";
+import { useAuth } from "../../contexts/useAuth";
+import Dropzone from "../Dropzone";
 
 type State = File | null;
 
@@ -29,8 +26,8 @@ const AddPostWidget = ({ picturePath }: { picturePath: string }) => {
   const [post, setPost] = useState("");
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState<State>(null);
-  const tokens: Token = useSelector((state: ReduxState) => state.tokens)!;
-  const { addPost } = useAddPost(setImage,setIsImage, setPost);
+  const { addPost } = useAddPost(setImage, setIsImage, setPost);
+  const { userId } = useAuth();
 
   const { palette } = useTheme() as { palette: Palette };
   const main = palette.primary.main;
@@ -64,40 +61,7 @@ const AddPostWidget = ({ picturePath }: { picturePath: string }) => {
           mt="1rem"
           p="1rem"
         >
-          <Dropzone
-            multiple={false}
-            onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <FlexBetween>
-                <Box
-                  {...getRootProps()}
-                  border={`2px dashed ${palette.primary.main}`}
-                  p="1rem"
-                  width="100%"
-                  sx={{ "&:hover": { cursor: "pointer" } }}
-                >
-                  <input {...getInputProps()} />
-                  {!image ? (
-                    <p>Add Image Here</p>
-                  ) : (
-                    <FlexBetween>
-                      <Typography>{image.name}</Typography>
-                      <EditOutlinedIcon />
-                    </FlexBetween>
-                  )}
-                </Box>
-                {image && (
-                  <IconButton
-                    onClick={() => setImage(null)}
-                    sx={{ width: "15%" }}
-                  >
-                    <DeleteOutlineOutlinedIcon />
-                  </IconButton>
-                )}
-              </FlexBetween>
-            )}
-          </Dropzone>
+          <Dropzone picture={image} setImage={setImage}/>
         </Box>
       )}
 
@@ -141,10 +105,10 @@ const AddPostWidget = ({ picturePath }: { picturePath: string }) => {
             </Typography>
           </FlexBetween>
         </FlexBetween>
-        {tokens && (
+        {userId && (
           <Button
             disabled={!post}
-            onClick={() => addPost({ post, image})}
+            onClick={() => addPost({ post, image })}
             sx={{
               color: palette.background.alt,
               backgroundColor: main,

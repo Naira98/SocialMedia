@@ -1,15 +1,12 @@
 import { useTheme } from "@emotion/react";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import Dropzone from "react-dropzone";
-
-import FlexBetween from "./styledComponents/FlexBetween";
-import { registerFromValues } from "../types/form";
+import { registerFromValues } from "../types/Forms";
 import { Palette } from "../types/ThemeWithPalette";
 import { useRegister } from "../hooks/auth/useRegister";
 import toast from "react-hot-toast";
+import Dropzone from "./Dropzone";
 
 const initialValuesRegister: registerFromValues = {
   firstName: "",
@@ -115,31 +112,7 @@ const RegisterForm = ({
               borderRadius="5px"
               p="1rem"
             >
-              <Dropzone
-                multiple={false}
-                onDrop={(acceptedFiles) =>
-                  setFieldValue("picture", acceptedFiles[0])
-                }
-              >
-                {({ getRootProps, getInputProps }) => (
-                  <Box
-                    {...getRootProps()}
-                    border={`2px dashed ${palette.primary.main}`}
-                    p="1rem"
-                    sx={{ "&:hover": { cursor: "pointer" } }}
-                  >
-                    <input {...getInputProps()} />
-                    {!values.picture ? (
-                      <p>Add Picture Here</p>
-                    ) : (
-                      <FlexBetween>
-                        <Typography>{values.picture.name}</Typography>
-                        <EditOutlinedIcon />
-                      </FlexBetween>
-                    )}
-                  </Box>
-                )}
-              </Dropzone>
+              <Dropzone picture={values.picture} setFieldValue={setFieldValue} />
             </Box>
 
             <TextField

@@ -1,30 +1,26 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSelector, useDispatch } from "react-redux";
-
-import { likeCommentPost } from "../../redux/authSlice";
 import toast from "react-hot-toast";
 import { addComment as addCommentApi } from "../../services/posts";
-import { ReduxState } from "../../types/reduxState";
 
-export function useAddComment(
-  setComment: React.Dispatch<React.SetStateAction<string>>
-) {
+export function useAddComment({
+  postCreatorId,
+  setComment,
+}: {
+  postCreatorId: string;
+  setComment: React.Dispatch<React.SetStateAction<string>>;
+}) {
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
-  const tokens = useSelector((state: ReduxState) => state.tokens)!;
-  // Mutations
+
   const {
     mutate: addComment,
     isPending,
     error,
   } = useMutation({
     mutationFn: ({ comment, postId }: { comment: string; postId: string }) =>
-      addCommentApi(comment, postId, tokens, dispatch),
-    onSuccess: (post) => {
-      // posts = Post  updated post only with userId populated
-      queryClient.invalidateQueries({ queryKey: ["posts", tokens.userId] });
-      queryClient.invalidateQueries({ queryKey: ["posts", 'feed'] });
-      dispatch(likeCommentPost({ post }));
+      addCommentApi(comment, postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts", postCreatorId] });
+      queryClient.invalidateQueries({ queryKey: ["posts", "feed"] });
       setComment("");
     },
     onError: (err) => {

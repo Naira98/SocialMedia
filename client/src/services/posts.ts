@@ -1,12 +1,9 @@
-import { Dispatch } from "@reduxjs/toolkit";
-import { Token } from "../types/reduxState";
+import { getTokens } from "../util/helpers";
 import apiReq from "./apiReq";
 
 export async function addPost(
   post: string,
   image: File | null,
-  tokens: Token,
-  dispatch: Dispatch,
 ) {
   try {
     const formData = new FormData();
@@ -18,8 +15,6 @@ export async function addPost(
     const res: Response = await apiReq(
       "POST",
       "/posts",
-      tokens,
-      dispatch,
       undefined,
       formData,
     );
@@ -35,21 +30,18 @@ export async function addPost(
 }
 
 export async function getFeed(
-  tokens: Token | null,
-  userId: string | null,
   isProfile: boolean,
-  dispatch: Dispatch,
+  userId: string | undefined,
 ) {
   try {
-    if (!tokens?.refreshToken) return null;
+    const tokens = getTokens()
+    if (!tokens.refreshToken || !tokens.accessToken) return null;
 
     let res: Response;
     if (!isProfile) {
       res = await apiReq(
         "GET",
         `/posts`,
-        tokens,
-        dispatch,
         {
           "Content-Type": "application/json",
         },
@@ -59,8 +51,6 @@ export async function getFeed(
       res = await apiReq(
         "GET",
         `/posts/${userId}`,
-        tokens,
-        dispatch,
         {
           "Content-Type": "application/json",
         },
@@ -80,15 +70,11 @@ export async function getFeed(
 
 export async function patchLike(
   postId: string,
-  tokens: Token | null,
-  dispatch: Dispatch,
 ) {
   try {
     const res: Response = await apiReq(
       "PATCH",
       `/posts/${postId}`,
-      tokens,
-      dispatch,
       {
         "Content-Type": "application/json",
       },
@@ -108,16 +94,11 @@ export async function patchLike(
 export async function addComment(
   comment: string,
   postId: string,
-  tokens: Token,
-  dispatch: Dispatch,
-  
 ) {
   try {
     const res: Response = await apiReq(
       "POST",
       `/posts/${postId}`,
-      tokens,
-      dispatch,
       {
         "Content-Type": "application/json",
       },
@@ -138,15 +119,11 @@ export async function addComment(
 
 export async function deletePost(
   postId: string,
-  tokens: Token | null,
-  dispatch: Dispatch,
 ) {
   try {
     const res: Response = await apiReq(
       "DELETE",
       `/posts/${postId}`,
-      tokens,
-      dispatch,
       {
         "Content-Type": "application/json",
       },

@@ -1,44 +1,14 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import { Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
-
-import PostCredentilas from "../PostCredentilas";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import { Palette } from "../../types/ThemeWithPalette";
-import { Friend, ReduxState } from "../../types/reduxState";
+import { Friend, IUser } from "../../types/User";
 import { useFetchFriends } from "../../hooks/users/useFetchFriends";
-import toast from "react-hot-toast";
-import { setFriendsData } from "../../redux/authSlice";
-import { getRefreshToken } from "../../util/helpers";
-import Spinner from "../Spinner";
+import FriendListItem from "../FriendListItem";
 
-const FriendListWidget = ({ userId }: { userId: string }) => {
+const FriendListWidget = ({ user }: { user: IUser }) => {
   const { palette } = useTheme() as { palette: Palette };
-  const friendsData = useSelector((state: ReduxState) => state.friendsData);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const refreshToken = getRefreshToken();
-
-  useEffect(() => {
-    if (!refreshToken) {
-      navigate("/");
-    }
-  }, [navigate, refreshToken]);
-
-  const { friends, isPending, error } = useFetchFriends(refreshToken, userId);
-
-  useEffect(() => {
-if (friends) dispatch(setFriendsData({ friends }));
-  }, [dispatch, friends])
-
-  if (isPending) return <Spinner />;
-
-  if (error) toast.error(error.message);
-
-  if (!friendsData) return null
+  const { friends } = useFetchFriends(user._id);
 
   return (
     <WidgetWrapper
@@ -58,13 +28,13 @@ if (friends) dispatch(setFriendsData({ friends }));
         fontWeight="500"
         sx={{ mb: "1.5rem" }}
       >
-        Friend List
+        Friend List of {user.firstName}
       </Typography>
 
       {friends &&
-        friendsData.length > 0 &&
-        friendsData.map((friend: Friend, i: number) => (
-          <PostCredentilas key={i} user={friend} createdAt={null} />
+        friends.length > 0 &&
+        friends.map((friend: Friend, i: number) => (
+          <FriendListItem key={i} user={friend} />
         ))}
     </WidgetWrapper>
   );

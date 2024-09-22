@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import {
   FormControl,
   IconButton,
@@ -18,22 +17,23 @@ import {
   Notifications,
 } from "@mui/icons-material";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-
 import { useLogut } from "../hooks/auth/useLogout";
 import FlexBetween from "./styledComponents/FlexBetween";
-import { setMode } from "../redux/authSlice";
 import UserImage from "./UserImage";
-import { ReduxState } from "../types/reduxState";
 import { ThemeWithPalette } from "../types/ThemeWithPalette";
+import { useMode } from "../contexts/useMode";
+import { useAuth } from "../contexts/useAuth";
+import { useGetMe } from "../hooks/auth/useGetMe";
+import Spinner from "./Spinner";
 
 const Nvabar = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { logout } = useLogut();
-  const modeStorage = localStorage.getItem("mode");
-  const user = useSelector((state: ReduxState) => state.user);
-  const tokens = useSelector((state: ReduxState) => state.tokens);
-  const mode = useSelector((state: ReduxState) => state.mode) && modeStorage;
+  const { mode, changeMode } = useMode();
+  const { userId, setUserId } = useAuth();
+  const { me, isPending } = useGetMe(userId, setUserId);
+  console.log(me)
+  const { logout } = useLogut(setUserId);
+
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
 
   const theme = useTheme() as ThemeWithPalette;
@@ -41,7 +41,9 @@ const Nvabar = () => {
   const neutralMediumMain = theme.palette.neutral.mediumMain;
   const alt = theme.palette.background.alt;
 
-  const fullName = `${user?.firstName} ${user?.lastName}`;
+  if (isPending) return <Spinner />
+
+  const fullName = `${me!.firstName} ${me!.lastName}`;
 
   return (
     <div style={{ position: "sticky", top: "0", left: "0", zIndex: "99" }}>
@@ -86,7 +88,7 @@ const Nvabar = () => {
             </>
           )}
 
-          <IconButton onClick={() => dispatch(setMode())}>
+          <IconButton onClick={() => changeMode()}>
             {mode === "light" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
             ) : (
@@ -94,10 +96,10 @@ const Nvabar = () => {
             )}
           </IconButton>
 
-          {user && (
-            <Link to={`/profile/${user._id}`}>
+          {me && (
+            <Link to={`/profile/${me._id}`}>
               <IconButton>
-                <UserImage image={user?.picturePath} size="40px" />
+                <UserImage image={me!.picturePath} size="40px" />
               </IconButton>
             </Link>
           )}
@@ -123,7 +125,7 @@ const Nvabar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              {tokens && (
+              {me?._id && (
                 <MenuItem sx={{ gap: "0.75rem" }} onClick={() => logout()}>
                   <LogoutOutlinedIcon /> Logout
                 </MenuItem>

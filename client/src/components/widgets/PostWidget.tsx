@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import {
   Box,
   Button,
@@ -13,24 +12,23 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { useTheme } from "@emotion/react";
-
 import PostCredentilas from "../PostCredentilas";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
-import { ReduxState } from "../../types/reduxState";
-import { Post } from "../../../../types/Post";
 import { Palette } from "../../types/ThemeWithPalette";
 import { usePatchLike } from "../../hooks/posts/usePatchLike";
 import { useAddComment } from "../../hooks/posts/useAddComment";
+import { useAuth } from "../../contexts/useAuth";
+import { IPost } from "../../types/Post";
 
 const PostWidget = ({
   post,
   isProfile,
-  i
+  i,
 }: {
-  post: Post;
+  post: IPost;
   isProfile: boolean;
-  i: number
+  i: number;
 }) => {
   const {
     _id: postId,
@@ -41,18 +39,18 @@ const PostWidget = ({
     comments,
     createdAt,
   } = post;
-
+  
   const [isComments, setIsComments] = useState(false);
   const [comment, setComment] = useState("");
-  const tokens = useSelector((state: ReduxState) => state.tokens);
-  const { _id: loggedInUserId } = useSelector(
-    (state: ReduxState) => state.user
-  )!;
-  const isLiked = Boolean(likes.get(loggedInUserId.toString()));
+
+  const { userId: loggedInUserId } = useAuth();
+  const isLiked = likes.includes(loggedInUserId!);
   const likeCount = Object.keys(likes).length;
+
   const name = `${userData.firstName} ${userData.lastName}`;
-  const { patchLike } = usePatchLike();
-  const { addComment } = useAddComment(setComment);
+
+  const { patchLike } = usePatchLike({postCreatorId: userData._id});
+  const { addComment } = useAddComment({postCreatorId: userData._id, setComment});
 
   const { palette } = useTheme() as { palette: Palette };
   const primatyMain = palette.primary.main;
@@ -60,9 +58,9 @@ const PostWidget = ({
   const primary = palette.primary.main;
 
   return (
-    <WidgetWrapper palette={palette} m={isProfile && i === 0 ? "0": "2rem 0"}>
+    <WidgetWrapper palette={palette} m={isProfile && i === 0 ? "0" : "2rem 0"}>
       <PostCredentilas
-        user={userData}
+        postedBy={userData}
         createdAt={createdAt}
         postId={postId.toString()}
         isProfile={isProfile}
@@ -84,15 +82,14 @@ const PostWidget = ({
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
-            {tokens && (
-              <IconButton onClick={() => patchLike(postId.toString())}>
-                {isLiked ? (
-                  <FavoriteOutlinedIcon sx={{ color: primary }} />
-                ) : (
-                  <FavoriteBorderOutlinedIcon />
-                )}
-              </IconButton>
-            )}
+            <IconButton onClick={() => patchLike(postId.toString())}>
+              {isLiked ? (
+                <FavoriteOutlinedIcon sx={{ color: primary }} />
+              ) : (
+                <FavoriteBorderOutlinedIcon />
+              )}
+            </IconButton>
+
             <Typography>{likeCount}</Typography>
           </FlexBetween>
 
@@ -131,7 +128,10 @@ const PostWidget = ({
             />
             <Button
               disabled={!comment}
-              onClick={() => addComment({ comment, postId: postId.toString() })}
+              onClick={(e) => {
+                e.preventDefault();
+                addComment({ comment, postId: postId.toString() });
+              }}
               sx={{
                 color: palette.background.alt,
                 backgroundColor: primatyMain,

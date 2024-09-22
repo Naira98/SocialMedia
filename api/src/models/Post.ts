@@ -5,7 +5,7 @@ export interface IPost {
   userId: ObjectId;
   description: string;
   picturePath: string;
-  likes: Map<string, boolean>;
+  likes: string[];
   comments: string[];
 }
 
@@ -22,10 +22,7 @@ const postSchema: Schema = new Schema(
       required: true,
     },
     picturePath: { type: String, default: "" },
-    likes: {
-      type: Map,
-      of: Boolean,
-    },
+    likes: { type: [{ type: String }], default: [] },
     comments: { type: [{ type: String }], default: [] },
   },
   { timestamps: true }

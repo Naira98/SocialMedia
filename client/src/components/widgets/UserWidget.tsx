@@ -1,57 +1,52 @@
 import { useState } from "react";
 import { useTheme } from "@emotion/react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Box, Divider, IconButton, Input, Typography } from "@mui/material";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
-
 import UserImage from "../UserImage";
+import Button from "../Button";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
-import { Palette } from "../../types/ThemeWithPalette";
-import { ReduxState } from "../../types/reduxState";
-import { User } from "../../../../types/User";
 import { useUpdateAccount } from "../../hooks/users/useUpdateProfile";
 import { useAddTwitter } from "../../hooks/users/useAddTwitter";
 import { useAddLinkedin } from "../../hooks/users/useAddLinkedin";
-import Button from "../Button";
+import { useFetchFriends } from "../../hooks/users/useFetchFriends";
+import { useAuth } from "../../contexts/useAuth";
+import { Palette } from "../../types/ThemeWithPalette";
+import { IUser } from "../../types/User";
 
 const UserWidget = ({
-  user,
+  userData,
   isMobileScreen,
 }: {
-  user: User | null;
+  userData: IUser;
   isMobileScreen: boolean;
 }) => {
-  const currentUser = useSelector((state: ReduxState) => state.user)!;
   const navigate = useNavigate();
+  const { userId } = useAuth();
+  const { friends } = useFetchFriends(userData._id);
 
   const [isUpdate, setIsUpdate] = useState(false);
-  const [firstName, setFirstName] = useState(currentUser.firstName);
-  const [lastName, setLastName] = useState(currentUser.lastName);
+  const [firstName, setFirstName] = useState(userData!.firstName);
+  const [lastName, setLastName] = useState(userData!.lastName);
 
   const [isTwitter, setIsTwitter] = useState(false);
-  const [twitterLink, setTwitterLink] = useState(currentUser.twitter);
+  const [twitterLink, setTwitterLink] = useState(userData!.twitter);
 
   const [isLinkedin, setIsLinkedin] = useState(false);
-  const [linkedinLink, setLinkedinLink] = useState(currentUser.linkedin);
+  const [linkedinLink, setLinkedinLink] = useState(userData!.linkedin);
 
   const { updateAccount } = useUpdateAccount(setIsUpdate);
   const { addTwitter } = useAddTwitter(setIsTwitter);
   const { addLinkedin } = useAddLinkedin(setIsLinkedin);
 
   const { palette } = useTheme() as { palette: Palette };
-
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
-
-  if (!currentUser || !user) {
-    return null;
-  }
 
   return (
     <WidgetWrapper
@@ -65,27 +60,25 @@ const UserWidget = ({
       {/* FIRST ROW */}
       <FlexBetween gap="0.5rem" pb="1.1rem">
         <FlexBetween gap="1rem">
-          <UserImage image={user?.picturePath} />
+          <UserImage image={userData.picturePath} />
           <Box>
             <Typography
               variant="h5"
               color={dark}
               fontWeight="500"
-              onClick={() => navigate(`/profile/${user?._id}`)}
+              onClick={() => navigate(`/profile/${userData._id}`)}
               sx={{
                 "&:hover": {
                   cursor: "pointer",
                 },
               }}
             >
-              {user?.firstName} {user?.lastName}
+              {userData.firstName} {userData.lastName}
             </Typography>
-            <Typography color={medium}>
-              {user?.friends.length} friends
-            </Typography>
+            <Typography color={medium}>{friends?.length} friends</Typography>
           </Box>
         </FlexBetween>
-        {currentUser._id === user._id && (
+        {userData._id === userId && (
           <IconButton onClick={() => setIsUpdate((u) => !u)}>
             <ManageAccountsOutlinedIcon />
           </IconButton>
@@ -111,7 +104,7 @@ const UserWidget = ({
                 disabled={!firstName && !lastName}
                 isMobileScreen={isMobileScreen}
                 onClick={() =>
-                  updateAccount({ userId: user._id, firstName, lastName })
+                  updateAccount({ userId: userId!, firstName, lastName })
                 }
               >
                 Update
@@ -124,7 +117,7 @@ const UserWidget = ({
               disabled={!firstName && !lastName}
               isMobileScreen={isMobileScreen}
               onClick={() =>
-                updateAccount({ userId: user._id, firstName, lastName })
+                updateAccount({ userId: userId!, firstName, lastName })
               }
             >
               Update
@@ -142,14 +135,14 @@ const UserWidget = ({
             fontSize="large"
             sx={{ color: main, fontSize: "25px" }}
           />
-          <Typography color={medium}>{user?.location}</Typography>
+          <Typography color={medium}>{userData.location}</Typography>
         </Box>
         <Box display="flex" alignItems="center" gap="1rem">
           <WorkOutlineOutlinedIcon
             fontSize="large"
             sx={{ color: main, fontSize: "25px" }}
           />
-          <Typography color={medium}>{user?.occupation}</Typography>
+          <Typography color={medium}>{userData.occupation}</Typography>
         </Box>
       </Box>
 
@@ -160,13 +153,13 @@ const UserWidget = ({
         <FlexBetween mb="0.5rem">
           <Typography color={medium}>Who's viewed your profile</Typography>
           <Typography color={main} fontWeight="500">
-            {user?.viewedProfile}
+            {userData?.viewedProfile}
           </Typography>
         </FlexBetween>
         <FlexBetween>
           <Typography color={medium}>Impressions of your post</Typography>
           <Typography color={main} fontWeight="500">
-            {user?.impressions}
+            {userData.impressions}
           </Typography>
         </FlexBetween>
       </Box>
@@ -186,13 +179,13 @@ const UserWidget = ({
                 Twitter
               </Typography>
               <Typography color={medium} fontSize="11px">
-                {user.twitter ? (
+                {userData.twitter ? (
                   <a
-                    href={`http://twitter.com/${user.twitter}`}
+                    href={`http://twitter.com/${userData.twitter}`}
                     target="_blank"
                     style={{ textDecoration: "none" }}
                   >
-                    {user.twitter}
+                    {userData.twitter}
                   </a>
                 ) : (
                   "Social Network"
@@ -200,7 +193,7 @@ const UserWidget = ({
               </Typography>
             </Box>
           </FlexBetween>
-          {currentUser._id === user._id && (
+          {userData._id === userId && (
             <IconButton onClick={() => setIsTwitter((t) => !t)}>
               <ModeEditOutlinedIcon sx={{ color: main }} />
             </IconButton>
@@ -218,9 +211,7 @@ const UserWidget = ({
             <Button
               disabled={!twitterLink}
               isMobileScreen={isMobileScreen}
-              onClick={() =>
-                addTwitter({ userId: user._id, link: twitterLink })
-              }
+              onClick={() => addTwitter({ userId: userId!, link: twitterLink })}
             >
               Add
             </Button>
@@ -235,13 +226,13 @@ const UserWidget = ({
                 Linkedin
               </Typography>
               <Typography color={medium} fontSize="10px">
-                {user.linkedin ? (
+                {userData.linkedin ? (
                   <a
-                    href={`http://linkedin.com/in/${user.linkedin}`}
+                    href={`http://linkedin.com/in/${userData.linkedin}`}
                     target="_blank"
                     style={{ textDecoration: "none" }}
                   >
-                    {user.linkedin}
+                    {userData.linkedin}
                   </a>
                 ) : (
                   "Network Platform"
@@ -249,7 +240,7 @@ const UserWidget = ({
               </Typography>
             </Box>
           </FlexBetween>
-          {currentUser._id === user._id && (
+          {userData._id === userId && (
             <IconButton onClick={() => setIsLinkedin((l) => !l)}>
               <ModeEditOutlinedIcon sx={{ color: main }} />
             </IconButton>
@@ -268,7 +259,7 @@ const UserWidget = ({
               disabled={!linkedinLink}
               isMobileScreen={isMobileScreen}
               onClick={() =>
-                addLinkedin({ userId: user._id, link: linkedinLink })
+                addLinkedin({ userId: userId!, link: linkedinLink })
               }
             >
               Add

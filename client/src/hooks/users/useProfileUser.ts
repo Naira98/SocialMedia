@@ -1,27 +1,17 @@
-import { useSelector, useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-
-import { ReduxState } from "../../types/reduxState";
 import { getProfileUser } from "../../services/users";
-
-// if (!token)
-// dispatch outside
-// dispatch(setFriends({ friends: data }));
+import { IUser } from "../../types/User";
 
 export function useProfileUser(
   userId: string,
 ) {
-  const tokens = useSelector((state: ReduxState) => state.tokens)!;
-  const dispatch = useDispatch();
-
   const {
-    data,
+    data: profileUser,
     isPending,
     error,
-  } = useQuery({
+  } = useQuery<IUser>({
     queryKey: ["user", userId],
-    // open profile page and return profile data
-    queryFn: () => getProfileUser(userId, tokens, dispatch),
+    queryFn: () => getProfileUser(userId),
   });
-  return { data, isPending, error };
+  return { profileUser, isPending, error };
 }

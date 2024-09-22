@@ -12,7 +12,7 @@ export const getFeed = async (
 ) => {
   try {
     const posts = await Post.find()
-      .populate("userId", "firstName lastName picturePath")
+      .populate("userId", "firstName lastName picturePath friends")
       .sort({ createdAt: -1 });
 
     // return all posts
@@ -32,7 +32,7 @@ export const getProfileFeed = async (
     const { userId } = req.params;
 
     const posts = await Post.find({ userId: userId })
-      .populate("userId", "firstName lastName picturePath")
+      .populate("userId", "firstName lastName picturePath friends")
       .sort({ createdAt: -1 });
 
     // return all posts
@@ -54,12 +54,11 @@ export const addPost = async (
       userId,
       description,
       picturePath,
-      likes: {},
     });
-    const addedPost = await newPost.save();
+    await newPost.save();
 
     const posts = await Post.find()
-      .populate("userId", "firstName lastName picturePath")
+      .populate("userId", "firstName lastName picturePath friends")
       .sort({ createdAt: -1 });
 
     // return all posts
@@ -78,16 +77,18 @@ export const likePost = async (
     const { postId } = req.params;
     const { userId } = req.user;
 
-    const post = await Post.findById(postId).populate(
+    let post = await Post.findById(postId).populate(
       "userId",
-      "firstName lastName picturePath"
+      "firstName lastName picturePath friends"
     );
     if (!post) return res.status(404).json({ message: "Post not found" });
-    const isLiked = post.likes.get(userId);
+
+    const isLiked = post.likes.includes(userId);
+
     if (isLiked) {
-      post.likes.delete(userId);
+      post.likes = post.likes.filter((i) => i !== userId);
     } else {
-      post.likes.set(userId, true);
+      post.likes.push(userId);
     }
 
     const updatedPost = await post.save();
@@ -110,7 +111,7 @@ export const commentPost = async (
     const post = await Post.updateOne(
       { _id: postId },
       { $push: { comments: comment } }
-    ).populate("userId", "firstName lastName picturePath");
+    ).populate("userId", "firstName lastName picturePath friends");
     if (!post) return res.status(404).json({ message: "Post not found" });
 
     // return updated post only

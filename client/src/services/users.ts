@@ -1,18 +1,13 @@
-import { Dispatch } from "@reduxjs/toolkit";
-import { Token } from "../types/reduxState";
 import apiReq from "./apiReq";
+import { getTokens } from "../util/helpers";
 
 export async function addRemoveFriend(
   friendId: string,
-  tokens: Token | null,
-  dispatch: Dispatch,
 ) {
   try {
     const res: Response = await apiReq(
       "PATCH",
       `/users/${friendId}`,
-      tokens,
-      dispatch,
       {
         "Content-Type": "application/json",
       },
@@ -27,24 +22,18 @@ export async function addRemoveFriend(
   }
 }
 
-export async function getFetchFriends(
-  tokens: Token,
-  userId: string,
-  dispatch: Dispatch,
-) {
+export async function getFetchFriends(userId: string) {
   try {
-    if (!tokens.refreshToken) return null;
+    const { refreshToken, accessToken } = getTokens();
+    if (!refreshToken || !accessToken) return null;
     const res: Response = await apiReq(
       "GET",
       `/users/friends/${userId}`,
-      tokens,
-      dispatch,
       {
         "Content-Type": "application/json",
       },
       undefined
     );
-
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
     return data;
@@ -55,15 +44,11 @@ export async function getFetchFriends(
 }
 export async function getProfileUser(
   userId: string,
-  tokens: Token | null,
-  dispatch: Dispatch,
 ) {
   try {
     const res: Response = await apiReq(
       "GET",
       `/users/${userId}`,
-      tokens,
-      dispatch,
       {
         "Content-Type": "application/json",
       },
@@ -72,7 +57,6 @@ export async function getProfileUser(
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
-
     return data;
   } catch (err) {
     console.log(err);
@@ -81,22 +65,18 @@ export async function getProfileUser(
 }
 
 export async function updateAccount(
-  userId: string,
   firstName: string,
   lastName: string,
-  tokens: Token | null,
-  dispatch: Dispatch,
+  userId: string
 ) {
   try {
     const res: Response = await apiReq(
       "PATCH",
       `/users/user`,
-      tokens,
-      dispatch,
       {
         "Content-Type": "application/json",
       },
-      JSON.stringify({ userId, firstName, lastName })
+      JSON.stringify({ firstName, lastName, userId })
     );
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
@@ -107,18 +87,11 @@ export async function updateAccount(
     throw err;
   }
 }
-export async function addTwitter(
-  userId: string,
-  link: string,
-  tokens: Token | null,
-  dispatch: Dispatch,
-) {
+export async function addTwitter(userId: string, link: string) {
   try {
     const res: Response = await apiReq(
       "PATCH",
       `/users/twitter`,
-      tokens,
-      dispatch,
       {
         "Content-Type": "application/json",
       },
@@ -134,18 +107,11 @@ export async function addTwitter(
   }
 }
 
-export async function addLinkedin(
-  userId: string,
-  link: string,
-  tokens: Token | null,
-  dispatch: Dispatch,
-) {
+export async function addLinkedin(userId: string, link: string) {
   try {
     const res: Response = await apiReq(
       "PATCH",
       `/users/linkedin`,
-      tokens,
-      dispatch,
       {
         "Content-Type": "application/json",
       },

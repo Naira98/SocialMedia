@@ -1,24 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-
 import { deletePost as deletePostApi } from "../../services/posts";
-import { ReduxState } from "../../types/reduxState";
-import { deletePost as deletePostAction } from "../../redux/authSlice";
+import { useAuth } from "../../contexts/useAuth";
 
 export function useDeletePost() {
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
-  const tokens = useSelector((state: ReduxState) => state.tokens)!;
-  // Mutations
+  const { userId } = useAuth();
+
   const { mutate: deletePost } = useMutation({
-    mutationFn: (postId: string) =>
-      deletePostApi(postId, tokens, dispatch),
-    onSuccess: (data) => {
-      //data= postId
-      queryClient.invalidateQueries({ queryKey: ["posts", tokens.userId] });
+    mutationFn: (postId: string) => deletePostApi(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts", userId] });
       queryClient.invalidateQueries({ queryKey: ["posts", "feed"] });
-      dispatch(deletePostAction(data));
     },
     onError: (err) => {
       toast.error(err.message);

@@ -1,16 +1,24 @@
-import { useSelector } from "react-redux";
 import { Box, useMediaQuery } from "@mui/material";
-
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import UserWidget from "../components/widgets/UserWidget";
 import AddPostWidget from "../components/widgets/AddPostWidget";
 import PostsWidget from "../components/widgets/PostsWidget";
 import AdvertiseWidget from "../components/widgets/AdvertiseWidget";
 import FriendListWidget from "../components/widgets/FriendListWidget";
-import { ReduxState } from "../types/reduxState";
+import Spinner from "../components/Spinner";
+import { useAuth } from "../contexts/useAuth";
+import { useGetMe } from "../hooks/auth/useGetMe";
 
 const Home = () => {
-  const user = useSelector((state: ReduxState) => state.user);
+  const { userId, setUserId } = useAuth();
+  const { me, isPending, error } = useGetMe(userId, setUserId);
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
+  const navigate = useNavigate();
+
+  if (isPending) return <Spinner />;
+  if (error) toast.error(error.message);
+  if (!me) return navigate("/");
 
   return (
     <Box
@@ -23,27 +31,23 @@ const Home = () => {
         isMobileScreen ? { flexDirection: "column" } : { flexDirection: "row" }
       }
     >
-      {user && (
+      {userId && (
         <>
           <Box flexBasis="26%">
             <UserWidget
-              user={user}
-              key={user._id.toString()}
+              userData={me}
+              key={me._id}
               isMobileScreen={isMobileScreen}
             />
           </Box>
           <Box flexBasis="64%">
-            <AddPostWidget picturePath={user.picturePath} />
-            <PostsWidget
-              userId={user._id.toString()}
-              key={user._id.toString()}
-              isProfile={false}
-            />
+            <AddPostWidget picturePath={me.picturePath} />
+            <PostsWidget key={me._id} isProfile={false} />
           </Box>
           {!isMobileScreen && (
             <Box flexBasis="26%">
               <AdvertiseWidget />
-              <FriendListWidget userId={user._id} key={user._id.toString()} />
+              <FriendListWidget user={me} key={me._id} />
             </Box>
           )}
         </>

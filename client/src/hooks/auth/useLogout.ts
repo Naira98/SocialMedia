@@ -1,15 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logout as logoutApi } from "../../services/auth";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setLogout } from "../../redux/authSlice";
 import toast from "react-hot-toast";
+import { removeTokens } from "../../util/helpers";
+import React from "react";
 
-export function useLogut() {
+export function useLogut(
+  setUserId: React.Dispatch<React.SetStateAction<string | null>>
+) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  // Mutations
+
   const {
     mutate: logout,
     isPending,
@@ -17,10 +18,10 @@ export function useLogut() {
   } = useMutation({
     mutationFn: logoutApi,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["user"]});
-      dispatch(setLogout());
-      localStorage.removeItem("refreshToken");
+      queryClient.setQueryData(["user", "me"], null);
+      removeTokens();
       navigate("/", { replace: true });
+      setUserId(null);
     },
     onError: (err) => {
       toast.error(err.message);

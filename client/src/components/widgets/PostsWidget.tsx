@@ -1,60 +1,35 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
-import PostWidget from "./PostWidget";
-import { ReduxState } from "../../types/reduxState";
-import { useGetFeed } from "../../hooks/posts/useGetFeed";
-import { setPosts } from "../../redux/authSlice";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { getRefreshToken } from "../../util/helpers";
-import Spinner from "../Spinner";
 import { Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import { Palette } from "../../types/ThemeWithPalette";
+import PostWidget from "./PostWidget";
+import Spinner from "../Spinner";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
+import { useGetFeed } from "../../hooks/posts/useGetFeed";
+import { Palette } from "../../types/ThemeWithPalette";
+import { IPost } from "../../types/Post";
+import { useParams } from "react-router-dom";
 
-const PostsWidget = ({
-  userId,
-  isProfile,
-}: {
-  userId: string;
-  isProfile: boolean;
-}) => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+const PostsWidget = ({ isProfile }: { isProfile: boolean }) => {
   const { palette } = useTheme() as { palette: Palette };
-
-  const posts = useSelector((state: ReduxState) => state.posts);
-  const refreshToken = getRefreshToken();
-
-  useEffect(() => {
-    if (!refreshToken) navigate("/");
-  }, [navigate, refreshToken]);
-
-  const { feed, isPending, error } = useGetFeed(
-    refreshToken,
-    userId,
-    isProfile
-  );
-
-  useEffect(() => {
-    if (feed) dispatch(setPosts({ posts: feed }));
-  }, [dispatch, feed]);
+  const { userId } = useParams();
+  const { feed, isPending, error } = useGetFeed(isProfile, userId);
 
   if (isPending) return <Spinner />;
   if (error) toast.error(error.message);
 
-  if (!posts || !posts.length)
+  if (!feed || !feed.length)
     return (
-      <WidgetWrapper palette={palette} style={{ textAlign: "center", padding: '3rem' }}>
+      <WidgetWrapper
+        palette={palette}
+        style={{ textAlign: "center", padding: "3rem" }}
+      >
         <Typography color={palette.neutral.medium} fontSize="1.5rem">
           No posts to show
         </Typography>
       </WidgetWrapper>
     );
 
-  return posts.map((post, i) => (
+  return feed.map((post: IPost, i: number) => (
     <PostWidget
       key={`${post._id.toString()}-${i}`}
       post={post}

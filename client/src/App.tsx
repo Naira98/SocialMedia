@@ -1,34 +1,32 @@
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { createTheme } from "@mui//material/styles";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { themeSettings } from "./theme";
-
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import AppLayout from "./components/AppLayout";
 import ProtectedRoutes from "./components/ProtectedRoutes";
-import { ReduxState } from "./types/reduxState";
 import { ThemeWithPalette } from "./types/ThemeWithPalette";
-import { getRefreshToken } from "./util/helpers";
 import Spinner from "./components/Spinner";
 import ProtectedLogin from "./components/ProtectedLogin";
-import { useGetUser } from "./hooks/auth/useGetUser";
+import { useGetMe } from "./hooks/auth/useGetMe";
+import { useMode } from "./contexts/useMode";
+import { useAuth } from "./contexts/useAuth";
 
 const App = () => {
-  const mode = useSelector((state: ReduxState) => state.mode);
+  const { mode } = useMode();
   const theme: ThemeWithPalette = useMemo(
     () => createTheme(themeSettings(mode)) as ThemeWithPalette,
     [mode]
   );
-  const refreshToken = getRefreshToken();
+  const navigate = useNavigate();
+  const { userId, setUserId } = useAuth();
+  const { isPending, error } = useGetMe(userId, setUserId);
 
-  const { isPending, error } = useGetUser(refreshToken);
-
-  if (error) toast.error(error.message);
+  if (error) navigate("/");
 
   if (isPending) return <Spinner />;
 

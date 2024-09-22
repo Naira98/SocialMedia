@@ -1,27 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-
-import { ReduxState } from "../../types/reduxState";
-import { setFriendsData } from "../../redux/authSlice";
 import { addRemoveFriend as addRemoveFriendApi } from "../../services/users";
+import { Friend } from "../../types/User";
 
-export function useAddDeleteFriend({
-  freindId,
-}:{freindId:string}) {
+export function useAddRemoveFriend({
+  friendId,
+  currentUserId,
+}: {
+  friendId: string;
+  currentUserId: string;
+}) {
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
-  const tokens = useSelector((state: ReduxState) => state.tokens)!;
-  // Mutations
+
   const { mutate: addRemoveFriend } = useMutation({
-    mutationFn: (friendId: string) => addRemoveFriendApi(friendId, tokens, dispatch),
-    onSuccess: (data) => {
-      //friends= array of {_id, firstName, lastName, occupation, picturePath, viewedProfile, impressions}[]
-      queryClient.invalidateQueries({ queryKey: ["friends", tokens.userId] });
+    mutationFn: (friendId: string) => addRemoveFriendApi(friendId),
+    onSuccess: (data: Friend[]) => {
+      queryClient.setQueryData(["friends", currentUserId], data);
       queryClient.invalidateQueries({
-        queryKey: ["friends", freindId],
+        queryKey: ["friends", friendId],
       });
-      dispatch(setFriendsData({ friends: data }));
     },
     onError: (err) => {
       toast.error(err.message);

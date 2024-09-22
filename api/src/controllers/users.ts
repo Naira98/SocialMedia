@@ -2,13 +2,30 @@ import { NextFunction, Response } from "express";
 import { RequestWithUser } from "../types/RequestWithUser";
 import User, { IUserModel } from "../models/User";
 
-export const getUser = async (
+export const getMe = async (
   req: RequestWithUser,
   res: Response,
   next: NextFunction
 ) => {
   try {
     // get current user or profile user (useGetUser, useProfileUser)
+    const { userId } = req.user;
+    const user = await User.findById(userId, "-friends -email -password -createdAt -updatedAt ").lean();
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.status(200).json(user);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getUser = async (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // get profile user (useProfileUser)
     const { id } = req.params;
     const user = await User.findById(id, "-password -createdAt -updatedAt");
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -34,6 +51,7 @@ export const getUserFriends = async (
         )
       )
     );
+    console.log(friends)
     return res.status(200).json(friends);
   } catch (err) {
     next(err);

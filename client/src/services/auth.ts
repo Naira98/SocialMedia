@@ -1,8 +1,7 @@
-import { loginFormValues, registerFromValues } from "../types/form";
-import { setLogin } from "../redux/authSlice";
-import { Dispatch } from "@reduxjs/toolkit";
+import { loginFormValues, registerFromValues } from "../types/Forms";
 import { NavigateFunction } from "react-router-dom";
-import { User } from "../../../types/User";
+import apiReq from "./apiReq";
+import { getTokens } from "../util/helpers";
 
 export async function login(values: loginFormValues) {
   try {
@@ -51,52 +50,28 @@ export async function register(
   }
 }
 
-export async function getUser(
-  user: User | null,
-  refreshToken: string | null,
-  dispatch: Dispatch,
+export async function getMe(
+  userId: string | null,
+  setUserId: React.Dispatch<React.SetStateAction<string | null>>,
   navigate: NavigateFunction
 ) {
   try {
-    if (!refreshToken) {
+    const { accessToken, refreshToken } = getTokens();
+    if (!refreshToken || !accessToken) {
       navigate("/");
       return null;
     }
 
-    const refreshRes = await fetch("http://localhost:3000/auth/refresh", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ refreshToken }),
-    });
-
-    const refreshData = await refreshRes.json(); // {userId, accessToken}
-
-    if (!refreshRes.ok) {
-      navigate("/");
-      return null;
-    }
-
-    const userRes = await fetch(
-      `http://localhost:3000/users/${refreshData.userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${refreshData.accessToken}`,
-        },
-      }
+    const res = await apiReq(
+      "GET",
+      "/users/me",
+      { "Content-Type": "application/json" },
+      undefined
     );
-
-    const userData = await userRes.json(); // userData: {_id, firstName, lastName, ...}
-
-    if (!userRes.ok) throw new Error(userData.message);
-
-    if (user?._id !== userData._id)
-      dispatch(setLogin({ user: userData, tokens: refreshData }));
-
-    return userData;
+    const data = await res.json(); // userData: {_id, firstName, lastName, ...}
+    if (!res.ok) throw new Error(data.message);
+    if (userId !== data._id) setUserId(data._id);
+    return data;
   } catch (err) {
     console.log(err);
     throw err;
