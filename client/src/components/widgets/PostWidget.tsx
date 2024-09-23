@@ -45,6 +45,7 @@ const PostWidget = ({
   const { userId: loggedInUserId } = useAuth();
   const isLiked = likes.includes(loggedInUserId!);
   const likeCount = Object.keys(likes).length;
+  const isYou = userData._id === loggedInUserId && isProfile;
 
   const name = `${userData.firstName} ${userData.lastName}`;
 
@@ -57,7 +58,7 @@ const PostWidget = ({
   const {primaryMain, neutralMain, palette} = useColors()
 
   return (
-    <WidgetWrapper palette={palette} m={isProfile && i === 0 ? "0" : "2rem 0"}>
+    <WidgetWrapper palette={palette} m={isProfile && !isYou && i === 0 ? "0" : "2rem 0"}>
       <PostCredentilas
         postedBy={userData}
         createdAt={createdAt}
