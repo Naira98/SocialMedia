@@ -26,7 +26,7 @@ import { IUser } from "../../types/User";
 const UserWidget = ({
   userData,
   isMobileScreen,
-}: {
+}: { 
   userData: IUser;
   isMobileScreen: boolean;
 }) => {

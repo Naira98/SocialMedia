@@ -7,14 +7,30 @@ import FriendListWidget from "../components/widgets/FriendListWidget";
 import AdvertiseWidget from "../components/widgets/AdvertiseWidget";
 import Spinner from "../components/Spinner";
 import { useProfileUser } from "../hooks/users/useProfileUser";
+import { useAuth } from "../contexts/useAuth";
+import AddPostWidget from "../components/widgets/AddPostWidget";
 
 const Profile = () => {
   const { userId } = useParams() as { userId: string };
   const { profileUser, isPending, error } = useProfileUser(userId);
+  const { userId: currentUserId } = useAuth();
+  const isYou = userId === currentUserId;
 
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
 
-  if (isPending) return <Spinner />;
+  if (isPending)
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Spinner />
+      </div>
+    );
   if (error) toast.error(error.message);
 
   return (
@@ -38,6 +54,7 @@ const Profile = () => {
             />
           </Box>
           <Box flexBasis="64%">
+            {isYou && <AddPostWidget picturePath={profileUser!.picturePath} />}
             <PostsWidget key={profileUser._id.toString()} isProfile={true} />
           </Box>
           {!isMobileScreen && (

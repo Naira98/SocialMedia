@@ -6,7 +6,7 @@ export interface IPost {
   description: string;
   picturePath: string;
   likes: string[];
-  comments: string[];
+  comments: { userId: string; comment: string }[];
 }
 
 export interface IPostModel extends IPost, Document<ObjectId> {}
@@ -23,7 +23,12 @@ const postSchema: Schema = new Schema(
     },
     picturePath: { type: String, default: "" },
     likes: { type: [{ type: String }], default: [] },
-    comments: { type: [{ type: String }], default: [] },
+    comments: {
+      type: [
+        { type: { userId: { type: String, ref: "User" }, comment: String } },
+      ],
+      default: [],
+    },
   },
   { timestamps: true }
 );

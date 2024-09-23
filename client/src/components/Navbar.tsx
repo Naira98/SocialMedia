@@ -51,7 +51,7 @@ const Nvabar = () => {
         <Link to="/home" style={{ textDecoration: "none" }} >
           <FlexBetween style={{ gap: "15px" }}>
             <img
-              src="logo.png"
+              src="/logo.png"
               alt="logo"
               style={{ width: "55px", cursor: "pointer" }}
             />

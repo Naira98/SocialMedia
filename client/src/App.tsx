@@ -28,7 +28,19 @@ const App = () => {
 
   if (error) navigate("/");
 
-  if (isPending) return <Spinner />;
+  if (isPending)
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Spinner />
+      </div>
+    );
 
   return (
     <div className="app">

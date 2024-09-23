@@ -10,7 +10,22 @@ const FriendListWidget = ({ user }: { user: IUser }) => {
   const { palette } = useColors();
   const { friends, isPending } = useFetchFriends(user._id);
 
-  if (isPending) return <Spinner />;
+  if (isPending)
+    return (
+      <WidgetWrapper
+        palette={palette}
+        style={{
+          position: "sticky",
+          top: "27.5rem",
+          left: "0",
+          zIndex: "99",
+          overflow: "scroll",
+          height: "19.75rem",
+        }}
+      >
+        <Spinner />
+      </WidgetWrapper>
+    );
 
   return (
     <WidgetWrapper

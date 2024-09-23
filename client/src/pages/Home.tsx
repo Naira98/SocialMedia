@@ -1,6 +1,5 @@
 import { Box, useMediaQuery } from "@mui/material";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import UserWidget from "../components/widgets/UserWidget";
 import AddPostWidget from "../components/widgets/AddPostWidget";
 import PostsWidget from "../components/widgets/PostsWidget";
@@ -14,11 +13,20 @@ const Home = () => {
   const { userId, setUserId } = useAuth();
   const { me, isPending, error } = useGetMe(userId, setUserId);
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
-  const navigate = useNavigate();
 
-  if (isPending) return <Spinner />;
+  if (isPending)
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spinner />
+      </div>
+    );
   if (error) toast.error(error.message);
-  if (!me) return navigate("/");
 
   return (
     <Box
@@ -35,19 +43,19 @@ const Home = () => {
         <>
           <Box flexBasis="26%">
             <UserWidget
-              userData={me}
-              key={me._id}
+              userData={me!}
+              key={me!._id}
               isMobileScreen={isMobileScreen}
             />
           </Box>
           <Box flexBasis="64%">
-            <AddPostWidget picturePath={me.picturePath} />
-            <PostsWidget key={me._id} isProfile={false} />
+            <AddPostWidget picturePath={me!.picturePath} />
+            <PostsWidget key={me!._id} isProfile={false} />
           </Box>
           {!isMobileScreen && (
             <Box flexBasis="26%">
               <AdvertiseWidget />
-              <FriendListWidget user={me} key={me._id} />
+              <FriendListWidget user={me!} key={me!._id} />
             </Box>
           )}
         </>
