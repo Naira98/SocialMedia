@@ -1,10 +1,9 @@
 import { Box, Typography } from "@mui/material";
-import { useTheme } from "@emotion/react";
 import Form from "../components/Form";
-import { Palette } from "../types/ThemeWithPalette";
+import useColors from "../hooks/util/useColors";
 
 const Login = () => {
-  const { palette } = useTheme() as { palette: Palette };
+  const { palette } = useColors();
 
   return (
     <Box>

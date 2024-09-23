@@ -7,7 +7,6 @@ import {
   Select,
   Typography,
   useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import {
   DarkMode,
@@ -20,11 +19,11 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useLogut } from "../hooks/auth/useLogout";
 import FlexBetween from "./styledComponents/FlexBetween";
 import UserImage from "./UserImage";
-import { ThemeWithPalette } from "../types/ThemeWithPalette";
 import { useMode } from "../contexts/useMode";
 import { useAuth } from "../contexts/useAuth";
 import { useGetMe } from "../hooks/auth/useGetMe";
 import Spinner from "./Spinner";
+import useColors from "../hooks/util/useColors";
 
 const Nvabar = () => {
   const { mode, changeMode } = useMode();
@@ -34,10 +33,7 @@ const Nvabar = () => {
 
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
 
-  const theme = useTheme() as ThemeWithPalette;
-  const neutralLight = theme.palette.neutral.light;
-  const neutralMediumMain = theme.palette.neutral.mediumMain;
-  const alt = theme.palette.background.alt;
+  const {neutralLight, neutralMedMain, backAlt} = useColors()
 
   if (isPending) return <Spinner />;
 
@@ -48,16 +44,16 @@ const Nvabar = () => {
       <FlexBetween
         style={{
           padding: "1rem 6%",
-          backgroundColor: alt,
+          backgroundColor: backAlt,
           gap: "1.5rem",
         }}
       >
         <Link to="/home" style={{ textDecoration: "none" }} >
-          <FlexBetween style={{ gap: "10px" }}>
+          <FlexBetween style={{ gap: "15px" }}>
             <img
               src="logo.png"
               alt="logo"
-              style={{ width: "50px", cursor: "pointer" }}
+              style={{ width: "55px", cursor: "pointer" }}
             />
             <Typography
               fontWeight="bold"
@@ -79,15 +75,15 @@ const Nvabar = () => {
           {!isMobileScreen && (
             <>
               <IconButton>
-                <Message sx={{ fontSize: "25px", color: neutralMediumMain }} />
+                <Message sx={{ fontSize: "25px", color: neutralMedMain }} />
               </IconButton>
               <IconButton>
                 <Notifications
-                  sx={{ fontSize: "25px", color: neutralMediumMain }}
+                  sx={{ fontSize: "25px", color: neutralMedMain }}
                 />
               </IconButton>
               <IconButton>
-                <Help sx={{ fontSize: "25px", color: neutralMediumMain }} />
+                <Help sx={{ fontSize: "25px", color: neutralMedMain }} />
               </IconButton>
             </>
           )}

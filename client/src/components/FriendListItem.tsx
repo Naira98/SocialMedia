@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import { Link } from "react-router-dom";
@@ -8,7 +8,7 @@ import FlexBetween from "./styledComponents/FlexBetween";
 import UserImage from "./UserImage";
 import { useAddRemoveFriend } from "../hooks/users/useAddRemoveFriend";
 import { Friend } from "../types/User";
-import { Palette } from "../types/ThemeWithPalette";
+import useColors from "../hooks/util/useColors";
 
 const FriendListItem = ({ user }: { user: Friend }) => {
   const { _id: friendId, firstName, lastName, picturePath, occupation } = user;
@@ -23,12 +23,7 @@ const FriendListItem = ({ user }: { user: Friend }) => {
     currentUserId: currentUserId!,
   });
 
-  const { palette } = useTheme() as { palette: Palette };
-  const primaryLight = palette.primary.light;
-  const primaryMain = palette.primary.main;
-  const primaryDark = palette.primary.dark;
-  const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
+  const { primaryLight, primaryMain, primaryDark, neutralMain, neutralMed } = useColors();
 
   return (
     <FlexBetween mb="1rem">
@@ -39,7 +34,7 @@ const FriendListItem = ({ user }: { user: Friend }) => {
         <Box>
           <Link to={`/profile/${friendId}`} style={{ textDecoration: "none" }}>
             <Typography
-              color={main}
+              color={neutralMain}
               variant="h5"
               fontWeight="500"
               sx={{
@@ -52,7 +47,7 @@ const FriendListItem = ({ user }: { user: Friend }) => {
               {firstName + " " + lastName}
             </Typography>
           </Link>
-          <Typography color={medium} fontSize="0.75rem">
+          <Typography color={neutralMed} fontSize="0.75rem">
             {occupation}
           </Typography>
         </Box>

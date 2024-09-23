@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   Box,
-  Button,
   Divider,
   IconButton,
   Input,
@@ -11,13 +10,13 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import { useTheme } from "@emotion/react";
 import PostCredentilas from "../PostCredentilas";
+import SmallButton from "../SmallButton";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
-import { Palette } from "../../types/ThemeWithPalette";
 import { usePatchLike } from "../../hooks/posts/usePatchLike";
 import { useAddComment } from "../../hooks/posts/useAddComment";
+import useColors from "../../hooks/util/useColors";
 import { useAuth } from "../../contexts/useAuth";
 import { IPost } from "../../types/Post";
 
@@ -39,7 +38,7 @@ const PostWidget = ({
     comments,
     createdAt,
   } = post;
-  
+
   const [isComments, setIsComments] = useState(false);
   const [comment, setComment] = useState("");
 
@@ -49,13 +48,13 @@ const PostWidget = ({
 
   const name = `${userData.firstName} ${userData.lastName}`;
 
-  const { patchLike } = usePatchLike({postCreatorId: userData._id});
-  const { addComment } = useAddComment({postCreatorId: userData._id, setComment});
+  const { patchLike } = usePatchLike({ postCreatorId: userData._id });
+  const { addComment } = useAddComment({
+    postCreatorId: userData._id,
+    setComment,
+  });
 
-  const { palette } = useTheme() as { palette: Palette };
-  const primatyMain = palette.primary.main;
-  const main = palette.neutral.main;
-  const primary = palette.primary.main;
+  const {primaryMain, neutralMain, palette} = useColors()
 
   return (
     <WidgetWrapper palette={palette} m={isProfile && i === 0 ? "0" : "2rem 0"}>
@@ -65,7 +64,7 @@ const PostWidget = ({
         postId={postId.toString()}
         isProfile={isProfile}
       />
-      <Typography color={main} sx={{ mt: "1rem" }}>
+      <Typography color={neutralMain} sx={{ mt: "1rem" }}>
         {description}
       </Typography>
       {picturePath && (
@@ -84,7 +83,7 @@ const PostWidget = ({
           <FlexBetween gap="0.3rem">
             <IconButton onClick={() => patchLike(postId.toString())}>
               {isLiked ? (
-                <FavoriteOutlinedIcon sx={{ color: primary }} />
+                <FavoriteOutlinedIcon sx={{ color: primaryMain }} />
               ) : (
                 <FavoriteBorderOutlinedIcon />
               )}
@@ -126,20 +125,15 @@ const PostWidget = ({
               onChange={(e) => setComment(e.target.value)}
               style={{ width: "70%" }}
             />
-            <Button
+            <SmallButton
               disabled={!comment}
               onClick={(e) => {
                 e.preventDefault();
                 addComment({ comment, postId: postId.toString() });
               }}
-              sx={{
-                color: palette.background.alt,
-                backgroundColor: primatyMain,
-                borderRadius: "3rem",
-              }}
             >
               Add Comment
-            </Button>
+            </SmallButton>
           </FlexBetween>
         </Box>
       )}

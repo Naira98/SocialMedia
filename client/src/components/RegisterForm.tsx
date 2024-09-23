@@ -1,12 +1,12 @@
-import { useTheme } from "@emotion/react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import toast from "react-hot-toast";
-import { registerFromValues } from "../types/Forms";
-import { Palette } from "../types/ThemeWithPalette";
-import { useRegister } from "../hooks/auth/useRegister";
 import Dropzone from "./Dropzone";
+import BigButton from "./BigButton";
+import { registerFromValues } from "../types/Forms";
+import { useRegister } from "../hooks/auth/useRegister";
+import useColors from "../hooks/util/useColors";
 
 const initialValuesRegister: registerFromValues = {
   firstName: "",
@@ -32,8 +32,8 @@ const RegisterForm = ({
 }: {
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { palette } = useTheme() as { palette: Palette };
-  const { register } = useRegister();
+  const { palette } = useColors();
+  const { register, isPending } = useRegister();
 
   const handleFormSubmit = async (values: registerFromValues) => {
     if (!values.picture) {
@@ -111,7 +111,10 @@ const RegisterForm = ({
               borderRadius="5px"
               p="1rem"
             >
-              <Dropzone picture={values.picture} setFieldValue={setFieldValue} />
+              <Dropzone
+                picture={values.picture}
+                setFieldValue={setFieldValue}
+              />
             </Box>
 
             <TextField
@@ -138,19 +141,7 @@ const RegisterForm = ({
           </Box>
 
           <Box>
-            <Button
-              fullWidth
-              type="submit"
-              sx={{
-                m: "2rem 0",
-                p: "1rem",
-                backgroundColor: palette.primary.main,
-                color: palette.background.alt,
-                "&:hover": { color: palette.primary.main },
-              }}
-            >
-              REGISTER
-            </Button>
+            <BigButton disabled={isPending}>REGISTER</BigButton>
             <Typography
               onClick={() => {
                 setIsLogin((isLogin) => !isLogin);

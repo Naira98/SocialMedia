@@ -1,18 +1,17 @@
 import { Link } from "react-router-dom";
 import { Box, IconButton, Typography } from "@mui/material";
-import { useTheme } from "@emotion/react";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { formatDistanceToNow } from "date-fns";
 import UserImage from "./UserImage";
 import FlexBetween from "./styledComponents/FlexBetween";
-import { Palette } from "../types/ThemeWithPalette";
 import { useAddRemoveFriend } from "../hooks/users/useAddRemoveFriend";
 import { useDeletePost } from "../hooks/posts/useDeletePost";
 import { useAuth } from "../contexts/useAuth";
 import { PostCreator } from "../types/User";
 import { useFetchFriends } from "../hooks/users/useFetchFriends";
+import useColors from "../hooks/util/useColors";
 
 const PostCredentilas = ({
   postedBy,
@@ -21,30 +20,26 @@ const PostCredentilas = ({
   isProfile = false,
 }: {
   postedBy: PostCreator;
-  createdAt: Date | null;
+  createdAt: Date;
   postId: string;
   isProfile?: boolean;
 }) => {
-  const name = `${postedBy.firstName} ${postedBy.lastName}`;
   const postCreatorId = postedBy._id;
   const { userId: currentUserId } = useAuth();
-  
+
   const { friends } = useFetchFriends(currentUserId!);
-  const isFriend = Boolean(friends?.find((friend) => friend._id === postCreatorId));
+  const isFriend = Boolean(
+    friends?.find((friend) => friend._id === postCreatorId)
+  );
   const { addRemoveFriend } = useAddRemoveFriend({
     friendId: postedBy._id,
     currentUserId: currentUserId!,
   });
   const { deletePost } = useDeletePost();
+  const { primaryLight, primaryMain, primaryDark, neutralMain, neutralMed } =
+    useColors();
 
-  const { palette } = useTheme() as { palette: Palette };
-  const primaryLight = palette.primary.light;
-  const primaryMain = palette.primary.main;
-  const primaryDark = palette.primary.dark;
-  const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
-
-  const date = createdAt ? formatDistanceToNow(createdAt) : null;
+  const date = formatDistanceToNow(createdAt);
 
   return (
     <FlexBetween mb="1rem">
@@ -58,7 +53,7 @@ const PostCredentilas = ({
             style={{ textDecoration: "none" }}
           >
             <Typography
-              color={main}
+              color={neutralMain}
               variant="h5"
               fontWeight="500"
               sx={{
@@ -68,10 +63,10 @@ const PostCredentilas = ({
                 },
               }}
             >
-              {name}
+              {`${postedBy.firstName} ${postedBy.lastName}`}
             </Typography>
           </Link>
-          <Typography color={medium} fontSize="0.75rem">
+          <Typography color={neutralMed} fontSize="0.75rem">
             {date + " ago"}
           </Typography>
         </Box>

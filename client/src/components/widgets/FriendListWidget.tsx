@@ -1,14 +1,16 @@
 import { Typography } from "@mui/material";
-import { useTheme } from "@emotion/react";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
-import { Palette } from "../../types/ThemeWithPalette";
 import { Friend, IUser } from "../../types/User";
 import { useFetchFriends } from "../../hooks/users/useFetchFriends";
 import FriendListItem from "../FriendListItem";
+import useColors from "../../hooks/util/useColors";
+import Spinner from "../Spinner";
 
 const FriendListWidget = ({ user }: { user: IUser }) => {
-  const { palette } = useTheme() as { palette: Palette };
-  const { friends } = useFetchFriends(user._id);
+  const { palette } = useColors();
+  const { friends, isPending } = useFetchFriends(user._id);
+
+  if (isPending) return <Spinner />;
 
   return (
     <WidgetWrapper

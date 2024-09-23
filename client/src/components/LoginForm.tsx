@@ -1,11 +1,11 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { useTheme } from "@emotion/react";
+import { Box, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { Palette } from "../types/ThemeWithPalette";
+import BigButton from "./BigButton";
 import { useLogin } from "../hooks/auth/useLogin";
 import { loginFormValues } from "../types/Forms";
 import { useAuth } from "../contexts/useAuth";
+import useColors from "../hooks/util/useColors";
 
 const initialValuesLogin = {
   email: "",
@@ -22,7 +22,7 @@ const LoginForm = ({
 }) => {
   const { setUserId } = useAuth();
   const { login, isPending } = useLogin(setUserId);
-  const { palette } = useTheme() as { palette: Palette };
+  const { palette } = useColors();
 
   const handleFormSubmit = async (values: loginFormValues) => {
     login({ values });
@@ -73,20 +73,7 @@ const LoginForm = ({
           </Box>
 
           <Box>
-            <Button
-              fullWidth
-              type="submit"
-              disabled={isPending}
-              sx={{
-                m: "2rem 0",
-                p: "1rem",
-                backgroundColor: palette.primary.main,
-                color: palette.background.alt,
-                "&:hover": { color: palette.primary.main },
-              }}
-            >
-              LOGIN
-            </Button>
+            <BigButton disabled={isPending}>LOGIN</BigButton>
             <Typography
               onClick={() => {
                 setIsLogin((isLogin: boolean) => !isLogin);

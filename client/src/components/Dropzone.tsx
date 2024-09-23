@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import FlexBetween from "./styledComponents/FlexBetween";
-import { Palette } from "../types/ThemeWithPalette";
+import useColors from "../hooks/util/useColors";
 
 const Dropzone = ({
   picture,
@@ -15,7 +15,7 @@ const Dropzone = ({
   setFieldValue?: (key: string, value: File | null) => void;
   setImage?: React.Dispatch<React.SetStateAction<File | null>>;
 }) => {
-  const { palette } = useTheme() as { palette: Palette };
+  const { palette } = useColors();
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {

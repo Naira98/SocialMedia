@@ -53,7 +53,7 @@ export const users = [
     picturePath: "p4.jpeg",
     friends: [userIds[5], userIds[1]],
     location: "Canada, CA",
-    occupation: "Data Scientist Hacker",
+    occupation: "Data Scientist",
     viewedProfile: 45468,
     impressions: 19986,
     createdAt: 1288090662,

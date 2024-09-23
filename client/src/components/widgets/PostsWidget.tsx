@@ -1,16 +1,15 @@
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Typography } from "@mui/material";
-import { useTheme } from "@emotion/react";
 import PostWidget from "./PostWidget";
 import Spinner from "../Spinner";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import { useGetFeed } from "../../hooks/posts/useGetFeed";
-import { Palette } from "../../types/ThemeWithPalette";
 import { IPost } from "../../types/Post";
+import useColors from "../../hooks/util/useColors";
 
 const PostsWidget = ({ isProfile }: { isProfile: boolean }) => {
-  const { palette } = useTheme() as { palette: Palette };
+  const { palette } = useColors();
   const { userId } = useParams();
   const { feed, isPending, error } = useGetFeed(isProfile, userId);
 
