@@ -32,7 +32,7 @@ const RegisterForm = ({
 }: {
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { palette } = useColors();
+  const { primaryMain, primaryMedMain, neutralMed } = useColors();
   const { register, isPending } = useRegister();
 
   const handleFormSubmit = async (values: registerFromValues) => {
@@ -107,7 +107,7 @@ const RegisterForm = ({
             />
             <Box
               gridColumn="span 4"
-              border={`1px solid ${palette.neutral.medium}`}
+              border={`1px solid ${neutralMed}`}
               borderRadius="5px"
               p="1rem"
             >
@@ -149,10 +149,10 @@ const RegisterForm = ({
               }}
               sx={{
                 textDecoration: "underline",
-                color: palette.primary.main,
+                color: primaryMain,
                 "&:hover": {
                   cursor: "pointer",
-                  color: palette.primary.light,
+                  color: primaryMedMain,
                 },
               }}
             >

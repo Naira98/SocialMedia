@@ -1,17 +1,16 @@
-import mongoose from "mongoose";
-
+import { ObjectId } from "mongodb";
 const userIds = [
-  new mongoose.Types.ObjectId(),
-  new mongoose.Types.ObjectId(),
-  new mongoose.Types.ObjectId(),
-  new mongoose.Types.ObjectId(),
-  new mongoose.Types.ObjectId(),
-  new mongoose.Types.ObjectId(),
-  new mongoose.Types.ObjectId(),
-  new mongoose.Types.ObjectId(),
+  new ObjectId(),
+  new ObjectId(),
+  new ObjectId(),
+  new ObjectId(),
+  new ObjectId(),
+  new ObjectId(),
+  new ObjectId(),
+  new ObjectId(),
 ];
 
-export const users = [
+export const usersData = [
   {
     _id: userIds[0],
     firstName: "test",
@@ -24,9 +23,8 @@ export const users = [
     occupation: "Software Engineer",
     viewedProfile: 14561,
     impressions: 888822,
-    createdAt: 1115211422,
-    updatedAt: 1115211422,
-    __v: 0,
+    twitter: "",
+    linkedin: "",
   },
   {
     _id: userIds[1],
@@ -40,9 +38,8 @@ export const users = [
     occupation: "Degenerate",
     viewedProfile: 12351,
     impressions: 55555,
-    createdAt: 1595589072,
-    updatedAt: 1595589072,
-    __v: 0,
+    twitter: "",
+    linkedin: "steveralph",
   },
   {
     _id: userIds[2],
@@ -56,9 +53,8 @@ export const users = [
     occupation: "Data Scientist",
     viewedProfile: 45468,
     impressions: 19986,
-    createdAt: 1288090662,
-    updatedAt: 1288090662,
-    __v: 0,
+    twitter: "",
+    linkedin: "",
   },
   {
     _id: userIds[3],
@@ -72,9 +68,8 @@ export const users = [
     occupation: "Educator",
     viewedProfile: 41024,
     impressions: 55316,
-    createdAt: 1219214568,
-    updatedAt: 1219214568,
-    __v: 0,
+    twitter: "",
+    linkedin: "",
   },
   {
     _id: userIds[4],
@@ -87,10 +82,6 @@ export const users = [
     location: "Utah, CA",
     occupation: "Hacker",
     viewedProfile: 40212,
-    impressions: 7758,
-    createdAt: 1493463661,
-    updatedAt: 1493463661,
-    __v: 0,
   },
   {
     _id: userIds[5],
@@ -104,9 +95,8 @@ export const users = [
     occupation: "Journalist",
     viewedProfile: 976,
     impressions: 4658,
-    createdAt: 1381326073,
-    updatedAt: 1381326073,
-    __v: 0,
+    twitter: "",
+    linkedin: "",
   },
   {
     _id: userIds[6],
@@ -120,9 +110,8 @@ export const users = [
     occupation: "Nurse",
     viewedProfile: 1510,
     impressions: 77579,
-    createdAt: 1714704324,
-    updatedAt: 1642716557,
-    __v: 0,
+    twitter: "",
+    linkedin: "",
   },
   {
     _id: userIds[7],
@@ -136,37 +125,31 @@ export const users = [
     occupation: "A Student",
     viewedProfile: 19420,
     impressions: 82970,
-    createdAt: 1369908044,
-    updatedAt: 1359322268,
-    __v: 0,
+    twitter: "",
+    linkedin: "",
   },
 ];
 
-export const posts = [
+export const postsData = [
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: new ObjectId(),
     userId: userIds[1],
-    firstName: "Steve",
-    lastName: "Ralph",
     description: "Some really long random description",
     picturePath: "post1.jpeg",
-    userPicturePath: "p3.jpeg",
     likes: [userIds[0], userIds[2], userIds[3], userIds[4]],
     comments: [
       "random comment",
       "another random comment",
       "yet another random comment",
     ],
+    createdAt: new Date(),
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: new ObjectId(),
     userId: userIds[3],
-    firstName: "Whatcha",
-    lastName: "Doing",
     description:
       "Another really long random description. This one is longer than the previous one.",
     picturePath: "post2.jpeg",
-    userPicturePath: "p6.jpeg",
     likes: [userIds[7], userIds[4], userIds[1], userIds[2]],
     comments: [
       "one more random comment",
@@ -174,16 +157,14 @@ export const posts = [
       "no more random comments",
       "I lied, one more random comment",
     ],
+    createdAt: new Date(),
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: new ObjectId(),
     userId: userIds[4],
-    firstName: "Jane",
-    lastName: "Doe",
     description:
       "This is the last really long random description. This one is longer than the previous one.",
     picturePath: "post3.jpeg",
-    userPicturePath: "p5.jpeg",
     likes: [userIds[1], userIds[6], userIds[3], userIds[5]],
     comments: [
       "one more random comment",
@@ -192,16 +173,14 @@ export const posts = [
       "Why am I doing this?",
       "I'm bored",
     ],
+    createdAt: new Date(),
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: new ObjectId(),
     userId: userIds[5],
-    firstName: "Harvey",
-    lastName: "Dunn",
     description:
       "This is the last really long random description. This one is longer than the previous one. Man I'm bored. I'm going to keep typing until I run out of things to say.",
     picturePath: "post4.jpeg",
-    userPicturePath: "p7.jpeg",
     likes: [userIds[1], userIds[6], userIds[3]],
     comments: [
       "I lied again, one more random comment",
@@ -211,16 +190,14 @@ export const posts = [
       "All I want to do is play video games",
       "I'm going to play video games",
     ],
+    createdAt: new Date(),
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: new ObjectId(),
     userId: userIds[6],
-    firstName: "Carly",
-    lastName: "Vowel",
     description:
       "Just a short description. I'm tired of typing. I'm going to play video games now.",
     picturePath: "post5.jpeg",
-    userPicturePath: "p8.jpeg",
     likes: [userIds[1], userIds[3], userIds[5], userIds[7]],
     comments: [
       "I lied again, one more random comment",
@@ -229,16 +206,14 @@ export const posts = [
       "What should I do?",
       "I'm going to play video games",
     ],
+    createdAt: new Date(),
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: new ObjectId(),
     userId: userIds[7],
-    firstName: "Jessica",
-    lastName: "Dunn",
     description:
       "For the last time, I'm going to play video games now. I'm tired of typing. I'm going to play video games now.",
     picturePath: "post6.jpeg",
-    userPicturePath: "p9.jpeg",
     likes: [userIds[1], userIds[2]],
 
     comments: [
@@ -248,5 +223,6 @@ export const posts = [
       "Stop it.",
       "Michael, stop it.",
     ],
+    createdAt: new Date(),
   },
 ];

@@ -9,12 +9,13 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import AppLayout from "./components/AppLayout";
 import ProtectedRoutes from "./components/ProtectedRoutes";
-import { ThemeWithPalette } from "./types/ThemeWithPalette";
 import Spinner from "./components/Spinner";
 import ProtectedLogin from "./components/ProtectedLogin";
+import { ThemeWithPalette } from "./types/ThemeWithPalette";
 import { useGetMe } from "./hooks/auth/useGetMe";
 import { useMode } from "./contexts/useMode";
 import { useAuth } from "./contexts/useAuth";
+import { removeTokens } from "./util/helpers";
 
 const App = () => {
   const { mode } = useMode();
@@ -26,7 +27,10 @@ const App = () => {
   const { userId, setUserId } = useAuth();
   const { isPending, error } = useGetMe(userId, setUserId);
 
-  if (error) navigate("/");
+  if (error) {
+    removeTokens();
+    navigate("/");
+  }
 
   if (isPending)
     return (

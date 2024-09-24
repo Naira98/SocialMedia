@@ -15,7 +15,7 @@ const Dropzone = ({
   setFieldValue?: (key: string, value: File | null) => void;
   setImage?: React.Dispatch<React.SetStateAction<File | null>>;
 }) => {
-  const { palette } = useColors();
+  const { primaryMain } = useColors();
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -50,14 +50,14 @@ const Dropzone = ({
       <FlexBetween>
         <Box
           {...getRootProps()}
-          border={`2px dashed ${palette.primary.main}`}
+          border={`2px dashed ${primaryMain}`}
           p="1rem"
           width="100%"
           sx={{ "&:hover": { cursor: "pointer" } }}
         >
           <input {...getInputProps()} />
           {!picture ? (
-            <p>Add Image Here</p>
+            <p style={{textAlign: 'center'}}>Add Image Here</p>
           ) : (
             <FlexBetween>
               <Typography>{picture.name}</Typography>

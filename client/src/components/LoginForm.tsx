@@ -22,7 +22,7 @@ const LoginForm = ({
 }) => {
   const { setUserId } = useAuth();
   const { login, isPending } = useLogin(setUserId);
-  const { palette } = useColors();
+  const { primaryMain, primaryMedMain } = useColors();
 
   const handleFormSubmit = async (values: loginFormValues) => {
     login({ values });
@@ -81,10 +81,10 @@ const LoginForm = ({
               }}
               sx={{
                 textDecoration: "underline",
-                color: palette.primary.main,
+                color: primaryMain,
                 "&:hover": {
                   cursor: "pointer",
-                  color: palette.primary.light,
+                  color: primaryMedMain,
                 },
               }}
             >

@@ -3,21 +3,30 @@ import Form from "../components/Form";
 import useColors from "../hooks/util/useColors";
 
 const Login = () => {
-  const { palette } = useColors();
+  const { backAlt } = useColors();
 
   return (
     <Box>
       <Box
         sx={{
           width: "100%",
-          backgroundColor: `${palette.background.alt}`,
+          backgroundColor: `${backAlt}`,
           p: "1rem 6%",
           textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "15px",
         }}
       >
+        <img
+          src="/logo.png"
+          alt="logo"
+          style={{ width: "60px", cursor: "pointer" }}
+        />
         <Typography
           fontWeight="bold"
-          fontSize="32px"
+          fontSize="38px"
           color="primary"
           noWrap={true}
         >
@@ -28,7 +37,7 @@ const Login = () => {
       <Box
         sx={{
           width: "50%",
-          backgroundColor: `${palette.background.alt}`,
+          backgroundColor: `${backAlt}`,
           p: "2rem",
           m: "2rem auto",
           borderRadius: "1.5rem",

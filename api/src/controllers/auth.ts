@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User, { IUserModel } from "../models/User";
 import { REFRESH_SECRET } from "../config/config";
 import { generateAccessToken, generateRefreshToken } from "../../lib/helpers";
 import { Token as TokenType } from "../types/Token";
-import Token from "../models/Token";
+import { tokens, users } from "../db/collections";
+import { ObjectId } from "mongodb";
 
 /* REGISTER */
 export const register = async (
@@ -23,13 +23,12 @@ export const register = async (
     picturePath,
   } = req.body;
   try {
-    const user = await User.findOne({ email: email });
+    const user = await users.findOne({ email: email });
     if (user) return res.status(409).json({ message: "Email already exists" });
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
-
-    const newUser = new User({
+    users.insertOne({
       email,
       firstName,
       lastName,
@@ -43,7 +42,6 @@ export const register = async (
       twitter: "",
       linkedin: "",
     });
-    await newUser.save();
 
     return res.status(201).json({ message: "You registered successfully" });
   } catch (err) {
@@ -59,7 +57,7 @@ export const login = async (
 ) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email: email }).lean();
+    const user = await users.findOne({ email: email });
     if (!user) return res.status(401).json({ message: "Wrong Credentials" });
 
     const doMatch = await bcrypt.compare(password, user.password);
@@ -68,12 +66,10 @@ export const login = async (
     const accessToken = generateAccessToken({ userId: user._id });
     const refreshToken = generateRefreshToken({ userId: user._id });
 
-    const tokens = new Token({
+    await tokens.insertOne({
       userId: user._id,
       refreshToken,
     });
-
-    await tokens.save();
 
     delete user.password;
     delete user.friends;
@@ -95,7 +91,7 @@ export const refresh = async (
   try {
     const { refreshToken } = req.body;
 
-    const tokenInDB = await Token.findOne({ refreshToken });
+    const tokenInDB = await tokens.findOne({ refreshToken });
     if (!tokenInDB) return res.status(401).json({ message: "Invalid Token" });
 
     jwt.verify(
@@ -122,7 +118,7 @@ export const logout = async (
   next: NextFunction
 ) => {
   try {
-    await Token.findOneAndDelete({ userId: req.userId });
+    await tokens.findOneAndDelete({ userId: new ObjectId(req.userId) });
     return res.status(200).json({ message: "Logged out" });
   } catch (err) {
     return res.status(401).json(err);

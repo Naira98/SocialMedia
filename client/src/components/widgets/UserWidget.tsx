@@ -1,12 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Divider,
-  IconButton,
-  Input,
-  Typography,
-} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import { Box, Divider, IconButton, Input, Typography } from "@mui/material";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
@@ -26,7 +20,7 @@ import { IUser } from "../../types/User";
 const UserWidget = ({
   userData,
   isMobileScreen,
-}: { 
+}: {
   userData: IUser;
   isMobileScreen: boolean;
 }) => {
@@ -48,7 +42,7 @@ const UserWidget = ({
   const { addTwitter } = useAddTwitter(setIsTwitter);
   const { addLinkedin } = useAddLinkedin(setIsLinkedin);
 
-  const {palette,neutralDark, neutralMed, neutralMain} = useColors()
+  const { palette, neutralDark, neutralMed, neutralMain } = useColors();
 
   return (
     <WidgetWrapper
@@ -62,7 +56,9 @@ const UserWidget = ({
       {/* FIRST ROW */}
       <FlexBetween gap="0.5rem" pb="1.1rem">
         <FlexBetween gap="1rem">
-          <UserImage image={userData.picturePath} />
+          <Link to={`/profile/${userData._id}`}>
+            <UserImage image={userData.picturePath} />
+          </Link>
           <Box>
             <Typography
               variant="h5"
@@ -77,7 +73,9 @@ const UserWidget = ({
             >
               {userData.firstName} {userData.lastName}
             </Typography>
-            <Typography color={neutralMed}>{friends?.length} friends</Typography>
+            <Typography color={neutralMed}>
+              {friends?.length} friends
+            </Typography>
           </Box>
         </FlexBetween>
         {userData._id === userId && (
@@ -167,7 +165,12 @@ const UserWidget = ({
 
       {/* FORTH ROW */}
       <Box p="1rem 0">
-        <Typography fontSize="1rem" color={neutralMain} fontWeight="500" mb="1rem">
+        <Typography
+          fontSize="1rem"
+          color={neutralMain}
+          fontWeight="500"
+          mb="1rem"
+        >
           Social Profiles
         </Typography>
 
@@ -184,7 +187,7 @@ const UserWidget = ({
                     href={`http://twitter.com/${userData.twitter}`}
                     target="_blank"
                     style={{
-                      textDecoration: "none",
+                      color: neutralMed,
                     }}
                   >
                     {userData.twitter}
@@ -225,12 +228,12 @@ const UserWidget = ({
               <Typography color={neutralMain} fontWeight="500">
                 Linkedin
               </Typography>
-              <Typography color={neutralMed} fontSize="10px">
+              <Typography color={neutralMed} fontSize="11px">
                 {userData.linkedin ? (
                   <a
                     href={`http://linkedin.com/in/${userData.linkedin}`}
                     target="_blank"
-                    style={{ textDecoration: "none" }}
+                    style={{ color: neutralMed }}
                   >
                     {userData.linkedin}
                   </a>

@@ -10,6 +10,8 @@ import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
 import { useAddPost } from "../../hooks/posts/useAddPost";
 import useColors from "../../hooks/util/useColors";
+import { useAuth } from "../../contexts/useAuth";
+import { Link } from "react-router-dom";
 
 type State = File | null;
 
@@ -18,13 +20,16 @@ const AddPostWidget = ({ picturePath }: { picturePath: string }) => {
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState<State>(null);
   const { addPost } = useAddPost(setImage, setIsImage, setPost);
+  const { userId } = useAuth();
 
-  const { palette, neutralLight, neutralMedMain, neutralMed } = useColors();
+  const { neutralLight, neutralMedMain, neutralMed, palette } = useColors();
 
   return (
     <WidgetWrapper palette={palette} mb="1.5rem">
       <FlexBetween gap="1.5rem" mb="1rem">
-        <UserImage image={picturePath} />
+        <Link to={`/profile/${userId}`}>
+          <UserImage image={picturePath} />
+        </Link>
         <InputBase
           onChange={(e) => {
             setPost(e.target.value);

@@ -2,8 +2,9 @@ import fs from "fs";
 import path from "path";
 import { NextFunction, Response } from "express";
 import { RequestWithUser } from "../types/RequestWithUser";
-import Post from "../models/Post";
 import { IMAGES_PATH } from "../server";
+import { posts, users } from "../db/collections";
+import { ObjectId } from "mongodb";
 
 export const getFeed = async (
   req: RequestWithUser,
@@ -11,12 +12,27 @@ export const getFeed = async (
   next: NextFunction
 ) => {
   try {
-    const posts = await Post.find()
-      .populate("userId", "firstName lastName picturePath friends")
-      .sort({ createdAt: -1 });
+    const feed = await posts.find().sort({ createdAt: -1 }).toArray();
 
+    const feedPostsPopulated = await Promise.all(
+      feed.map(async (post) => {
+        const postAuthor = (await users.findOne(
+          { _id: post.userId },
+          {
+            projection: {
+              _id: 1,
+              firstName: 1,
+              lastName: 1,
+              picturePath: 1,
+            },
+          }
+        ));
+
+        return { ...post, userId: postAuthor };
+      })
+    );
     // return all posts
-    return res.status(200).json(posts);
+    return res.status(200).json(feedPostsPopulated);
   } catch (err) {
     next(err);
   }
@@ -29,12 +45,29 @@ export const getProfileFeed = async (
 ) => {
   try {
     const { userId } = req.params;
-    const posts = await Post.find({ userId: userId })
-      .populate("userId", "firstName lastName picturePath friends")
-      .sort({ createdAt: -1 });
 
-    // return all posts
-    return res.status(200).json(posts);
+    const profilePosts = await posts
+      .find({ userId: new ObjectId(userId) })
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    const profilePostsPopulated = await Promise.all(
+      profilePosts.map(async (post) => {
+        const postAuthor = (await users.findOne(
+          { _id: post.userId },
+          {
+            projection: {
+              _id: 1,
+              firstName: 1,
+              lastName: 1,
+              picturePath: 1,
+            },
+          }
+        )) 
+        return { ...post, userId: postAuthor };
+      })
+    );
+    return res.status(200).json(profilePostsPopulated);
   } catch (err) {
     next(err);
   }
@@ -48,19 +81,17 @@ export const addPost = async (
   try {
     const { description, picturePath } = req.body;
     const { userId } = req.user;
-    const newPost = new Post({
-      userId,
+    posts.insertOne({
+      userId: new ObjectId(userId),
       description,
       picturePath,
+      likes: [],
+      comments: [],
+      createdAt: new Date(),
     });
-    await newPost.save();
-
-    const posts = await Post.find()
-      .populate("userId", "firstName lastName picturePath friends")
-      .sort({ createdAt: -1 });
 
     // return all posts
-    res.status(201).json(posts);
+    res.status(201).json({ message: "Post created successfully" });
   } catch (err) {
     next(err);
   }
@@ -75,23 +106,25 @@ export const likePost = async (
     const { postId } = req.params;
     const { userId } = req.user;
 
-    let post = await Post.findById(postId).populate(
-      "userId",
-      "firstName lastName picturePath friends"
-    );
+    const post = await posts.findOne({ _id: new ObjectId(postId) });
+
     if (!post) return res.status(404).json({ message: "Post not found" });
 
     const isLiked = post.likes.includes(userId);
 
     if (isLiked) {
-      post.likes = post.likes.filter((i) => i !== userId);
+      posts.updateOne(
+        { _id: new ObjectId(postId) },
+        { $pull: { likes: { $in: [userId] } } }
+      );
     } else {
-      post.likes.push(userId);
+      posts.updateOne(
+        { _id: new ObjectId(postId) },
+        { $push: { likes: userId } }
+      );
     }
 
-    const updatedPost = await post.save();
-    // return updated post only
-    res.status(200).json(updatedPost);
+    res.status(200).json({ message: "Success" });
   } catch (err) {
     next(err);
   }
@@ -106,14 +139,13 @@ export const commentPost = async (
     const { postId } = req.params;
     const { comment } = req.body;
 
-    const post = await Post.updateOne(
-      { _id: postId },
+    await posts.findOneAndUpdate(
+      { _id: new ObjectId(postId) },
       { $push: { comments: comment } }
-    ).populate("userId", "firstName lastName picturePath friends");
-    if (!post) return res.status(404).json({ message: "Post not found" });
+    );
 
     // return updated post only
-    res.status(200).json(post);
+    res.status(200).json({ message: "Comment added successfully" });
   } catch (err) {
     next(err);
   }
@@ -128,11 +160,21 @@ export const deletePost = async (
     const { postId } = req.params;
     const { userId } = req.user;
 
-    const picturePath = (await Post.findOne({ _id: postId, userId: userId }))
-      .picturePath;
+    const post = await posts.findOne({
+      _id: new ObjectId(postId),
+      userId: new ObjectId(userId),
+    });
 
-    await Post.findOneAndDelete({ _id: postId, userId: userId });
-    deleteImage(picturePath);
+    if (post.userId.toString() !== userId)
+      return res
+        .status(403)
+        .json({ message: "You can delete your posts only" });
+
+    await posts.findOneAndDelete({
+      _id: new ObjectId(postId),
+      userId: new ObjectId(userId),
+    });
+    if (post.picturePath) deleteImage(post.picturePath);
 
     // return id of deleted post only
     res.status(200).json({ postId });

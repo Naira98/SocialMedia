@@ -1,18 +1,15 @@
 import path from "path";
 import express from "express";
-import mongoose from "mongoose";
 import helmet from "helmet";
 import cors from "cors";
-
-import { MONGO_URI } from "./config/config";
+import './db/db'
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
 import postRoutes from "./routes/posts";
 import { notFound } from "./controllers/notFound";
 import { errorHandler } from "./controllers/errorHandler";
-import { users, posts } from "../data/index.js";
-import User from "./models/User";
-import Post from "./models/Post";
+import {  usersData, postsData } from "../data/index.js";
+import { posts, users } from "./db/collections";
 
 const PORT = 3000;
 const app = express();
@@ -41,11 +38,10 @@ app.use("/posts", postRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-mongoose.connect(MONGO_URI);
 app.listen(PORT, () => {
   /* ADD DATA ONE TIME */
-  // User.insertMany(users);
-  // Post.insertMany(posts);
+  // posts.insertMany(postsData);
+  // users.insertMany(usersData);
 
   return console.log(`Server starts on port: ${PORT}`);
 });

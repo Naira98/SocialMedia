@@ -40,13 +40,14 @@ export const themeSettings = (mode: any) => {
             // palette values for dark mode
             primary: {
               dark: colorTokens.primary[200],
+              medMain: colorTokens.primary[300],
               main: colorTokens.primary[500],
               light: colorTokens.primary[800],
             },
             neutral: {
               dark: colorTokens.grey[100],
               main: colorTokens.grey[200],
-              mediumMain: colorTokens.grey[300],
+              medMain: colorTokens.grey[300],
               medium: colorTokens.grey[400],
               light: colorTokens.grey[700],
             },
@@ -59,13 +60,14 @@ export const themeSettings = (mode: any) => {
             // palette values for light mode
             primary: {
               dark: colorTokens.primary[700],
+              medMain: colorTokens.primary[600],
               main: colorTokens.primary[500],
               light: colorTokens.primary[50],
             },
             neutral: {
               dark: colorTokens.grey[700],
               main: colorTokens.grey[500],
-              mediumMain: colorTokens.grey[400],
+              medMain: colorTokens.grey[400],
               medium: colorTokens.grey[300],
               light: colorTokens.grey[50],
             },

@@ -4,10 +4,21 @@ import FlexBetween from "../styledComponents/FlexBetween";
 import useColors from "../../hooks/util/useColors";
 
 const AdvertiseWidget = () => {
-  const {palette, neutralDark, neutralMain, neutralMed} = useColors()
+  const { neutralDark, neutralMain, neutralMed, palette } = useColors();
 
   return (
-    <WidgetWrapper palette={palette} mb="1.5rem" style={{position: 'sticky', top:'6rem', left:'0', zIndex: '99', height:'20rem', cursor:"pointer"}}>
+    <WidgetWrapper
+    palette={palette}
+      mb="1.5rem"
+      style={{
+        position: "sticky",
+        top: "6rem",
+        left: "0",
+        zIndex: "99",
+        height: "20rem",
+        cursor: "pointer",
+      }}
+    >
       <FlexBetween>
         <Typography color={neutralDark} variant="h5" fontWeight="500">
           Sponsored

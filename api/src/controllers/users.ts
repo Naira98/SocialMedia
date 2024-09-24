@@ -1,6 +1,7 @@
 import { NextFunction, Response } from "express";
 import { RequestWithUser } from "../types/RequestWithUser";
-import User, { IUserModel } from "../models/User";
+import { users } from "../db/collections";
+import { ObjectId } from "mongodb";
 
 export const getMe = async (
   req: RequestWithUser,
@@ -9,7 +10,18 @@ export const getMe = async (
 ) => {
   try {
     const { userId } = req.user;
-    const user = await User.findById(userId, "-friends -email -password -createdAt -updatedAt ").lean();
+    const user = await users.findOne(
+      { _id: ObjectId.createFromHexString(userId) },
+      {
+        projection: {
+          email: 0,
+          password: 0,
+          friends: 0,
+          createdAt: 0,
+          updatedAt: 0,
+        },
+      }
+    );
     if (!user) return res.status(404).json({ message: "User not found" });
 
     return res.status(200).json(user);
@@ -26,7 +38,18 @@ export const getProfileUser = async (
   try {
     // get profile user (useProfileUser)
     const { id } = req.params;
-    const user = await User.findById(id, "-password -createdAt -updatedAt");
+    const user = await users.findOne(
+      { _id: new ObjectId(id) },
+      {
+        projection: {
+          email: 0,
+          password: 0,
+          friends: 0,
+          createdAt: 0,
+          updatedAt: 0,
+        },
+      }
+    );
     if (!user) return res.status(404).json({ message: "User not found" });
     return res.status(200).json(user);
   } catch (err) {
@@ -41,14 +64,24 @@ export const getUserFriends = async (
 ) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
+    const user = await users.findOne({ _id: new ObjectId(id) });
     if (!user) return res.status(404).json({ message: "User not found" });
-    const friends = await Promise.all(
-      user.friends.map((id) =>
-        User.findById(id).select(
-          "_id firstName lastName occupation picturePath viewedProfile impressions linkedin twitter"
-        )
-      )
+    const friends = [];
+    await Promise.all(
+      user.friends.map(async (id) => {
+        const friend = await users.findOne(
+          { _id: new ObjectId(id) },
+          {
+            projection: {
+              firstName: 1,
+              lastName: 1,
+              occupation: 1,
+              picturePath: 1,
+            },
+          }
+        );
+        friends.push(friend);
+      })
     );
     return res.status(200).json(friends);
   } catch (err) {
@@ -68,27 +101,30 @@ export const addRemoveFriend = async (
     if (userId.toString() === friendId.toString())
       return res.status(400).json({ message: "You can't follow yourself" });
 
-    const user = await User.findById(userId);
-    const friend = await User.findById(friendId);
+    const user = await users.findOne({ _id: new ObjectId(userId) });
+    const friend = await users.findOne({ _id: new ObjectId(friendId) });
 
     if (user.friends.includes(friendId)) {
-      user.friends = user.friends.filter((id) => id !== friendId);
-      friend.friends = friend.friends.filter((id) => id !== userId);
+      await users.updateOne(
+        { _id: new ObjectId(userId) },
+        { $pull: { friends: { $in: [friendId] } } }
+      );
+      await users.updateOne(
+        { _id: new ObjectId(friendId) },
+        { $pull: { friends: { $in: [userId] } } }
+      );
     } else {
-      user.friends.push(friendId);
-      friend.friends.push(userId);
+      await users.updateOne(
+        { _id: new ObjectId(userId) },
+        { $push: { friends: friendId } }
+      );
+      await users.updateOne(
+        { _id: new ObjectId(friendId) },
+        { $push: { friends: userId } }
+      );
     }
 
-    await Promise.all([await user.save(), await friend.save()]);
-
-    const friends = await Promise.all(
-      user.friends.map((id) =>
-        User.findById(id).select(
-          "_id firstName lastName occupation picturePath viewedProfile impressions "
-        )
-      )
-    );
-    return res.status(200).json(friends);
+    return res.status(200).json({ message: "Success" });
   } catch (err) {
     next(err);
   }
@@ -108,20 +144,13 @@ export const updateAccount = async (
         .json({ message: "Can't add link to another user" });
     }
 
-    const user = await User.findOneAndUpdate(
-      { _id: userId },
-      { firstName, lastName },
-      { returnDocument: "after" }
+    await users.updateOne(
+      { _id: ObjectId.createFromHexString(userId) },
+      { $set: { firstName, lastName } }
     );
 
-    delete (
-      user as Omit<IUserModel, "password"> & {
-        password?: IUserModel["password"];
-      }
-    ).password;
-
     // return updatedUser
-    res.status(200).json(user);
+    res.status(200).json({ message: "Success" });
   } catch (err) {
     next(err);
   }
@@ -141,14 +170,13 @@ export const addTwitter = async (
         .json({ message: "Can't add link to another user" });
     }
 
-    const user = await User.findOneAndUpdate(
-      { _id: userId },
-      { twitter: link },
-      { returnDocument: "after" }
+    await users.updateOne(
+      { _id: ObjectId.createFromHexString(userId) },
+      { $set: { twitter: link } }
     );
 
     // return updatedUser
-    res.status(200).json(user);
+    res.status(200).json({ message: "Success" });
   } catch (err) {
     next(err);
   }
@@ -168,14 +196,13 @@ export const addLinkedin = async (
         .json({ message: "Can't add link to another user" });
     }
 
-    const user = await User.findOneAndUpdate(
-      { _id: userId },
-      { linkedin: link },
-      { returnDocument: "after" }
+    await users.updateOne(
+      { _id: ObjectId.createFromHexString(userId) },
+      { $set: { linkedin: link } }
     );
 
     // return updatedUser
-    res.status(200).json(user);
+    res.status(200).json({ message: "Success" });
   } catch (err) {
     next(err);
   }

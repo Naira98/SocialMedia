@@ -1,8 +1,13 @@
+import { ObjectId } from "mongodb";
+
 export interface IUser {
-  _id: string;
+  _id?: ObjectId;
   firstName: string;
   lastName: string;
+  email: string;
+  password: string;
   picturePath: string;
+  friends: ObjectId[];
   location: string;
   occupation: string;
   viewedProfile: number;
@@ -10,13 +15,3 @@ export interface IUser {
   twitter: string;
   linkedin: string;
 }
-
-export type PostCreator = Pick<
-  IUser,
-  "_id" | "firstName" | "lastName" | "picturePath"
->;
-
-export type Friend = Pick<
-  IUser,
-  "_id" | "firstName" | "lastName" | "picturePath" | "occupation"
->;

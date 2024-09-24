@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  Box,
-  Divider,
-  IconButton,
-  Input,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, IconButton, Input, Typography } from "@mui/material";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
@@ -55,10 +49,13 @@ const PostWidget = ({
     setComment,
   });
 
-  const {primaryMain, neutralMain, palette} = useColors()
+  const { primaryMain, neutralMain, palette } = useColors();
 
   return (
-    <WidgetWrapper palette={palette} m={isProfile && !isYou && i === 0 ? "0" : "2rem 0"}>
+    <WidgetWrapper
+      palette={palette}
+      m={isProfile && !isYou && i === 0 ? "0" : "2rem 0"}
+    >
       <PostCredentilas
         postedBy={userData}
         createdAt={createdAt}
@@ -82,7 +79,11 @@ const PostWidget = ({
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
-            <IconButton onClick={() => patchLike(postId.toString())}>
+            <IconButton
+              onClick={() => {
+                patchLike(postId.toString());
+              }}
+            >
               {isLiked ? (
                 <FavoriteOutlinedIcon sx={{ color: primaryMain }} />
               ) : (

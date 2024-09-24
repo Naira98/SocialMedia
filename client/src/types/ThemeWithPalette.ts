@@ -1,20 +1,30 @@
-import { Theme, Palette as MUIPalette, TypeBackground } from "@mui/material";
+import {
+  Theme,
+  Palette as MUIPalette,
+  TypeBackground,
+  PaletteColor,
+} from "@mui/material";
 
 export interface ThemeWithPalette extends Theme {
-  palette: Palette
+  palette: Palette;
 }
 
 export interface Palette extends MUIPalette {
+  primary: Primary;
   neutral: {
     dark: string;
     main: string;
-    mediumMain: string;
+    medMain: string;
     medium: string;
     light: string;
   };
-  background: Background
+  background: Background;
 }
 
- interface Background extends TypeBackground {
+interface Background extends TypeBackground {
   alt: string;
- }
+}
+
+interface Primary extends PaletteColor {
+  medMain: string;
+}

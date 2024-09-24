@@ -9,7 +9,7 @@ import { IPost } from "../../types/Post";
 import useColors from "../../hooks/util/useColors";
 
 const PostsWidget = ({ isProfile }: { isProfile: boolean }) => {
-  const { palette } = useColors();
+  const { palette, neutralMed } = useColors();
   const { userId } = useParams();
   const { feed, isPending, error } = useGetFeed(isProfile, userId);
 
@@ -22,7 +22,7 @@ const PostsWidget = ({ isProfile }: { isProfile: boolean }) => {
         palette={palette}
         style={{ textAlign: "center", padding: "3rem" }}
       >
-        <Typography color={palette.neutral.medium} fontSize="1.5rem">
+        <Typography color={neutralMed} fontSize="1.5rem">
           No posts to show
         </Typography>
       </WidgetWrapper>

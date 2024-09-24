@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { addRemoveFriend as addRemoveFriendApi } from "../../services/users";
-import { Friend } from "../../types/User";
 
 export function useAddRemoveFriend({
   friendId,
@@ -14,8 +13,8 @@ export function useAddRemoveFriend({
 
   const { mutate: addRemoveFriend } = useMutation({
     mutationFn: (friendId: string) => addRemoveFriendApi(friendId),
-    onSuccess: (data: Friend[]) => {
-      queryClient.setQueryData(["friends", currentUserId], data);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["friends", currentUserId] });
       queryClient.invalidateQueries({
         queryKey: ["friends", friendId],
       });

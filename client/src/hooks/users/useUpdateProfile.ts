@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { updateAccount as updateAccountApi } from "../../services/users";
-import { IUser } from "../../types/User";
 
 export function useUpdateAccount(
   setIsUpdate: React.Dispatch<React.SetStateAction<boolean>>
@@ -18,8 +17,8 @@ export function useUpdateAccount(
       firstName: string;
       lastName: string;
     }) => updateAccountApi(firstName, lastName, userId),
-    onSuccess: (user: IUser) => {
-      queryClient.setQueryData(["user", "me"], user);
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["user", "me"]});
       setIsUpdate(false);
     },
     onError: (err) => {

@@ -33,7 +33,7 @@ const Nvabar = () => {
 
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
 
-  const {neutralLight, neutralMedMain, backAlt} = useColors()
+  const { neutralLight, neutralMedMain, backAlt } = useColors();
 
   if (isPending) return <Spinner />;
 
@@ -48,7 +48,7 @@ const Nvabar = () => {
           gap: "1.5rem",
         }}
       >
-        <Link to="/home" style={{ textDecoration: "none" }} >
+        <Link to="/home" style={{ textDecoration: "none" }}>
           <FlexBetween style={{ gap: "15px" }}>
             <img
               src="/logo.png"

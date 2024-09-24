@@ -7,7 +7,7 @@ import useColors from "../../hooks/util/useColors";
 import Spinner from "../Spinner";
 
 const FriendListWidget = ({ user }: { user: IUser }) => {
-  const { palette } = useColors();
+  const { neutralDark, palette } = useColors();
   const { friends, isPending } = useFetchFriends(user._id);
 
   if (isPending)
@@ -40,7 +40,7 @@ const FriendListWidget = ({ user }: { user: IUser }) => {
       }}
     >
       <Typography
-        color={palette.neutral.dark}
+        color={neutralDark}
         variant="h5"
         fontWeight="500"
         sx={{ mb: "1.5rem" }}

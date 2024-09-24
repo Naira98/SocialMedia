@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { addPost as addPostApi } from "../../services/posts";
 import { useAuth } from "../../contexts/useAuth";
-import { IPost } from "../../types/Post";
 
 export function useAddPost(
   setImage: React.Dispatch<React.SetStateAction<File | null>>,
@@ -19,9 +18,9 @@ export function useAddPost(
   } = useMutation({
     mutationFn: ({ post, image }: { post: string; image: File | null }) =>
       addPostApi(post, image),
-    onSuccess: (posts: IPost[]) => {
-      queryClient.setQueryData(["posts", userId], posts);
-      queryClient.setQueryData(["posts", "feed"], posts);
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["posts", "feed"]});
+      queryClient.invalidateQueries({queryKey: ["posts", userId]});
       setImage(null);
       setIsImage(false);
       setPost("");

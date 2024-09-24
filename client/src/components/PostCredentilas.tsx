@@ -8,10 +8,10 @@ import UserImage from "./UserImage";
 import FlexBetween from "./styledComponents/FlexBetween";
 import { useAddRemoveFriend } from "../hooks/users/useAddRemoveFriend";
 import { useDeletePost } from "../hooks/posts/useDeletePost";
-import { useAuth } from "../contexts/useAuth";
-import { PostCreator } from "../types/User";
 import { useFetchFriends } from "../hooks/users/useFetchFriends";
 import useColors from "../hooks/util/useColors";
+import { useAuth } from "../contexts/useAuth";
+import { PostCreator } from "../types/User";
 
 const PostCredentilas = ({
   postedBy,

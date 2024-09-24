@@ -1,8 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import {
-  getTokens,
-  setAccessToken,
-} from "../util/helpers";
+import { getTokens, setAccessToken } from "../util/helpers";
 
 const apiReq = async (
   method: string,
@@ -13,14 +10,16 @@ const apiReq = async (
 ) => {
   try {
     // eslint-disable-next-line prefer-const
-    let {accessToken, refreshToken} = getTokens()
+    let { accessToken, refreshToken } = getTokens();
 
     if (accessToken && refreshToken) {
       const decodedToken = jwtDecode(accessToken);
 
       if (!decodedToken.exp) throw new Error("Error in decoding token");
-
-      if (decodedToken.exp * 1000 <= Date.now()) {
+      // console.log(Date.now());
+      // console.log(decodedToken.exp * 1000);
+      // console.log(Date.now() >= decodedToken.exp * 1000);
+      if (Date.now() >= decodedToken.exp * 1000) {
         const res = await fetch("http://localhost:3000/auth/refresh", {
           method: "POST",
           headers: {
@@ -32,12 +31,13 @@ const apiReq = async (
         if (res.ok) {
           setAccessToken(data.accessToken);
           accessToken = data.accessToken;
+          // console.log(accessToken);
         } else {
           throw new Error(data.message);
         }
       }
 
-      return await fetch(`http://localhost:3000${endpoint}`, {
+       const res = await fetch(`http://localhost:3000${endpoint}`, {
         method,
         headers: {
           ...(accessToken && {
@@ -47,6 +47,8 @@ const apiReq = async (
         },
         body: body,
       });
+      console.log(res)
+      return res
     } else {
       throw new Error("You are not authenticated");
     }

@@ -8,8 +8,8 @@ export function usePatchLike({postCreatorId}: {postCreatorId:string}) {
   const { mutate: patchLike } = useMutation({
     mutationFn: (postId: string) => patchLikeApi(postId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts", postCreatorId] });
       queryClient.invalidateQueries({ queryKey: ["posts", "feed"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", postCreatorId] });
     },
     onError: (err) => {
       toast.error(err.message);
