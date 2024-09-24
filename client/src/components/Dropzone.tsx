@@ -57,7 +57,7 @@ const Dropzone = ({
         >
           <input {...getInputProps()} />
           {!picture ? (
-            <p style={{textAlign: 'center'}}>Add Image Here</p>
+            <p style={{ textAlign: "center" }}>Add Image Here</p>
           ) : (
             <FlexBetween>
               <Typography>{picture.name}</Typography>
@@ -66,7 +66,10 @@ const Dropzone = ({
           )}
         </Box>
         {picture && (
-          <IconButton onClick={onDelete} sx={{ width: "15%" }}>
+          <IconButton
+            onClick={onDelete}
+            sx={{ marginX: "1rem", height: "50px", width: "50px" }}
+          >
             <DeleteOutlineOutlinedIcon />
           </IconButton>
         )}

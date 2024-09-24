@@ -7,7 +7,7 @@ export interface IUser {
   email: string;
   password: string;
   picturePath: string;
-  friends: ObjectId[];
+  friends: string[];
   location: string;
   occupation: string;
   viewedProfile: number;

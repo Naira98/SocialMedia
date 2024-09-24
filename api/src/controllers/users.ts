@@ -96,7 +96,7 @@ export const addRemoveFriend = async (
 ) => {
   try {
     const { userId } = req.user;
-    const { friendId } = req.params;
+    const friendId = req.params.friendId;
 
     if (userId.toString() === friendId.toString())
       return res.status(400).json({ message: "You can't follow yourself" });

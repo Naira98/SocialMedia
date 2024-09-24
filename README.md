@@ -8,10 +8,10 @@
 - Typescript
 - Node js
 - Express
-- Mongoose
+- MongoDB
 - JWT
 - React
-- Redux
+- ContextApi
 - React Query
 
 ### Features

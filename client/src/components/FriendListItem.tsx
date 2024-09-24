@@ -10,8 +10,14 @@ import { useAddRemoveFriend } from "../hooks/users/useAddRemoveFriend";
 import { Friend } from "../types/User";
 import useColors from "../hooks/util/useColors";
 
-const FriendListItem = ({ user }: { user: Friend }) => {
-  const { _id: friendId, firstName, lastName, picturePath, occupation } = user;
+const FriendListItem = ({ friend }: { friend: Friend }) => {
+  const {
+    _id: friendId,
+    firstName,
+    lastName,
+    picturePath,
+    occupation,
+  } = friend;
   const { userId: currentUserId } = useAuth();
 
   const { friends } = useFetchFriends(currentUserId!);
@@ -23,7 +29,8 @@ const FriendListItem = ({ user }: { user: Friend }) => {
     currentUserId: currentUserId!,
   });
 
-  const { primaryLight, primaryMain, primaryDark, neutralMain, neutralMed } = useColors();
+  const { primaryLight, primaryMain, primaryDark, neutralMain, neutralMed } =
+    useColors();
 
   return (
     <FlexBetween mb="1rem">
@@ -57,7 +64,7 @@ const FriendListItem = ({ user }: { user: Friend }) => {
       {friendId !== currentUserId && (
         <IconButton
           onClick={() => {
-            addRemoveFriend(user._id);
+            addRemoveFriend(friend._id);
           }}
           sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
         >

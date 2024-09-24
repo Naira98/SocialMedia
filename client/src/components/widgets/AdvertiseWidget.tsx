@@ -8,7 +8,7 @@ const AdvertiseWidget = () => {
 
   return (
     <WidgetWrapper
-    palette={palette}
+      palette={palette}
       mb="1.5rem"
       style={{
         position: "sticky",
@@ -29,7 +29,7 @@ const AdvertiseWidget = () => {
         width="100%"
         height="auto"
         alt="advert"
-        src="http://localhost:3000/assets/info4.jpeg"
+        src="http://localhost:3000/assets/info2.jpeg"
         style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
       />
       <FlexBetween>

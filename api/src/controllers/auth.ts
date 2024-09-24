@@ -66,10 +66,16 @@ export const login = async (
     const accessToken = generateAccessToken({ userId: user._id });
     const refreshToken = generateRefreshToken({ userId: user._id });
 
-    await tokens.insertOne({
-      userId: user._id,
-      refreshToken,
-    });
+    await tokens.findOneAndUpdate(
+      { userId: user._id },
+      {
+        $set: {
+          userId: user._id,
+          refreshToken,
+        },
+      },
+      { upsert: true }
+    );
 
     delete user.password;
     delete user.friends;

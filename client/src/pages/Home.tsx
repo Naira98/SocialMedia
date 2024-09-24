@@ -8,11 +8,16 @@ import FriendListWidget from "../components/widgets/FriendListWidget";
 import Spinner from "../components/Spinner";
 import { useAuth } from "../contexts/useAuth";
 import { useGetMe } from "../hooks/auth/useGetMe";
+import { useEffect } from "react";
 
 const Home = () => {
   const { userId, setUserId } = useAuth();
   const { me, isPending, error } = useGetMe(userId, setUserId);
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   if (isPending)
     return (

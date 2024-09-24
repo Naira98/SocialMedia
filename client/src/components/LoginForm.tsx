@@ -74,22 +74,39 @@ const LoginForm = ({
 
           <Box>
             <BigButton disabled={isPending}>LOGIN</BigButton>
-            <Typography
-              onClick={() => {
-                setIsLogin((isLogin: boolean) => !isLogin);
-                resetForm();
-              }}
-              sx={{
-                textDecoration: "underline",
-                color: primaryMain,
-                "&:hover": {
-                  cursor: "pointer",
-                  color: primaryMedMain,
-                },
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "5px",
               }}
             >
-              Don't have an account? Sign Up here.
-            </Typography>
+              <Typography
+                sx={{
+                  color: primaryMain,
+                }}
+              >
+                Don't have an account?{" "}
+              </Typography>
+
+              <Typography
+                onClick={() => {
+                  setIsLogin((isLogin: boolean) => !isLogin);
+                  resetForm();
+                }}
+                sx={{
+                  textDecoration: "underline",
+                  color: primaryMain,
+                  "&:hover": {
+                    cursor: "pointer",
+                    color: primaryMedMain,
+                  },
+                }}
+              >
+                Sign Up here.
+              </Typography>
+            </div>
           </Box>
         </form>
       )}

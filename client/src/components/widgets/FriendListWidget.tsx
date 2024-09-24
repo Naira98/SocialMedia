@@ -51,7 +51,7 @@ const FriendListWidget = ({ user }: { user: IUser }) => {
       {friends &&
         friends.length > 0 &&
         friends.map((friend: Friend, i: number) => (
-          <FriendListItem key={i} user={friend} />
+          <FriendListItem key={i} friend={friend} />
         ))}
     </WidgetWrapper>
   );

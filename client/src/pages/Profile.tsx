@@ -9,6 +9,7 @@ import Spinner from "../components/Spinner";
 import { useProfileUser } from "../hooks/users/useProfileUser";
 import { useAuth } from "../contexts/useAuth";
 import AddPostWidget from "../components/widgets/AddPostWidget";
+import { useEffect } from "react";
 
 const Profile = () => {
   const { userId } = useParams() as { userId: string };
@@ -17,6 +18,10 @@ const Profile = () => {
   const isYou = userId === currentUserId;
 
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   if (isPending)
     return (

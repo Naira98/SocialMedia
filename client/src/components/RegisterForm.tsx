@@ -142,22 +142,39 @@ const RegisterForm = ({
 
           <Box>
             <BigButton disabled={isPending}>REGISTER</BigButton>
-            <Typography
-              onClick={() => {
-                setIsLogin((isLogin) => !isLogin);
-                resetForm();
-              }}
-              sx={{
-                textDecoration: "underline",
-                color: primaryMain,
-                "&:hover": {
-                  cursor: "pointer",
-                  color: primaryMedMain,
-                },
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "5px",
               }}
             >
-              Already have an account? Login here.
-            </Typography>
+              <Typography
+                sx={{
+                  color: primaryMain,
+                }}
+              >
+                Already have an account?
+              </Typography>
+
+              <Typography
+                onClick={() => {
+                  setIsLogin((isLogin) => !isLogin);
+                  resetForm();
+                }}
+                sx={{
+                  textDecoration: "underline",
+                  color: primaryMain,
+                  "&:hover": {
+                    cursor: "pointer",
+                    color: primaryMedMain,
+                  },
+                }}
+              >
+                Login here.
+              </Typography>
+            </div>
           </Box>
         </form>
       )}
