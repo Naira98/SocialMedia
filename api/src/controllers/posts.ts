@@ -16,7 +16,7 @@ export const getFeed = async (
 
     const feedPostsPopulated = await Promise.all(
       feed.map(async (post) => {
-        const postAuthor = (await users.findOne(
+        const postAuthor = await users.findOne(
           { _id: post.userId },
           {
             projection: {
@@ -26,7 +26,7 @@ export const getFeed = async (
               picturePath: 1,
             },
           }
-        ));
+        );
 
         return { ...post, userId: postAuthor };
       })
@@ -53,7 +53,7 @@ export const getProfileFeed = async (
 
     const profilePostsPopulated = await Promise.all(
       profilePosts.map(async (post) => {
-        const postAuthor = (await users.findOne(
+        const postAuthor = await users.findOne(
           { _id: post.userId },
           {
             projection: {
@@ -63,7 +63,7 @@ export const getProfileFeed = async (
               picturePath: 1,
             },
           }
-        )) 
+        );
         return { ...post, userId: postAuthor };
       })
     );
@@ -81,7 +81,7 @@ export const addPost = async (
   try {
     const { description, picturePath } = req.body;
     const { userId } = req.user;
-    posts.insertOne({
+   await posts.insertOne({
       userId: new ObjectId(userId),
       description,
       picturePath,
@@ -103,6 +103,7 @@ export const likePost = async (
   next: NextFunction
 ) => {
   try {
+    console.log("in like post", new Date().toISOString());
     const { postId } = req.params;
     const { userId } = req.user;
 
@@ -113,12 +114,12 @@ export const likePost = async (
     const isLiked = post.likes.includes(userId);
 
     if (isLiked) {
-      posts.updateOne(
+      await posts.updateOne(
         { _id: new ObjectId(postId) },
         { $pull: { likes: { $in: [userId] } } }
       );
     } else {
-      posts.updateOne(
+      await posts.updateOne(
         { _id: new ObjectId(postId) },
         { $push: { likes: userId } }
       );
