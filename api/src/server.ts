@@ -12,7 +12,7 @@ import {  usersData, postsData } from "../data/index.js";
 import { posts, users } from "./db/collections";
 
 const PORT = 3000;
-const app = express();
+export const app = express();
 export const IMAGES_PATH = path.join(__dirname, "..", "public", "assets");
 
 declare module "express" {

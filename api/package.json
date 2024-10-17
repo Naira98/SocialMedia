@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
-    "start": "nodemon -e ts,tsx,js,jsx,json -x node --import tsx ./src/server.ts"
+    "start": "nodemon -e ts,tsx,js,jsx,json -x node --import tsx ./src/server.ts",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -12,8 +13,11 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.1",
+    "@types/jest": "^29.5.13",
     "@types/jsonwebtoken": "^9.0.6",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.4",
+    "supertest": "^7.0.0",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4"
   },

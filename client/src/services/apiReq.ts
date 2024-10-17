@@ -16,9 +16,6 @@ const apiReq = async (
       const decodedToken = jwtDecode(accessToken);
 
       if (!decodedToken.exp) throw new Error("Error in decoding token");
-      // console.log(Date.now());
-      // console.log(decodedToken.exp * 1000);
-      // console.log(Date.now() >= decodedToken.exp * 1000);
       if (Date.now() >= decodedToken.exp * 1000) {
         const res = await fetch("http://localhost:3000/auth/refresh", {
           method: "POST",
@@ -31,7 +28,6 @@ const apiReq = async (
         if (res.ok) {
           setAccessToken(data.accessToken);
           accessToken = data.accessToken;
-          // console.log(accessToken);
         } else {
           throw new Error(data.message);
         }
@@ -47,7 +43,6 @@ const apiReq = async (
         },
         body: body,
       });
-      console.log(res)
       return res
     } else {
       throw new Error("You are not authenticated");

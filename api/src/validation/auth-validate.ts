@@ -55,6 +55,7 @@ export const registerValidation = async (
   const valid = error == null;
 
   if (!valid) {
+    console.log(error)
     res.status(422).json({
       message: error.details[0].message,
       data: body,

@@ -103,7 +103,6 @@ export const likePost = async (
   next: NextFunction
 ) => {
   try {
-    console.log("in like post", new Date().toISOString());
     const { postId } = req.params;
     const { userId } = req.user;
 

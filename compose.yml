@@ -1,0 +1,50 @@
+services:
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - social_media:/data/db
+
+  api:
+    depends_on:
+      - mongo
+    build: ./api
+    ports:
+      - 3000:3000
+    env_file:
+      - ./api/.env
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    develop:
+      watch:
+        - path: ./api/package.json
+          action: rebuild
+        - path: ./api/package-lock.json
+          action: rebuild
+        - path: ./api
+          target: /app
+          action: sync
+
+  client:
+    depends_on:
+      - api
+    build: ./client
+    ports:
+      - 5173:5173
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    develop:
+      watch:
+        - path: ./client/package.json
+          action: rebuild
+        - path: ./client/package-lock.json
+          action: rebuild
+        - path: ./client
+          target: /app
+          action: sync
+
+volumes:
+  social_media:
