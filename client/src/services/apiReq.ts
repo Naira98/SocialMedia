@@ -17,7 +17,7 @@ const apiReq = async (
 
       if (!decodedToken.exp) throw new Error("Error in decoding token");
       if (Date.now() >= decodedToken.exp * 1000) {
-        const res = await fetch("http://localhost:3000/auth/refresh", {
+        const res = await fetch("http://localhost:3000/api/auth/refresh", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -25,6 +25,7 @@ const apiReq = async (
           body: JSON.stringify({ refreshToken }),
         });
         const data = await res.json();
+        console.log(data)
         if (res.ok) {
           setAccessToken(data.accessToken);
           accessToken = data.accessToken;
@@ -33,7 +34,7 @@ const apiReq = async (
         }
       }
 
-       const res = await fetch(`http://localhost:3000${endpoint}`, {
+       const res = await fetch(`http://localhost:3000/api${endpoint}`, {
         method,
         headers: {
           ...(accessToken && {

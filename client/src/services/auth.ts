@@ -5,7 +5,7 @@ import { getTokens } from "../util/helpers";
 
 export async function login(values: loginFormValues) {
   try {
-    const res = await fetch("http://localhost:3000/auth/login", {
+    const res = await fetch("http://localhost:3000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
@@ -35,7 +35,7 @@ export async function register(
     //   console.log(pair[0] + ", " + pair[1]);
     // }
 
-    const res = await fetch("http://localhost:3000/auth/register", {
+    const res = await fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       body: formData,
     });
@@ -80,7 +80,7 @@ export async function getMe(
 
 export async function logout() {
   try {
-    const res = await fetch("http://localhost:3000/auth/logout", {
+    const res = await fetch("http://localhost:3000/api/auth/logout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     });

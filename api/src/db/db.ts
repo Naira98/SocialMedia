@@ -1,25 +1,28 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
-import { MONGO_DB, MONGO_URI } from "../config/config";
+import { MongoClient } from "mongodb";
+import { NODE_ENV, MONGO_URI } from "../config/config";
+import dotenv from "dotenv";
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(MONGO_URI, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
+dotenv.config();
+let MONGO_DB = process.env.MONGO_DB || "";
 
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db(MONGO_DB).command({ ping: 1 });
-  } catch (err) {
-    console.log(err.message);
-  }
-}
-run().catch(console.dir);
+// Append -test to MONGO_DB if NODE_ENV is test
+if (NODE_ENV === "test") MONGO_DB += "-test";
 
-export const db = client.db(MONGO_DB);
+// MongoDB client
+const client = new MongoClient(MONGO_URI);
+
+// MongoDB connection
+export const connectionPromise = client
+  .connect()
+  .then(() => {
+    console.log(MONGO_DB)
+    console.log("MongoDB connected");
+  })
+  .catch((err) => console.log(err));
+
+// Set Database
+const db = client.db(MONGO_DB);
+
+// Export db and client
+export default db;
+export { client };

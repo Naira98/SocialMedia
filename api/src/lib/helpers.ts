@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { ACCESS_SECRET, REFRESH_SECRET } from "../src/config/config.js";
+import { ACCESS_SECRET, REFRESH_SECRET } from "../config/config";
 
 const generateAccessToken = ({ userId }) => {
   return jwt.sign({ userId }, ACCESS_SECRET, { expiresIn: "1m" });

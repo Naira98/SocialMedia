@@ -20,6 +20,8 @@ export const loginValidation = async (
   const { value, error } = result;
   const valid = error == null;
 
+  console.log(error)
+
   if (!valid) {
     res.status(422).json({
       message: error.details[0].message,
@@ -45,7 +47,7 @@ export const registerValidation = async (
       .required(),
     password: Joi.string().min(4).max(10).required(),
     location: Joi.string().min(3).max(30).required(),
-    occupation: Joi.string().min(3).max(30).required(),
+    occupation: Joi.string().min(3).max(50).required(),
     picturePath: Joi.required(),
   });
 
@@ -55,7 +57,6 @@ export const registerValidation = async (
   const valid = error == null;
 
   if (!valid) {
-    console.log(error)
     res.status(422).json({
       message: error.details[0].message,
       data: body,

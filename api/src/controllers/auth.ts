@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { REFRESH_SECRET } from "../config/config";
-import { generateAccessToken, generateRefreshToken } from "../../lib/helpers";
+import { generateAccessToken, generateRefreshToken } from "../lib/helpers";
 import { Token as TokenType } from "../types/Token";
 import { tokens, users } from "../db/collections";
 import { ObjectId } from "mongodb";
@@ -96,7 +96,7 @@ export const refresh = async (
 ) => {
   try {
     const { refreshToken } = req.body;
-
+    console.log('(refreshToken)', refreshToken);
     const tokenInDB = await tokens.findOne({ refreshToken });
     if (!tokenInDB) return res.status(401).json({ message: "Invalid Token" });
 
@@ -106,8 +106,8 @@ export const refresh = async (
       async (err: Error, userData: TokenType) => {
         if (err)
           return res.status(401).json({ message: "You are not authenticated" });
-
         const accessToken = generateAccessToken({ userId: userData.userId });
+        console.log('(in end point new access token)',accessToken);
         return res.status(200).json({
           accessToken,
         });

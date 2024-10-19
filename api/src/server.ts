@@ -2,18 +2,17 @@ import path from "path";
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
-import './db/db'
+import "./db/db";
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
 import postRoutes from "./routes/posts";
 import { notFound } from "./controllers/notFound";
 import { errorHandler } from "./controllers/errorHandler";
-import {  usersData, postsData } from "../data/index.js";
-import { posts, users } from "./db/collections";
+// import {  usersData, postsData } from "../data/index.js";
+// import { posts, users } from "./db/collections";
 
 const PORT = 3000;
 export const app = express();
-export const IMAGES_PATH = path.join(__dirname, "..", "public", "assets");
 
 declare module "express" {
   interface Request {
@@ -31,14 +30,14 @@ app.use(
   express.static(path.join(__dirname, "..", "public", "assets"))
 );
 
-app.use("/auth", authRoutes);
-app.use("/users", userRoutes);
-app.use("/posts", postRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+export const server = app.listen(PORT, () => {
   /* ADD DATA ONE TIME */
   // posts.insertMany(postsData);
   // users.insertMany(usersData);

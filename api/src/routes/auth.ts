@@ -5,8 +5,11 @@ import {
   registerValidation,
 } from "../validation/auth-validate";
 import { upload } from "../config/multer";
+import { verifyToken } from "../middlewares/is-auth";
 
 const router = express.Router();
+
+/* /api/auth */
 
 router.post(
   "/register",
@@ -19,6 +22,6 @@ router.post("/login", loginValidation, login);
 
 router.post("/refresh", refresh);
 
-router.post("/logout", logout);
+router.post("/logout", verifyToken, logout);
 
 export default router;

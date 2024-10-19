@@ -1,8 +1,9 @@
 import path from "path";
 import multer, { FileFilterCallback } from "multer";
 import { Request } from "express";
-import { IMAGES_PATH } from "../server";
 import { nanoid } from "nanoid";
+
+export const IMAGES_PATH = path.join(__dirname, "..", "..", "public", "assets");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

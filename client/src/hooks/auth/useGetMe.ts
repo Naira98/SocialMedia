@@ -17,6 +17,7 @@ export function useGetMe(
   } = useQuery<IUser>({
     queryKey: ["user", "me"],
     queryFn: () => getMe(userId, setUserId, navigate),
+    retry: false,
   });
   return { me, isPending, error };
 }

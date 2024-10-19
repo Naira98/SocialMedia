@@ -2,9 +2,10 @@ import fs from "fs";
 import path from "path";
 import { NextFunction, Response } from "express";
 import { RequestWithUser } from "../types/RequestWithUser";
-import { IMAGES_PATH } from "../server";
+
 import { posts, users } from "../db/collections";
 import { ObjectId } from "mongodb";
+import { IMAGES_PATH } from "../config/multer";
 
 export const getFeed = async (
   req: RequestWithUser,
@@ -81,7 +82,7 @@ export const addPost = async (
   try {
     const { description, picturePath } = req.body;
     const { userId } = req.user;
-   await posts.insertOne({
+    await posts.insertOne({
       userId: new ObjectId(userId),
       description,
       picturePath,
