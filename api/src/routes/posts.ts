@@ -13,6 +13,8 @@ import { upload } from "../config/multer";
 
 const router = express.Router();
 
+/* /api/posts */
+
 router.get("/", verifyToken, getFeed);
 
 router.get("/:userId", verifyToken, getProfileFeed);

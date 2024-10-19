@@ -125,7 +125,7 @@ export const likePost = async (
       );
     }
 
-    res.status(200).json({ message: "Success" });
+    res.status(200).json({ message: "like added successfully" });
   } catch (err) {
     next(err);
   }
