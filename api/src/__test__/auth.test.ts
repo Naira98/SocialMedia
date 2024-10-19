@@ -2,34 +2,43 @@ import request from "supertest";
 import { client, connectionPromise } from "../db/db";
 import { app, server } from "../server";
 import { tokens, users } from "../db/collections";
-import { data, loginFakeUser, registerFakeUser } from "./generateUser";
+import { loginFakeUser, registerFakeUser, UserData } from "./generateUser";
 
 let accessToken: string;
 let refreshToken: string;
+const userData = new UserData()
 
 describe("Auth", () => {
+  it('must pass', ()=>{
+    expect(1).toBeTruthy()
+  })
+
   beforeAll(async () => {
+    console.log('before all in auth')
     await connectionPromise;
   });
 
   afterAll(async () => {
-    await Promise.all([users.drop(), tokens.drop(), client.close()]);
+    console.log('after all in auth')
+    await Promise.all([users.drop(), tokens.drop()
+      ,client.close()
+    ]);
     server.close();
   });
 
   it("/register => should return status 201", async () => {
-    const res = await registerFakeUser();
+    const res = await registerFakeUser(userData);
     expect(res.status).toBe(201);
     expect(res.body.message).toMatch(/you registered successfully/i);
   });
 
   it("/login => should return JWT tokens and user without password and friends", async () => {
-    const res = await loginFakeUser();
+    const res = await loginFakeUser(userData);
 
     expect(res.status).toBe(200);
     expect(res.body.tokens.accessToken).toBeTruthy();
     expect(res.body.tokens.refreshToken).toBeTruthy();
-    expect(res.body.user.email).toBe(data.email);
+    expect(res.body.user.email).toBe(userData.email);
     expect(res.body.user.password).toBeUndefined();
     expect(res.body.user.friends).toBeUndefined();
 
