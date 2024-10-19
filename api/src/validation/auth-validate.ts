@@ -20,8 +20,6 @@ export const loginValidation = async (
   const { value, error } = result;
   const valid = error == null;
 
-  console.log(error)
-
   if (!valid) {
     res.status(422).json({
       message: error.details[0].message,
