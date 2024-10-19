@@ -14,9 +14,8 @@ services:
       - 3000:3000
     env_file:
       - ./api/.env
-    volumes:
-      - ./api:/app
-      - /app/node_modules
+    environment:
+      MONGO_URI: "mongodb://mongo/"
     develop:
       watch:
         - path: ./api/package.json
@@ -33,9 +32,6 @@ services:
     build: ./client
     ports:
       - 5173:5173
-    volumes:
-      - ./client:/app
-      - /app/node_modules
     develop:
       watch:
         - path: ./client/package.json
