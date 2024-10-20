@@ -25,7 +25,6 @@ const apiReq = async (
           body: JSON.stringify({ refreshToken }),
         });
         const data = await res.json();
-        console.log(data)
         if (res.ok) {
           setAccessToken(data.accessToken);
           accessToken = data.accessToken;

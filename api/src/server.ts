@@ -37,10 +37,11 @@ app.use("/api/posts", postRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-export const server = app.listen(PORT, () => {
-  /* ADD DATA ONE TIME */
-  // posts.insertMany(postsData);
-  // users.insertMany(usersData);
+if (process.env.NODE_ENV != "test")
+  app.listen(PORT, () => {
+    /* ADD DATA ONE TIME */
+    // posts.insertMany(postsData);
+    // users.insertMany(usersData);
 
-  return console.log(`Server starts on port: ${PORT}`);
-});
+    return console.log(`Server starts on port: ${PORT}`);
+  });

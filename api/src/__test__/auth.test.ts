@@ -1,74 +1,122 @@
-import request from "supertest";
 import { client, connectionPromise } from "../db/db";
-import { app, server } from "../server";
 import { tokens, users } from "../db/collections";
-import { loginFakeUser, registerFakeUser, UserData } from "./generateUser";
+import { generateUserData } from "./generateUser";
+import { postReqFormData, postReqJson } from "./testReq";
+import { faker } from "@faker-js/faker/.";
+import { deleteImages } from "../utils/deleteImages";
 
 let accessToken: string;
 let refreshToken: string;
-const userData = new UserData()
+const userData = generateUserData();
+let picturePaths: string[] = [];
+
+jest.useFakeTimers({ advanceTimers: true });
 
 describe("Auth", () => {
-  it('must pass', ()=>{
-    expect(1).toBeTruthy()
-  })
-
   beforeAll(async () => {
-    console.log('before all in auth')
     await connectionPromise;
   });
 
   afterAll(async () => {
-    console.log('after all in auth')
-    await Promise.all([users.drop(), tokens.drop()
-      ,client.close()
-    ]);
-    server.close();
+    deleteImages(picturePaths);
+    await Promise.all([users.drop(), tokens.drop()]);
+    await client.close();
   });
 
-  it("/register => should return status 201", async () => {
-    const res = await registerFakeUser(userData);
-    expect(res.status).toBe(201);
-    expect(res.body.message).toMatch(/you registered successfully/i);
+  describe("Register", () => {
+    it("should return status 201 when register with new data", async () => {
+      const res = await postReqFormData("/auth/register", userData, "p1.jpeg");
+      expect(res.status).toBe(201);
+      expect(res.body.message).toMatch(/you registered successfully/i);
+    });
+
+    it("should return status 409 when register with the same email", async () => {
+      const res = await postReqFormData("/auth/register", userData, "p1.jpeg");
+      expect(res.status).toBe(409);
+      expect(res.body.message).toMatch(/email already exists/i);
+      picturePaths.push(res.body.picturePath);
+    });
   });
 
-  it("/login => should return JWT tokens and user without password and friends", async () => {
-    const res = await loginFakeUser(userData);
+  describe("Login", () => {
+    it("should return 401 when using wrong email", async () => {
+      const res = await postReqJson("/auth/login", {
+        email: faker.internet.email(),
+        password: userData.password,
+      });
+      expect(res.status).toBe(401);
+      expect(res.body.message).toMatch(/wrong credentials/i);
+    });
 
-    expect(res.status).toBe(200);
-    expect(res.body.tokens.accessToken).toBeTruthy();
-    expect(res.body.tokens.refreshToken).toBeTruthy();
-    expect(res.body.user.email).toBe(userData.email);
-    expect(res.body.user.password).toBeUndefined();
-    expect(res.body.user.friends).toBeUndefined();
+    it("should return 401 when using wrong password", async () => {
+      const res = await postReqJson("/auth/login", {
+        email: userData.email,
+        password: faker.internet.password({ length: 10 }),
+      });
+      expect(res.status).toBe(401);
+      expect(res.body.message).toMatch(/wrong credentials/i);
+    });
 
-    accessToken = res.body.tokens.accessToken;
-    refreshToken = res.body.tokens.refreshToken;
+    it("should return JWT tokens and user without password and friends", async () => {
+      const res = await postReqJson("/auth/login", {
+        email: userData.email,
+        password: userData.password,
+      });
+      expect(res.status).toBe(200);
+      expect(res.body.tokens.accessToken).toBeTruthy();
+      expect(res.body.tokens.refreshToken).toBeTruthy();
+      expect(res.body.user.email).toBe(userData.email);
+      expect(res.body.user.password).toBeUndefined();
+      expect(res.body.user.friends).toBeUndefined();
+
+      accessToken = res.body.tokens.accessToken;
+      refreshToken = res.body.tokens.refreshToken;
+      picturePaths.push(res.body.user.picturePath);
+    });
   });
 
-  it("/refresh => should return new access token", async () => {
+  describe("Refresh Token", () => {
+    it("should return 401 when sending wrong refresh token", async () => {
+      jest.advanceTimersByTime(1000);
 
-    await new Promise((f) => setTimeout(f, 1100));
+      const res = await postReqJson("/auth/refresh", {
+        refreshToken: faker.string.alpha(50),
+      });
+      expect(res.status).toBe(401);
+      expect(res.body.message).toMatch(/invalid token/i);
+    });
 
-    const res = await request(app)
-      .post("/api/auth/refresh")
-      .send({ refreshToken })
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json");
+    it("should return new access token with correct data", async () => {
+      jest.advanceTimersByTime(1000);
 
-    expect(res.status).toBe(200);
-    expect(res.body.accessToken).not.toBe(accessToken);
-    accessToken = res.body.accessToken;
+      const res = await postReqJson("/auth/refresh", { refreshToken });
+      expect(res.status).toBe(200);
+      expect(res.body.accessToken).not.toBe(accessToken);
+      accessToken = res.body.accessToken;
+    });
   });
 
-  it("/logout => should return new access token", async () => {
-    const res = await request(app)
-      .post("/api/auth/logout")
-      .set("Authorization", `Bearer ${accessToken}`)
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json");
+  describe("Logout", () => {
+    it("should return 403 and Access Declined when don't send access token", async () => {
+      const res = await postReqJson("/auth/logout", undefined, undefined);
+      expect(res.status).toBe(403);
+      expect(res.body.message).toMatch(/access declined/i);
+    });
 
-    expect(res.status).toBe(200);
-    expect(res.body.message).toMatch(/logged out/i);
+    it("should return 403 when send wrong access token", async () => {
+      const res = await postReqJson(
+        "/auth/logout",
+        undefined,
+        faker.string.alpha(50)
+      );
+      expect(res.status).toBe(403);
+      expect(res.body.message).toMatch(/token invalid/i);
+    });
+
+    it("should return 200 with correct data", async () => {
+      const res = await postReqJson("/auth/logout", undefined, accessToken);
+      expect(res.status).toBe(200);
+      expect(res.body.message).toMatch(/logged out/i);
+    });
   });
 });

@@ -6,7 +6,8 @@ dotenv.config();
 let MONGO_DB = process.env.MONGO_DB || "";
 
 // Append -test to MONGO_DB if NODE_ENV is test
-if (NODE_ENV === "test") MONGO_DB += "-test";
+if (NODE_ENV === "test")
+  MONGO_DB += `-${Math.random().toString().slice(2)}-test`;
 
 // MongoDB client
 const client = new MongoClient(MONGO_URI);
@@ -15,7 +16,6 @@ const client = new MongoClient(MONGO_URI);
 export const connectionPromise = client
   .connect()
   .then(() => {
-    console.log(MONGO_DB)
     console.log("MongoDB connected");
   })
   .catch((err) => console.log(err));

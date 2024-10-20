@@ -138,10 +138,10 @@ export const updateAccount = async (
   try {
     let { userId, firstName, lastName } = req.body;
 
-    if (req.user.toString() === userId.toString()) {
+    if (req.user.userId.toString() !== userId.toString()) {
       return res
         .status(403)
-        .json({ message: "Can't add link to another user" });
+        .json({ message: "You can't make update to another user" });
     }
 
     await users.updateOne(
@@ -164,10 +164,10 @@ export const addTwitter = async (
   try {
     let { userId, link } = req.body;
 
-    if (req.user.toString() === userId.toString()) {
+    if (req.user.userId.toString() !== userId.toString()) {
       return res
         .status(403)
-        .json({ message: "Can't add link to another user" });
+        .json({ message: "You can't add link to another user" });
     }
 
     await users.updateOne(
@@ -190,10 +190,10 @@ export const addLinkedin = async (
   try {
     let { userId, link } = req.body;
 
-    if (req.user.toString() === userId.toString()) {
+    if (req.user.userId.toString() !== userId.toString()) {
       return res
         .status(403)
-        .json({ message: "Can't add link to another user" });
+        .json({ message: "You can't add link to another user" });
     }
 
     await users.updateOne(

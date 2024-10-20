@@ -1,10 +1,7 @@
 import { getTokens } from "../util/helpers";
 import apiReq from "./apiReq";
 
-export async function addPost(
-  post: string,
-  image: File | null,
-) {
+export async function addPost(post: string, image: File | null) {
   try {
     const formData = new FormData();
     formData.append("description", post);
@@ -12,12 +9,7 @@ export async function addPost(
       formData.append("picture", image);
     }
 
-    const res: Response = await apiReq(
-      "POST",
-      "/posts",
-      undefined,
-      formData,
-    );
+    const res: Response = await apiReq("POST", "/posts", undefined, formData);
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
@@ -29,12 +21,9 @@ export async function addPost(
   }
 }
 
-export async function getFeed(
-  isProfile: boolean,
-  userId: string | undefined,
-) {
+export async function getFeed(isProfile: boolean, userId: string | undefined) {
   try {
-    const tokens = getTokens()
+    const tokens = getTokens();
     if (!tokens.refreshToken || !tokens.accessToken) return null;
 
     let res: Response;
@@ -45,7 +34,7 @@ export async function getFeed(
         {
           "Content-Type": "application/json",
         },
-        undefined,
+        undefined
       );
     } else {
       res = await apiReq(
@@ -54,7 +43,7 @@ export async function getFeed(
         {
           "Content-Type": "application/json",
         },
-        undefined,
+        undefined
       );
     }
 
@@ -68,9 +57,7 @@ export async function getFeed(
   }
 }
 
-export async function patchLike(
-  postId: string,
-) {
+export async function patchLike(postId: string) {
   try {
     const res: Response = await apiReq(
       "PATCH",
@@ -78,7 +65,7 @@ export async function patchLike(
       {
         "Content-Type": "application/json",
       },
-      undefined,
+      undefined
     );
 
     const data = await res.json();
@@ -91,10 +78,7 @@ export async function patchLike(
   }
 }
 
-export async function addComment(
-  comment: string,
-  postId: string,
-) {
+export async function addComment(comment: string, postId: string) {
   try {
     const res: Response = await apiReq(
       "POST",
@@ -102,7 +86,7 @@ export async function addComment(
       {
         "Content-Type": "application/json",
       },
-      JSON.stringify({ comment }),
+      JSON.stringify({ comment })
     );
 
     const data = await res.json();
@@ -112,14 +96,11 @@ export async function addComment(
     return data;
   } catch (err) {
     console.log(err);
-    console.log(err);
     throw err;
   }
 }
 
-export async function deletePost(
-  postId: string,
-) {
+export async function deletePost(postId: string) {
   try {
     const res: Response = await apiReq(
       "DELETE",
@@ -127,7 +108,7 @@ export async function deletePost(
       {
         "Content-Type": "application/json",
       },
-      undefined,
+      undefined
     );
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);

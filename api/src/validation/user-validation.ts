@@ -10,8 +10,8 @@ export const updateAccountValidation = async (
 
   const updateProfileSchema = Joi.object().keys({
     userId: Joi.string().min(1).max(25).required(),
-    firstName: Joi.string().pattern(/^[a-zA-Z]+$/).min(3).max(15).required(),
-    lastName: Joi.string().pattern(/^[a-zA-Z]+$/).min(3).max(15).required(),
+    firstName: Joi.string().alphanum().min(3).max(30).required(),
+    lastName: Joi.string().alphanum().min(3).max(30).required(),
   });
 
   const result = updateProfileSchema.validate(body);
@@ -21,7 +21,10 @@ export const updateAccountValidation = async (
 
   if (!valid) {
     res.status(422).json({
-      message: error.details[0].type === 'string.pattern.base' ? 'username must contain alphabetic characters only' : error.details[0].message,
+      message:
+        error.details[0].type === "string.pattern.base"
+          ? "username must contain alphabetic characters only"
+          : error.details[0].message,
       data: body,
     });
   } else {
@@ -38,7 +41,7 @@ export const linkValidation = async (
 
   const addTwitterSchema = Joi.object().keys({
     userId: Joi.string().alphanum().min(1).max(25).required(),
-    link: Joi.string().alphanum().min(3).max(50).required(),
+    link: Joi.string().alphanum().min(3).max(100).required(),
   });
 
   const result = addTwitterSchema.validate(body);
@@ -55,4 +58,3 @@ export const linkValidation = async (
     next();
   }
 };
-

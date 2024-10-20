@@ -10,7 +10,7 @@ export const verifyToken = (
 ) => {
   try {
     let token = req.header("Authorization");
-    if (!token) return res.status(403).json({ message: "Access Decliend" });
+    if (!token) return res.status(403).json({ message: "Access Declined" });
 
     if (token.startsWith("Bearer ")) {
       token = token.split(" ").at(1);

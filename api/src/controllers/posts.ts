@@ -6,6 +6,7 @@ import { RequestWithUser } from "../types/RequestWithUser";
 import { posts, users } from "../db/collections";
 import { ObjectId } from "mongodb";
 import { IMAGES_PATH } from "../config/multer";
+import { deleteImages } from "../utils/deleteImages";
 
 export const getFeed = async (
   req: RequestWithUser,
@@ -125,7 +126,7 @@ export const likePost = async (
       );
     }
 
-    res.status(200).json({ message: "like added successfully" });
+    res.status(200).json({ message: "like added or removed successfully" });
   } catch (err) {
     next(err);
   }
@@ -163,7 +164,6 @@ export const deletePost = async (
 
     const post = await posts.findOne({
       _id: new ObjectId(postId),
-      userId: new ObjectId(userId),
     });
 
     if (post.userId.toString() !== userId)
@@ -175,17 +175,11 @@ export const deletePost = async (
       _id: new ObjectId(postId),
       userId: new ObjectId(userId),
     });
-    if (post.picturePath) deleteImage(post.picturePath);
+    if (post.picturePath) deleteImages([post.picturePath]);
 
     // return id of deleted post only
     res.status(200).json({ postId });
   } catch (err) {
     next(err);
   }
-};
-
-const deleteImage = (imagePath: string) => {
-  fs.unlink(path.join(IMAGES_PATH, imagePath), (err) => {
-    if (err) console.log(err);
-  });
 };

@@ -16,6 +16,7 @@ import {
 
 const router = express.Router();
 
+/* /api/users */
 router.get("/me", verifyToken, getMe);
 
 router.get("/:id", verifyToken, getProfileUser);

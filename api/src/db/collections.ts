@@ -1,6 +1,6 @@
-import { IPost } from "../../types/IPost";
-import { IToken } from "../../types/IToken";
-import { IUser } from "../../types/IUser";
+import { IPost } from "../types/IPost";
+import { IToken } from "../types/IToken";
+import { IUser } from "../types/IUser";
 import db from "./db";
 
 export const users = db.collection<IUser>("users");

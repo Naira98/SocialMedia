@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { REFRESH_SECRET } from "../config/config";
-import { generateAccessToken, generateRefreshToken } from "../lib/helpers";
-import { Token as TokenType } from "../types/Token";
+import { generateAccessToken, generateRefreshToken } from "../utils/generateJWT";
 import { tokens, users } from "../db/collections";
 import { ObjectId } from "mongodb";
+import { IToken } from "../types/IToken";
 
 /* REGISTER */
 export const register = async (
@@ -24,11 +24,11 @@ export const register = async (
   } = req.body;
   try {
     const user = await users.findOne({ email: email });
-    if (user) return res.status(409).json({ message: "Email already exists" });
+    if (user) return res.status(409).json({ message: "Email already exists", picturePath });
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
-    users.insertOne({
+    const newUser = await users.insertOne({
       email,
       firstName,
       lastName,
@@ -43,8 +43,12 @@ export const register = async (
       linkedin: "",
     });
 
-    return res.status(201).json({ message: "You registered successfully" });
+    return res.status(201).json({
+      message: "You registered successfully",
+      userId: newUser.insertedId,
+    });
   } catch (err) {
+    console.error(err);
     next(err);
   }
 };
@@ -102,7 +106,7 @@ export const refresh = async (
     jwt.verify(
       refreshToken,
       REFRESH_SECRET,
-      async (err: Error, userData: TokenType) => {
+      async (err: Error, userData: IToken) => {
         if (err)
           return res.status(401).json({ message: "You are not authenticated" });
         const accessToken = generateAccessToken({ userId: userData.userId });
