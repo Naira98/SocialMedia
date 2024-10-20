@@ -15,9 +15,6 @@ const client = new MongoClient(MONGO_URI);
 // MongoDB connection
 export const connectionPromise = client
   .connect()
-  .then(() => {
-    console.log("MongoDB connected");
-  })
   .catch((err) => console.log(err));
 
 // Set Database
