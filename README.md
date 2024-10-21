@@ -56,6 +56,7 @@ Enhanced user experience with the addition of dark mode support and a responsive
 - **Formik**: For building and managing forms.
 - **Yup**: Schema builder for value parsing and validation.
 - **Multer**: For handling image uploads and file management.
+- **Supertest**: Simplifies HTTP assertions for testing API endpoints in Node.js applications.
 - **React Dropzone**: For implementing drag-and-drop file uploads.
 - **Helmet**: Securing Express apps by setting various HTTP headers.
 - **React Hot Toast**: For showing notifications and feedback to users in a non-intrusive way.
