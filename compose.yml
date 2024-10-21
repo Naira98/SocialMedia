@@ -16,15 +16,17 @@ services:
       - ./api/.env
     environment:
       MONGO_URI: "mongodb://mongo/"
+    volumes:
+      - ./api/public/assets:/app/public/assets
     develop:
       watch:
-        - path: ./api/package.json
+        - path: ./app/package.json
           action: rebuild
-        - path: ./api/package-lock.json
+        - path: ./app/yarn.lock
           action: rebuild
         - path: ./api
           target: /app
-          action: sync
+          action: sync+restart
 
   client:
     depends_on:
@@ -36,11 +38,11 @@ services:
       watch:
         - path: ./client/package.json
           action: rebuild
-        - path: ./client/package-lock.json
+        - path: ./client/yarn.lock
           action: rebuild
         - path: ./client
           target: /app
-          action: sync
+          action: sync+restart
 
 volumes:
   social_media:

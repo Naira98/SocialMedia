@@ -1,14 +1,11 @@
 import { Button } from "@mui/material";
-import { MouseEvent } from "react";
 import useColors from "../hooks/util/useColors";
 
 const SmallButton = ({
   disabled,
-  onClick,
   children,
 }: {
   disabled: boolean;
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
   children: string;
 }) => {
   const { primaryMain, backAlt } = useColors();
@@ -16,7 +13,7 @@ const SmallButton = ({
   return (
     <Button
       disabled={disabled}
-      onClick={onClick}
+      type='submit'
       sx={{
         paddingX: "1rem",
         backgroundColor: primaryMain,
@@ -31,20 +28,3 @@ const SmallButton = ({
 };
 
 export default SmallButton;
-
-// <ButtonMui
-//   disabled={disabled}
-//   style={
-//     isMobileScreen
-//       ? { width: "20%" }
-//       : { width: "40%", marginTop: "0.5rem" }
-//   }
-//   onClick={onClick}
-//   sx={{
-//     color: backAlt,
-//     backgroundColor: primatyMain,
-//     borderRadius: "3rem",
-//   }}
-// >
-//   {children}
-// </ButtonMui>

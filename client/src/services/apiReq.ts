@@ -11,7 +11,6 @@ const apiReq = async (
   try {
     // eslint-disable-next-line prefer-const
     let { accessToken, refreshToken } = getTokens();
-
     if (accessToken && refreshToken) {
       const decodedToken = jwtDecode(accessToken);
 
@@ -32,8 +31,7 @@ const apiReq = async (
           throw new Error(data.message);
         }
       }
-
-       const res = await fetch(`http://localhost:3000/api${endpoint}`, {
+      const res = await fetch(`http://localhost:3000/api${endpoint}`, {
         method,
         headers: {
           ...(accessToken && {
@@ -43,7 +41,7 @@ const apiReq = async (
         },
         body: body,
       });
-      return res
+      return res;
     } else {
       throw new Error("You are not authenticated");
     }

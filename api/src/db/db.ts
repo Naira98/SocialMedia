@@ -2,6 +2,7 @@ import { MongoClient } from "mongodb";
 import { NODE_ENV, MONGO_URI } from "../config/config";
 import dotenv from "dotenv";
 
+console.log(MONGO_URI)
 dotenv.config();
 let MONGO_DB = process.env.MONGO_DB || "";
 
@@ -14,7 +15,7 @@ const client = new MongoClient(MONGO_URI);
 
 // MongoDB connection
 export const connectionPromise = client
-  .connect()
+  .connect().then(()=>console.log('Mongo connected'))
   .catch((err) => console.log(err));
 
 // Set Database

@@ -85,43 +85,40 @@ const UserWidget = ({
         )}
       </FlexBetween>
       {isUpdate && (
-        <FlexBetween gap="0.5rem" pb="1.1rem" flexDirection="column">
-          <FlexBetween gap="0.75rem">
-            <Input
-              placeholder="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              style={{ width: "70%" }}
-            />
-            <Input
-              placeholder="Last Name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              style={{ width: "70%" }}
-            />
-            {isMobileScreen && (
-              <SmallButton
-                disabled={!firstName && !lastName}
-                onClick={() =>
-                  updateAccount({ userId: userId!, firstName, lastName })
-                }
-              >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            updateAccount({ userId: userId!, firstName, lastName });
+          }}
+        >
+          <FlexBetween gap="0.5rem" pb="1.1rem" flexDirection="column">
+            <FlexBetween gap="0.75rem">
+              <Input
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                style={{ width: "70%" }}
+              />
+              <Input
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                style={{ width: "70%" }}
+              />
+              {isMobileScreen && (
+                <SmallButton disabled={!firstName && !lastName}>
+                  Update
+                </SmallButton>
+              )}
+            </FlexBetween>
+
+            {!isMobileScreen && (
+              <SmallButton disabled={!firstName && !lastName}>
                 Update
               </SmallButton>
             )}
           </FlexBetween>
-
-          {!isMobileScreen && (
-            <SmallButton
-              disabled={!firstName && !lastName}
-              onClick={() =>
-                updateAccount({ userId: userId!, firstName, lastName })
-              }
-            >
-              Update
-            </SmallButton>
-          )}
-        </FlexBetween>
+        </form>
       )}
 
       <Divider />
@@ -205,20 +202,22 @@ const UserWidget = ({
           )}
         </FlexBetween>
         {isTwitter && (
-          <FlexBetween gap="0.5rem" pb="1.1rem">
-            <Input
-              placeholder="@"
-              value={twitterLink}
-              onChange={(e) => setTwitterLink(e.target.value)}
-              style={{ width: "70%" }}
-            />
-            <SmallButton
-              disabled={!twitterLink}
-              onClick={() => addTwitter({ userId: userId!, link: twitterLink })}
-            >
-              Add
-            </SmallButton>
-          </FlexBetween>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addTwitter({ userId: userId!, link: twitterLink });
+            }}
+          >
+            <FlexBetween gap="0.5rem" pb="1.1rem">
+              <Input
+                placeholder="@"
+                value={twitterLink}
+                onChange={(e) => setTwitterLink(e.target.value)}
+                style={{ width: "70%" }}
+              />
+              <SmallButton disabled={!twitterLink}>Add</SmallButton>
+            </FlexBetween>
+          </form>
         )}
 
         <FlexBetween gap="1rem">
@@ -244,28 +243,32 @@ const UserWidget = ({
             </Box>
           </FlexBetween>
           {userData._id === userId && (
-            <IconButton onClick={() => setIsLinkedin((l) => !l)}>
+            <IconButton
+              onClick={() => {
+                setIsLinkedin((l) => !l);
+              }}
+            >
               <ModeEditOutlinedIcon sx={{ color: neutralMain }} />
             </IconButton>
           )}
         </FlexBetween>
         {isLinkedin && (
-          <FlexBetween gap="0.5rem" mt="0.5rem">
-            <Input
-              placeholder="/in/"
-              value={linkedinLink}
-              onChange={(e) => setLinkedinLink(e.target.value)}
-              style={{ width: "70%" }}
-            />
-            <SmallButton
-              disabled={!linkedinLink}
-              onClick={() =>
-                addLinkedin({ userId: userId!, link: linkedinLink })
-              }
-            >
-              Add
-            </SmallButton>
-          </FlexBetween>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addLinkedin({ userId: userId!, link: linkedinLink });
+            }}
+          >
+            <FlexBetween gap="0.5rem" mt="0.5rem">
+              <Input
+                placeholder="/in/"
+                value={linkedinLink}
+                onChange={(e) => setLinkedinLink(e.target.value)}
+                style={{ width: "70%" }}
+              />
+              <SmallButton disabled={!linkedinLink}>Add</SmallButton>
+            </FlexBetween>
+          </form>
         )}
       </Box>
     </WidgetWrapper>

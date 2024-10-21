@@ -19,7 +19,6 @@ const FriendListWidget = ({ user }: { user: IUser }) => {
           top: "27.5rem",
           left: "0",
           zIndex: "99",
-          overflow: "scroll",
           height: "19.75rem",
         }}
       >
@@ -35,7 +34,6 @@ const FriendListWidget = ({ user }: { user: IUser }) => {
         top: "27.5rem",
         left: "0",
         zIndex: "99",
-        overflow: "scroll",
         height: "19.75rem",
       }}
     >

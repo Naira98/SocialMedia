@@ -18,9 +18,9 @@ export function useLogut(
   } = useMutation({
     mutationFn: logoutApi,
     onSuccess: () => {
+      navigate("/", { replace: true });
       queryClient.setQueryData(["user", "me"], null);
       removeTokens();
-      navigate("/", { replace: true });
       setUserId(null);
     },
     onError: (err) => {

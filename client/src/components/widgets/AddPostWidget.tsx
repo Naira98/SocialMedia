@@ -25,88 +25,87 @@ const AddPostWidget = ({ picturePath }: { picturePath: string }) => {
   const { neutralLight, neutralMedMain, neutralMed, palette } = useColors();
 
   return (
-    <WidgetWrapper palette={palette} mb="1.5rem">
-      <FlexBetween gap="1.5rem" mb="1rem">
-        <Link to={`/profile/${userId}`}>
-          <UserImage image={picturePath} />
-        </Link>
-        <InputBase
-          onChange={(e) => {
-            setPost(e.target.value);
-          }}
-          value={post}
-          sx={{
-            width: "100%",
-            backgroundColor: neutralLight,
-            borderRadius: "2rem",
-            padding: "1rem 2rem",
-          }}
-          placeholder="What's in your mind?"
-        />
-      </FlexBetween>
-
-      {isImage && (
-        <Box
-          border={`1px solid ${neutralMed}`}
-          borderRadius="5px"
-          mt="1rem"
-          p="1rem"
-        >
-          <Dropzone picture={image} setImage={setImage} />
-        </Box>
-      )}
-
-      <Divider sx={{ m: "1.25rem 0" }} />
-
-      <FlexBetween>
-        <FlexBetween gap="2rem">
-          <FlexBetween gap="0.25rem" onClick={() => setIsImage((i) => !i)}>
-            <IconButton>
-              <CollectionsOutlinedIcon sx={{ color: neutralMedMain }} />
-            </IconButton>
-            <Typography
-              color={neutralMedMain}
-              sx={{ "&:hover": { cursor: "pointer", color: neutralMed } }}
-            >
-              Image
-            </Typography>
-          </FlexBetween>
-
-          <FlexBetween gap="0.25rem">
-            <IconButton>
-              <VideocamIcon sx={{ color: neutralMedMain }} />
-            </IconButton>
-            <Typography
-              color={neutralMedMain}
-              sx={{ "&:hover": { cursor: "pointer", color: neutralMed } }}
-            >
-              Live Video
-            </Typography>
-          </FlexBetween>
-
-          <FlexBetween gap="0.25rem">
-            <IconButton>
-              <MoodOutlinedIcon sx={{ color: neutralMedMain }} />
-            </IconButton>
-            <Typography
-              color={neutralMedMain}
-              sx={{ "&:hover": { cursor: "pointer", color: neutralMed } }}
-            >
-              Activity / Feeling
-            </Typography>
-          </FlexBetween>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        addPost({ post, image });
+      }}
+    >
+      <WidgetWrapper palette={palette} mb="1.5rem">
+        <FlexBetween gap="1.5rem" mb="1rem">
+          <Link to={`/profile/${userId}`}>
+            <UserImage image={picturePath} />
+          </Link>
+          <InputBase
+            onChange={(e) => {
+              setPost(e.target.value);
+            }}
+            value={post}
+            sx={{
+              width: "100%",
+              backgroundColor: neutralLight,
+              borderRadius: "2rem",
+              padding: "1rem 2rem",
+            }}
+            placeholder="What's in your mind?"
+          />
         </FlexBetween>
-        <SmallButton
-          disabled={!post}
-          onClick={(e) => {
-            e.preventDefault();
-            addPost({ post, image });
-          }}
-        >
-          POST
-        </SmallButton>
-      </FlexBetween>
-    </WidgetWrapper>
+
+        {isImage && (
+          <Box
+            border={`1px solid ${neutralMed}`}
+            borderRadius="5px"
+            mt="1rem"
+            p="1rem"
+          >
+            <Dropzone picture={image} setImage={setImage} />
+          </Box>
+        )}
+
+        <Divider sx={{ m: "1.25rem 0" }} />
+
+        <FlexBetween>
+          <FlexBetween gap="2rem">
+            <FlexBetween gap="0.25rem" onClick={() => setIsImage((i) => !i)}>
+              <IconButton>
+                <CollectionsOutlinedIcon sx={{ color: neutralMedMain }} />
+              </IconButton>
+              <Typography
+                color={neutralMedMain}
+                sx={{ "&:hover": { cursor: "pointer", color: neutralMed } }}
+              >
+                Image
+              </Typography>
+            </FlexBetween>
+
+            <FlexBetween gap="0.25rem">
+              <IconButton>
+                <VideocamIcon sx={{ color: neutralMedMain }} />
+              </IconButton>
+              <Typography
+                color={neutralMedMain}
+                sx={{ "&:hover": { cursor: "pointer", color: neutralMed } }}
+              >
+                Live Video
+              </Typography>
+            </FlexBetween>
+
+            <FlexBetween gap="0.25rem">
+              <IconButton>
+                <MoodOutlinedIcon sx={{ color: neutralMedMain }} />
+              </IconButton>
+              <Typography
+                color={neutralMedMain}
+                sx={{ "&:hover": { cursor: "pointer", color: neutralMed } }}
+              >
+                Activity / Feeling
+              </Typography>
+            </FlexBetween>
+          </FlexBetween>
+          <SmallButton disabled={!post}>POST</SmallButton>
+        </FlexBetween>
+      </WidgetWrapper>
+    </form>
   );
 };
 

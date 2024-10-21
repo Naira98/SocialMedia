@@ -7,11 +7,13 @@ export const IMAGES_PATH = path.join(__dirname, "..", "..", "public", "assets");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    console.log(IMAGES_PATH)
     cb(null, IMAGES_PATH);
   },
   filename: function (req, file, cb) {
     const randomeName = nanoid() + path.extname(file.originalname);
     cb(null, randomeName);
+    console.log(randomeName)
     req.body.picturePath = randomeName;
   },
 });

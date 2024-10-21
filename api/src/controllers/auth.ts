@@ -6,6 +6,7 @@ import { generateAccessToken, generateRefreshToken } from "../utils/generateJWT"
 import { tokens, users } from "../db/collections";
 import { ObjectId } from "mongodb";
 import { IToken } from "../types/IToken";
+import { RequestWithUser } from "../types/RequestWithUser";
 
 /* REGISTER */
 export const register = async (
@@ -121,12 +122,12 @@ export const refresh = async (
 };
 
 export const logout = async (
-  req: Request,
+  req: RequestWithUser,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    await tokens.findOneAndDelete({ userId: new ObjectId(req.userId) });
+    await tokens.findOneAndDelete({ userId: new ObjectId(req.user.userId) });
     return res.status(200).json({ message: "Logged out" });
   } catch (err) {
     return res.status(401).json(err);

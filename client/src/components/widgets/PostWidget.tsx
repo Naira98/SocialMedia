@@ -120,23 +120,26 @@ const PostWidget = ({
             </Box>
           ))}
           <Divider />
-          <FlexBetween style={{ marginTop: "0.5rem" }}>
-            <Input
-              placeholder="Add your comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              style={{ width: "70%" }}
-            />
-            <SmallButton
-              disabled={!comment}
-              onClick={(e) => {
-                e.preventDefault();
-                addComment({ comment, postId: postId.toString() });
-              }}
-            >
-              Add Comment
-            </SmallButton>
-          </FlexBetween>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addComment({ comment, postId: postId.toString() });
+            }}
+          >
+            <FlexBetween style={{ marginTop: "0.5rem" }}>
+              <Input
+                placeholder="Add your comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                style={{ width: "70%" }}
+              />
+              <SmallButton
+                disabled={!comment}
+              >
+                Add Comment
+              </SmallButton>
+            </FlexBetween>
+          </form>
         </Box>
       )}
     </WidgetWrapper>

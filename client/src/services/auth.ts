@@ -80,9 +80,8 @@ export async function getMe(
 
 export async function logout() {
   try {
-    const res = await fetch("http://localhost:3000/api/auth/logout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const res = await apiReq("POST", "/auth/logout", {
+      "Content-Type": "application/json",
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
