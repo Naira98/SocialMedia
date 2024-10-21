@@ -54,6 +54,7 @@ Enhanced user experience with the addition of dark mode support and a responsive
 ### Additional Tools
 
 - **Formik**: For building and managing forms.
+- **Zod**: TypeScript-first schema declaration and validation library for ensuring data integrity.
 - **Yup**: Schema builder for value parsing and validation.
 - **Multer**: For handling image uploads and file management.
 - **Supertest**: Simplifies HTTP assertions for testing API endpoints in Node.js applications.
