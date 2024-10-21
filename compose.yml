@@ -26,7 +26,7 @@ services:
           action: rebuild
         - path: ./api
           target: /app
-          action: sync+restart
+          action: sync
 
   client:
     depends_on:
@@ -42,7 +42,7 @@ services:
           action: rebuild
         - path: ./client
           target: /app
-          action: sync+restart
+          action: sync
 
 volumes:
   social_media:
