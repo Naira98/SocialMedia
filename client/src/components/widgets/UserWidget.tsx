@@ -16,6 +16,8 @@ import { useFetchFriends } from "../../hooks/users/useFetchFriends";
 import useColors from "../../hooks/util/useColors";
 import { useAuth } from "../../contexts/useAuth";
 import { IUser } from "../../types/User";
+import twitterImage from "../../assets/twitter.png";
+import linkedinImage from "../../assets/linkedin.png";
 
 const UserWidget = ({
   userData,
@@ -50,7 +52,12 @@ const UserWidget = ({
       style={
         isMobileScreen
           ? { display: "block" }
-          : { position: "sticky", top: "6rem", left: "0", zIndex: "99" }
+          : {
+              position: "sticky",
+              width: "279px",
+              top: "7.5rem",
+              justifySelf: "end",
+            }
       }
     >
       {/* FIRST ROW */}
@@ -145,23 +152,6 @@ const UserWidget = ({
 
       {/* THIRD ROW */}
       <Box p="1rem 0">
-        <FlexBetween mb="0.5rem">
-          <Typography color={neutralMed}>Who's viewed your profile</Typography>
-          <Typography color={neutralMain} fontWeight="500">
-            {userData?.viewedProfile}
-          </Typography>
-        </FlexBetween>
-        <FlexBetween>
-          <Typography color={neutralMed}>Impressions of your post</Typography>
-          <Typography color={neutralMain} fontWeight="500">
-            {userData.impressions}
-          </Typography>
-        </FlexBetween>
-      </Box>
-      <Divider />
-
-      {/* FORTH ROW */}
-      <Box p="1rem 0">
         <Typography
           fontSize="1rem"
           color={neutralMain}
@@ -173,7 +163,7 @@ const UserWidget = ({
 
         <FlexBetween gap="1rem" mb="0.5rem">
           <FlexBetween gap="1rem">
-            <img src="../../../src/assets/twitter.png" alt="twitter" />
+            <img src={twitterImage} alt="twitter" />
             <Box>
               <Typography color={neutralMain} fontWeight="500">
                 Twitter
@@ -222,7 +212,7 @@ const UserWidget = ({
 
         <FlexBetween gap="1rem">
           <FlexBetween gap="1rem">
-            <img src="../../../src/assets/linkedin.png" alt="linkedin" />
+            <img src={linkedinImage} alt="linkedin" />
             <Box>
               <Typography color={neutralMain} fontWeight="500">
                 Linkedin

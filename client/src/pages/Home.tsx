@@ -16,8 +16,8 @@ const Home = () => {
   const isMobileScreen = useMediaQuery("(max-width: 1200px)");
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+  }, []);
 
   if (isPending)
     return (

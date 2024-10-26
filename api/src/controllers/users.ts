@@ -102,26 +102,29 @@ export const addRemoveFriend = async (
       return res.status(400).json({ message: "You can't follow yourself" });
 
     const user = await users.findOne({ _id: new ObjectId(userId) });
-    const friend = await users.findOne({ _id: new ObjectId(friendId) });
 
     if (user.friends.includes(friendId)) {
-      await users.updateOne(
-        { _id: new ObjectId(userId) },
-        { $pull: { friends: { $in: [friendId] } } }
-      );
-      await users.updateOne(
-        { _id: new ObjectId(friendId) },
-        { $pull: { friends: { $in: [userId] } } }
-      );
+      await Promise.all([
+        users.updateOne(
+          { _id: new ObjectId(userId) },
+          { $pull: { friends: { $in: [friendId] } } }
+        ),
+        users.updateOne(
+          { _id: new ObjectId(friendId) },
+          { $pull: { friends: { $in: [userId] } } }
+        ),
+      ]);
     } else {
-      await users.updateOne(
-        { _id: new ObjectId(userId) },
-        { $push: { friends: friendId } }
-      );
-      await users.updateOne(
-        { _id: new ObjectId(friendId) },
-        { $push: { friends: userId } }
-      );
+      await Promise.all([
+        users.updateOne(
+          { _id: new ObjectId(userId) },
+          { $push: { friends: friendId } }
+        ),
+        users.updateOne(
+          { _id: new ObjectId(friendId) },
+          { $push: { friends: userId } }
+        ),
+      ]);
     }
 
     return res.status(200).json({ message: "Success" });

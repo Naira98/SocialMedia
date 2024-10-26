@@ -10,8 +10,6 @@ export interface IUser {
   friends: string[];
   location: string;
   occupation: string;
-  viewedProfile: number;
-  impressions: number;
   twitter: string;
   linkedin: string;
 }

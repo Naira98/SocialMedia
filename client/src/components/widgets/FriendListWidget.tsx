@@ -15,11 +15,11 @@ const FriendListWidget = ({ user }: { user: IUser }) => {
       <WidgetWrapper
         palette={palette}
         style={{
-          position: "sticky",
-          top: "27.5rem",
-          left: "0",
-          zIndex: "99",
-          height: "19.75rem",
+          position: "fixed",
+          width: "279px",
+          top: "29rem",
+          bottom: "1rem",
+          overflow: "scroll",
         }}
       >
         <Spinner />
@@ -30,11 +30,11 @@ const FriendListWidget = ({ user }: { user: IUser }) => {
     <WidgetWrapper
       palette={palette}
       style={{
-        position: "sticky",
-        top: "27.5rem",
-        left: "0",
-        zIndex: "99",
-        height: "19.75rem",
+        position: "fixed",
+        width: "279px",
+        top: "29rem",
+        bottom: "1rem",
+        overflow: "scroll",
       }}
     >
       <Typography

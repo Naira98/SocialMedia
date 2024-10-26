@@ -38,8 +38,6 @@ export const register = async (
       location,
       occupation,
       picturePath,
-      viewedProfile: Math.floor(Math.random() * 10000),
-      impressions: Math.floor(Math.random() * 10000),
       twitter: "",
       linkedin: "",
     });

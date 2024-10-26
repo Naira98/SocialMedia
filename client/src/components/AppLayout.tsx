@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
 import { Box } from "@mui/material";
-import Nvabar from "./Navbar";
+import Navbar from "./Navbar";
 
 const AppLayout = () => {
   return (
     <Box>
-      <Nvabar />
+      <Navbar />
       <Outlet />
     </Box>
   );

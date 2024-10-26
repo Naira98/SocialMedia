@@ -2,6 +2,7 @@ import { Typography } from "@mui/material";
 import WidgetWrapper from "../styledComponents/WidgetWrapper";
 import FlexBetween from "../styledComponents/FlexBetween";
 import useColors from "../../hooks/util/useColors";
+import advertiseImage from "../../assets/advertise.jpeg";
 
 const AdvertiseWidget = () => {
   const { neutralDark, neutralMain, neutralMed, palette } = useColors();
@@ -11,10 +12,9 @@ const AdvertiseWidget = () => {
       palette={palette}
       mb="1.5rem"
       style={{
-        position: "sticky",
-        top: "6rem",
-        left: "0",
-        zIndex: "99",
+        position: "fixed",
+        width: "279px",
+        top: "7.5rem",
         height: "20rem",
         cursor: "pointer",
       }}
@@ -29,7 +29,7 @@ const AdvertiseWidget = () => {
         width="100%"
         height="auto"
         alt="advert"
-        src="http://localhost:3000/assets/info2.jpeg"
+        src={advertiseImage}
         style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
       />
       <FlexBetween>

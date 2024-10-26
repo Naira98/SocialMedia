@@ -157,8 +157,8 @@ describe("Users", () => {
     it("should restun 200 when updating your account name", async () => {
       const res = await patchReq("/users/user", accessToken, {
         userId: loggedUserId,
-        firstName: faker.person.firstName().slice(0, 30),
-        lastName: faker.person.lastName().slice(0, 30),
+        firstName: generateAlphaNumString(),
+        lastName: generateAlphaNumString(),
       });
       expect(res.status).toBe(200);
       expect(res.body.message).toMatch(/success/i);

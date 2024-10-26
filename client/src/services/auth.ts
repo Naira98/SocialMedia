@@ -31,10 +31,6 @@ export async function register(
       if (value != null) formData.append(key, value);
     }
 
-    // for (const pair of formData.entries()) {
-    //   console.log(pair[0] + ", " + pair[1]);
-    // }
-
     const res = await fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       body: formData,

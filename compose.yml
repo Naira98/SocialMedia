@@ -1,23 +1,12 @@
 services:
-  mongo:
-    image: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - social_media:/data/db
-
   api:
-    depends_on:
-      - mongo
     build: ./api
     ports:
       - 3000:3000
     env_file:
       - ./api/.env
-    environment:
-      MONGO_URI: "mongodb://mongo/"
     volumes:
-      - ./api/public/assets:/app/public/assets
+      - assets:/app/public/assets
     develop:
       watch:
         - path: ./app/package.json
@@ -45,4 +34,4 @@ services:
           action: sync
 
 volumes:
-  social_media:
+  assets:

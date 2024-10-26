@@ -6,15 +6,8 @@ import {
   MenuItem,
   Select,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
-import {
-  DarkMode,
-  Help,
-  LightMode,
-  Message,
-  Notifications,
-} from "@mui/icons-material";
+import { DarkMode, LightMode } from "@mui/icons-material";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useLogut } from "../hooks/auth/useLogout";
 import FlexBetween from "./styledComponents/FlexBetween";
@@ -25,15 +18,13 @@ import { useGetMe } from "../hooks/auth/useGetMe";
 import Spinner from "./Spinner";
 import useColors from "../hooks/util/useColors";
 
-const Nvabar = () => {
+const Navbar = () => {
   const { mode, changeMode } = useMode();
   const { userId, setUserId } = useAuth();
   const { me, isPending } = useGetMe(userId, setUserId);
   const { logout } = useLogut(setUserId);
 
-  const isMobileScreen = useMediaQuery("(max-width: 1200px)");
-
-  const { neutralLight, neutralMedMain, backAlt } = useColors();
+  const { neutralLight, backAlt } = useColors();
 
   if (isPending) return <Spinner />;
 
@@ -72,22 +63,6 @@ const Nvabar = () => {
         </Link>
 
         <FlexBetween gap="2rem">
-          {!isMobileScreen && (
-            <>
-              <IconButton>
-                <Message sx={{ fontSize: "25px", color: neutralMedMain }} />
-              </IconButton>
-              <IconButton>
-                <Notifications
-                  sx={{ fontSize: "25px", color: neutralMedMain }}
-                />
-              </IconButton>
-              <IconButton>
-                <Help sx={{ fontSize: "25px", color: neutralMedMain }} />
-              </IconButton>
-            </>
-          )}
-
           <IconButton onClick={() => changeMode()}>
             {mode === "light" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
@@ -138,4 +113,4 @@ const Nvabar = () => {
   );
 };
 
-export default Nvabar;
+export default Navbar;
