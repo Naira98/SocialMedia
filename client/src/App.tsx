@@ -16,6 +16,7 @@ import { useGetMe } from "./hooks/auth/useGetMe";
 import { useMode } from "./contexts/useMode";
 import { useAuth } from "./contexts/useAuth";
 import { removeTokens } from "./util/helpers";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   const { mode } = useMode();
@@ -71,6 +72,7 @@ const App = () => {
               path="/profile/:userId"
               element={<Profile key={window.location.pathname} />}
             />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
 

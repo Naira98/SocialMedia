@@ -3,9 +3,11 @@ import useColors from "../hooks/util/useColors";
 
 const SmallButton = ({
   disabled,
+  onClick,
   children,
 }: {
-  disabled: boolean;
+  disabled?: boolean;
+  onClick?: () => void;
   children: string;
 }) => {
   const { primaryMain, backAlt } = useColors();
@@ -13,7 +15,8 @@ const SmallButton = ({
   return (
     <Button
       disabled={disabled}
-      type='submit'
+      onClick={onClick}
+      type="submit"
       sx={{
         paddingX: "1rem",
         backgroundColor: primaryMain,
